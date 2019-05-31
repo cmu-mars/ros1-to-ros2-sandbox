@@ -18,7 +18,7 @@ RUN apt-get update && \
 # to copy over the commands from the internet)
 RUN useradd -m docker && echo "docker:docker" | chpasswd && adduser docker sudo
 
-
+# This is just so that we can use sudo without having to give a password
 ADD ./sudoers.txt /etc/sudoers
 
 RUN chmod 440 /etc/sudoers
@@ -117,7 +117,8 @@ ENV ROS1_DISTRO melodic
 
 RUN sudo apt-get install --no-install-recommends -y libboost-iostreams-dev libboost-regex-dev libboost-system-dev libboost-thread-dev libceres-dev libgoogle-glog-dev liblua5.2-dev libpcl-dev libprotobuf-dev libsdl1.2-dev libsdl-image1.2-dev libsuitesparse-dev libudev-dev libusb-1.0-0-dev libyaml-cpp-dev protobuf-compiler python-sphinx ros-$ROS1_DISTRO-catkin ros-$ROS1_DISTRO-kobuki-driver ros-$ROS1_DISTRO-kobuki-ftdi
 
-
+# The following commands, up to the part where we actually use the command line, do not work...
+# It fails on this line in particular.
 #RUN colcon build --symlink-install --packages-skip cartographer cartographer_ros cv_bridge opencv_tests ros1_bridge turtlebot2_amcl turtlebot2_drivers turtlebot2_follower turtlebot2_cartographer turtlebot2_teleop vision_opencv
 
 #RUN /bin/bash -c "source /opt/ros/$ROS1_DISTRO/setup.bash"

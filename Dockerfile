@@ -120,6 +120,10 @@ RUN sudo apt-get install --no-install-recommends -y libboost-iostreams-dev libbo
 # The following commands, up to the part where we actually use the command line, do not work...
 # It fails on this line in particular.
 #RUN cd ~/ros2_ws && \
+#    sudo rm /etc/ros/rosdep/sources.list.d/20-default.list && \
+#    sudo rosdep init && \
+#    rosdep update && \
+#    rosdep install --from-paths src --ignore-src --rosdistro bouncy -y -r --skip-keys "console_bridge fastcdr fastrtps libopensplice67 rti-connext-dds-5.3.1 urdfdom_headers"
 #    . /opt/ros/bouncy/setup.sh && \
 #    colcon build --symlink-install --packages-skip cartographer cartographer_ros cv_bridge opencv_tests ros1_bridge turtlebot2_amcl turtlebot2_drivers turtlebot2_follower turtlebot2_cartographer turtlebot2_teleop vision_opencv
 

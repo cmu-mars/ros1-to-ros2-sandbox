@@ -119,7 +119,9 @@ RUN sudo apt-get install --no-install-recommends -y libboost-iostreams-dev libbo
 
 # The following commands, up to the part where we actually use the command line, do not work...
 # It fails on this line in particular.
-#RUN colcon build --symlink-install --packages-skip cartographer cartographer_ros cv_bridge opencv_tests ros1_bridge turtlebot2_amcl turtlebot2_drivers turtlebot2_follower turtlebot2_cartographer turtlebot2_teleop vision_opencv
+#RUN cd ~/ros2_ws && \
+#    . /opt/ros/bouncy/setup.sh && \
+#    colcon build --symlink-install --packages-skip cartographer cartographer_ros cv_bridge opencv_tests ros1_bridge turtlebot2_amcl turtlebot2_drivers turtlebot2_follower turtlebot2_cartographer turtlebot2_teleop vision_opencv
 
 #RUN /bin/bash -c "source /opt/ros/$ROS1_DISTRO/setup.bash"
 #RUN colcon build --symlink-install --packages-select cartographer cartographer_ros turtlebot2_amcl turtlebot2_cartographer turtlebot2_drivers turtlebot2_follower turtlebot2_teleop

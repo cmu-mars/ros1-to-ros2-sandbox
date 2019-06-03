@@ -26,9 +26,33 @@ so it won't affect the currently "working" docker image.
 
 ## Known Issues
 
+### Docker Incompatibility with `udev` (Issue #2)
+
+Since `udev` cannot be run inside of a container, we actually cannot do
+some of the system configuration steps that are outlined in the README
+for the turtlebot2_demo repo. I'm not sure if it's worth it to do the
+workarounds to try to get my usb ports to talk to the docker image,
+since I tried doing this and it seemed to break other things, and
+further advice is greatly appreciated, since after all, I'm probably not
+going to be trying to use a joystick to move this turtle robot around.
+
+## Past Issues Fixed by Dubious Means
+
+This section includes documentation for something that is technically
+fixed, but was fixed in such a way that I cannot fully endorse it at
+all, and if something isn't working, it might be worth revisiting
+how this was done. (Of course, this might also send you on a wild
+goose chase.) Further down the road, any particular issue may be
+removed in favor of keeping just some inline comments in the code
+alerting future contributors that there was some issue 
+
 ### `colcon build` failing only when run from Dockerfile
 
-I've gotten the colcon build to work twice now, in this sort of hack-y fashion.
+I've gotten the `colcon build` to work, in this sort of hack-y fashion, which
+fixed issue #1.
+By running the docker image that was built by executing all of the commands
+that come before actually building `turtlebot2_demo`, all of which have
+remained mostly unchanged since I first committed the Dockerfile to this repo.
 
 ```
 Audrey:ros1-to-ros2-sandbox audrey$ docker run -t -i audreyseo/rosubuntu:1.0.6
@@ -178,7 +202,7 @@ Summary: 12 packages finished Æ9.97sÅ
 ```
 
 So I basically took the above commands and made it into a single `RUN` command
-in the Dockerfile, but that isn't working out so well.
+in the Dockerfile, and it seems to be working, more or less.
 
 ```
 RUN cd ~/ros2_ws && \
@@ -215,4 +239,11 @@ RUN cd ~/ros2_ws && \
       vision_opencv turtlebot2_demo
 ```
 
-Basically, the same problelm that I was having while running commands inside the docker container itself happens if the commands are run from the Dockerfile itself.
+I actually ended up splitting the above into two steps instead of one, which actually was more for
+debugging purposes than functionality.
+
+Since whenever you start a new RUN command you end up back at root, if you split up
+all of the above commands, you would have to put `cd ~/ros2_ws` in front of many of them,
+which seems less than ideal.
+
+So anyway, this is very hacky, but I guess it works?

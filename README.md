@@ -45,7 +45,7 @@ since I tried doing this and it seemed to break other things, and
 further advice is greatly appreciated, since after all, I'm probably not
 going to be trying to use a joystick to move this turtle robot around.
 
-### OpenCV3 Not Built for ROS1 Melodic (Issue #4)
+### OpenCV3 Not Built for ROS1 Melodic ([#4][i4])
 
 The dependency `opencv3` is not available for ros-melodic as a binary,
 but it is available for kinetic, which seems to be what turtlebot2_demo
@@ -269,3 +269,4 @@ So anyway, this is very hacky, but I guess it works?
 
 [i1]: https://github.com/cmu-mars/ros1-to-ros2-sandbox/issues/1
 [i2]: https://github.com/cmu-mars/ros1-to-ros2-sandbox/issues/2
+[i4]: https://github.com/cmu-mars/ros1-to-ros2-sandbox/issues/4

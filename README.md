@@ -8,11 +8,20 @@ Build with
 docker build -t <username>/ros2turtle:<version> .
 ```
 
-And run with
+At the moment, this doesn't build something that works, however. To build something that doesn't result in errors, but may be incorrect, run
+```
+docker build -t <username>/ros2turtle:<version> -f dockerfiles/Dockerfile-melodic .
+```
+
+And run the resulting image with
 
 ```
 docker run -t -i <username>/ros2turtle:<version>
 ```
+
+When you enter the container, your working directory is automatically
+`/home/docker/ros2_ws`, the ROS2 workspace created by the
+Dockerfile.
 
 Note: the name can be changed, and is a bit arbitrary, and the
 only reason why I've been using a name is because then you can
@@ -35,6 +44,16 @@ workarounds to try to get my usb ports to talk to the docker image,
 since I tried doing this and it seemed to break other things, and
 further advice is greatly appreciated, since after all, I'm probably not
 going to be trying to use a joystick to move this turtle robot around.
+
+### OpenCV3 Not Built for ROS1 Melodic (Issue #4)
+
+The dependency `opencv3` is not available for ros-melodic as a binary,
+but it is available for kinetic, which seems to be what turtlebot2_demo
+assumes you have installed.
+
+This might be fixed by changing the `FROM ros:melodic` command in the Dockerfile
+to `FROM ros:kinetic`. A new file in `dockerfiles` called `Dockerfile-melodic`
+has been added that contains the old version that uses melodic.
 
 ## Past Issues Fixed by Dubious Means
 

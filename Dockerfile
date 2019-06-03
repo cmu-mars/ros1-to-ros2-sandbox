@@ -1,10 +1,10 @@
 # APPARENTLY the ROS docker images are already built on
 # top of the official Ubuntu docker image, so you
 # don't need to actually say FROM ubuntu:18.04, and
-# it comes with ros-kinetic already installed.
+# it comes with ros-melodic already installed.
 # When I built this [2019.06.03], it was specifically
-# built from Ubuntu Xenial (16.04).
-FROM ros:kinetic
+# built from Ubuntu Bionic (18.04).
+FROM ros:melodic
 
 # Copy the context of our build to the app directory, at
 # the root.
@@ -67,35 +67,18 @@ RUN sudo sh -c 'echo "deb [arch=amd64,arm64] http://packages.ros.org/ros2/ubuntu
 # INSTALL ROS2 PACKAGES
 ENV CHOOSE_ROS_DISTRO bouncy
 
+RUN sudo apt-get update && \
+    sudo apt-get install -y ros-$CHOOSE_ROS_DISTRO-ros-base
 
-# Commented out following three RUN commands
-# because this is from the instructions for
-# installation from binaries, not building from source
-#RUN sudo apt-get update && \
-#    sudo apt-get install -y ros-$CHOOSE_ROS_DISTRO-ros-base
+RUN /bin/bash -c "source /opt/ros/$CHOOSE_ROS_DISTRO/setup.bash"
 
-#RUN /bin/bash -c "source /opt/ros/$CHOOSE_ROS_DISTRO/setup.bash"
-
-#RUN . /opt/ros/$CHOOSE_ROS_DISTRO/setup.sh && \
-#    sudo apt-get update && \
-#    sudo apt-get install -y ros-$CHOOSE_ROS_DISTRO-ros1-bridge
+RUN . /opt/ros/$CHOOSE_ROS_DISTRO/setup.sh && \
+    sudo apt-get update && \
+    sudo apt-get install -y ros-$CHOOSE_ROS_DISTRO-ros1-bridge
 
 # install wget, because it wasn't installed
 RUN sudo apt-get update && \
     sudo apt-get install -y wget
-
-RUN sudo apt-get update && \
-    sudo apt-get install -y software-properties-common && \
-    sudo add-apt-repository ppa:jonathonf/python-3.6 && \
-    sudo apt-get update && \
-    sudo apt-get install -y python3.6 libpython3.6 && \
-    sudo update-alternatives --install /usr/bin/python3 python3 /usr/bin/python3.5 2 && \
-    sudo update-alternatives --install /usr/bin/python3 python3 /usr/bin/python3.6 1 && \
-    sudo rm /usr/bin/python3 && \
-    sudo ln -s python3.6 /usr/bin/python3
-
-RUN sudo apt-get update && \
-    sudo apt-get install -y python3-dev
 
 # INSTALL DEVELOPMENT TOOLS AND ROS TOOLS
 RUN sudo apt-get clean && \
@@ -132,46 +115,51 @@ RUN sudo apt install --no-install-recommends -y \
       libasio-dev \
       libtinyxml2-dev
 
-RUN python3 --version
 
-# GET ROS2 CODE
-RUN mkdir -p ~/ros2_ws/src && \
-    cd ~/ros2_ws && \
-    wget https://raw.githubusercontent.com/ros2/ros2/release-latest/ros2.repos && \
-    vcs import src < ros2.repos
+# OpenCV3 workaround
+# Install dependencies
+RUN sudo apt-get install -y build-essential pkg-config libgtk-3-dev && \
+    sudo apt-get install -y libavcodec-dev libavformat-dev libswscale-dev libv4l-dev libxvidcore-dev libx264-dev && \
+    sudo apt-get install -y libjpeg-dev libpng-dev libtiff-dev gfortran openexr libatlas-base-dev && \
+    sudo apt-get install -y python3-dev python3-numpy libtbb2 libtbb-dev libdc1394-22-dev
 
-# Change the default working directory to our ros2 workspace
-WORKDIR /home/docker/ros2_ws
-
-# INSTALL DEPENDENCIES USING ROSDEP
-# NOTE: this command and many afterwards DEPEND on being in the
-# ros2 workspace!
-RUN { sudo rosdep init || true; } && \
-    rosdep update && \
-    rosdep install --from-paths src --ignore-src --rosdistro crystal -y --skip-keys "console_bridge fastcdr fastrtps libopensplice67 libopensplice69 python3-lark-parser rti-connext-dds-5.3.1 urdfdom_headers" && \
-    python3 -m pip install -U lark-parser
-
-# BUILD THE CODE IN THE WORKSPACE
-#RUN . /opt/ros/$CHOOSE_ROS_DISTRO/setup.sh && \
-RUN    colcon build --symlink-install --packages-ignore qt_gui_cpp rqt_gui_cpp --packages-skip ros1_bridge
-
-# BUILDING THE [ROS1] BRIDGE FROM SOURCE
-# https://github.com/ros2/ros1_bridge/blob/master/README.md#building-the-bridge-from-source
-RUN . /opt/ros/$ROS1_DISTRO/setup.sh && \
-    . ~/ros2_ws/local_setup.bash && \
-    colcon build --symlink-install --packages-select ros1_bridge --cmake-force-configure
+RUN mkdir ~/opencv_build && \
+    cd ~/opencv_build && \
+    git clone https://github.com/opencv/opencv.git && \
+    git clone https://github.com/opencv/opencv_contrib.git && \
+    cd opencv && \
+    git checkout 3.4.6 && \
+    cd ~/opencv_build/opencv_contrib && \
+    git checkout 3.4.6 && \
+    cd ~/opencv_build/opencv && \
+    mkdir build && \
+    cd build && \
+    cmake -D CMAKE_BUILD_TYPE=RELEASE \
+          -D CMAKE_INSTALL_PREFIX=/usr/local \
+          -D INSTALL_C_EXAMPLES=ON \
+          -D INSTALL_PYTHON_EXAMPLES=ON \
+          -D OPENCV_GENERATE_PKGCONFIG=ON \
+          -D OPENCV_EXTRA_MODULES_PATH=~/opencv_build/opencv_contrib/modules \
+          -D BUILD_EXAMPLES=ON .. && \
+    nproc && \
+    make -j4 && \
+    sudo make install && \
+    pkg-config --modversion opencv
 
 # note: all following section headings are from turtlebot2_demo readme
 # INSTALLATION
 ## INSTALLATION FROM SOURCE
-RUN wget https://raw.githubusercontent.com/ros2/turtlebot2_demo/bouncy/turtlebot2_demo.repos && \
+RUN mkdir -p ~/ros2_ws/src && \
+    cd ~/ros2_ws && \
+    wget https://raw.githubusercontent.com/ros2/turtlebot2_demo/bouncy/turtlebot2_demo.repos && \
     vcs import src < turtlebot2_demo.repos
 
-
+# Change the default working directory to our ros2 workspace
+WORKDIR /home/docker/ros2_ws
 
 
 ### INSTALL SOME DEPENDENCIES
-ENV ROS1_DISTRO kinetic
+ENV ROS1_DISTRO melodic
 
 RUN sudo apt-get clean && \
     sudo apt-get update && \

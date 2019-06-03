@@ -26,7 +26,7 @@ so it won't affect the currently "working" docker image.
 
 ## Known Issues
 
-### Docker Incompatibility with `udev` (Issue #2)
+### Docker Incompatibility with `udev` ([#2][i2])
 
 Since `udev` cannot be run inside of a container, we actually cannot do
 some of the system configuration steps that are outlined in the README
@@ -49,7 +49,7 @@ alerting future contributors that there was some issue
 ### `colcon build` failing only when run from Dockerfile
 
 I've gotten the `colcon build` to work, in this sort of hack-y fashion, which
-fixed issue #1.
+fixed issue [#1][i1].
 By running the docker image that was built by executing all of the commands
 that come before actually building `turtlebot2_demo`, all of which have
 remained mostly unchanged since I first committed the Dockerfile to this repo.
@@ -247,3 +247,6 @@ all of the above commands, you would have to put `cd ~/ros2_ws` in front of many
 which seems less than ideal.
 
 So anyway, this is very hacky, but I guess it works?
+
+[i1]: https://github.com/cmu-mars/ros1-to-ros2-sandbox/issues/1
+[i2]: https://github.com/cmu-mars/ros1-to-ros2-sandbox/issues/2

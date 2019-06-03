@@ -4,7 +4,7 @@
 # it comes with ros-melodic already installed.
 # When I built this [2019.06.03], it was specifically
 # built from Ubuntu Bionic (18.04).
-FROM ros:kinetic
+FROM ros:melodic
 
 # Copy the context of our build to the app directory, at
 # the root.
@@ -129,7 +129,7 @@ WORKDIR /home/docker/ros2_ws
 
 
 ### INSTALL SOME DEPENDENCIES
-ENV ROS1_DISTRO kinetic
+ENV ROS1_DISTRO melodic
 
 RUN sudo apt-get clean && \
     sudo apt-get update && \
@@ -189,7 +189,7 @@ RUN . /opt/ros/$CHOOSE_ROS_DISTRO/setup.sh && \
         turtlebot2_cartographer \
         turtlebot2_teleop \
         vision_opencv \
-        turtlebot2_demo && \
+        turtlebot2_demo
     . /opt/ros/$ROS1_DISTRO/setup.sh && \
     colcon build --symlink-install \
       --packages-select \

@@ -1,17 +1,48 @@
 # ros1-to-ros2-sandbox
 
+## Docker Configuration
+
+This has been tested on Mac OS X 10.12.6 running Docker Desktop 2.0.0.3, with Docker Engine version 18.09.2.
+
+It's recommended, if possible, to allot at least 4 GiB of memory to Docker via the Docker preferences, otherwise certain parts of the build make take a very long time to run/fail out.
+
 ## Build
 
-Build with
+All Dockerfiles are now contained within the `dockerfiles` directory. The following two working Dockerfiles are
+
+- `Dockerfile-melodic`, which builds turtlebot2_demo on a base of `ros:melodic`, without trying to install opencv3
+- `Dockerfile-opencv3`, which is the same as the melodic version, except it installs opencv3 from source.
+
+Build using one of these files like so:
 
 ```
-docker build -t <username>/ros2turtle:<version> .
+docker build -t <username>/ros2turtle:<version> -f dockerfiles/<dockerfile-name> .
 ```
 
-At the moment, this doesn't build something that works, however. To build something that doesn't result in errors, but may be incorrect, run
+Note that the build takes a long time, somewhere upwards of 30 minutes,
+especially if you build the opencv3 version. Also, the build tends
+to hang when building cartographer_ros, so you may see an error like this:
+
 ```
-docker build -t <username>/ros2turtle:<version> -f dockerfiles/Dockerfile-melodic .
+Finished <<< cartographer Æ2min 2sÅ
+Starting >>> cartographer_ros
+...
+--- stderr: cartographer_ros                                           
+c++: internal compiler error: Killed (program cc1plus)
+Please submit a full bug report,
+with preprocessed source if appropriate.
+See <file:///usr/share/doc/gcc-7/README.Bugs> for instructions.
+makeÆ2Å: *** ÆCMakeFiles/cartographer_ros.dir/cartographer_ros/node.cc.oÅ Error 4
+makeÆ2Å: *** Waiting for unfinished jobs....
+makeÆ1Å: *** ÆCMakeFiles/cartographer_ros.dir/allÅ Error 2
+make: *** ÆallÅ Error 2
+---
 ```
+This is fine, and in fact, the Dockerfile builds these packages twice
+because of this problem, as a workaround. If you have 2 GiB of memory
+alloted to the Docker engine, and if your system is roughly the same,
+it should build successfully in the end. Allotting more memory, if you
+have it, to the Docker engine can decrease the chance of this happening.
 
 And run the resulting image with
 
@@ -34,16 +65,6 @@ image and I'm making changes, I can just increase the version number
 so it won't affect the currently "working" docker image.
 
 ## Known Issues
-
-### Docker Incompatibility with `udev` ([#2][i2])
-
-Since `udev` cannot be run inside of a container, we actually cannot do
-some of the system configuration steps that are outlined in the README
-for the turtlebot2_demo repo. I'm not sure if it's worth it to do the
-workarounds to try to get my usb ports to talk to the docker image,
-since I tried doing this and it seemed to break other things, and
-further advice is greatly appreciated, since after all, I'm probably not
-going to be trying to use a joystick to move this turtle robot around.
 
 ### OpenCV3 Not Built for ROS1 Melodic ([#4][i4])
 

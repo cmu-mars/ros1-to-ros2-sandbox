@@ -32,6 +32,10 @@ RUN chmod 440 /etc/sudoers
 #       the following commands as the user docker
 USER docker
 
+# Copy some configuration files to run when the shell opens
+RUN cp /app/my-bashrc ~/.bashrc && \
+    cp /app/my-bash_profile ~/.bash_profile
+
 # Install locales, which is needed for
 # first step of those build instructions
 RUN sudo apt-get clean && sudo apt-get update && sudo apt-get install -y locales
@@ -189,7 +193,7 @@ RUN . /opt/ros/$CHOOSE_ROS_DISTRO/setup.sh && \
         turtlebot2_cartographer \
         turtlebot2_teleop \
         vision_opencv \
-        turtlebot2_demo
+        turtlebot2_demo && \
     . /opt/ros/$ROS1_DISTRO/setup.sh && \
     colcon build --symlink-install \
       --packages-select \

@@ -1,0 +1,3 @@
+source ~/ros2_ws/install/setup.bash
+
+source /opt/ros/bouncy/setup.bash

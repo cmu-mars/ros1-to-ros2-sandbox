@@ -4,7 +4,7 @@
 # it comes with ros-melodic already installed.
 # When I built this [2019.06.03], it was specifically
 # built from Ubuntu Bionic (18.04).
-FROM ros:melodic
+FROM osrf/ros:melodic-desktop-full
 
 # Copy the context of our build to the app directory, at
 # the root.
@@ -107,7 +107,7 @@ RUN sudo apt-get clean && \
 RUN pip3 install --upgrade pip
 
 # install some pip packages needed for testing
-RUN python3 -m pip install -U \
+RUN python3 -m pip install --user -U \
       argcomplete \
       flake8 \
       flake8-blind-except \
@@ -145,11 +145,19 @@ WORKDIR /home/docker/ros2_ws
 RUN { sudo rosdep init || true; } && \
     rosdep update && \
     rosdep install --from-paths src --ignore-src --rosdistro crystal -y --skip-keys "console_bridge fastcdr fastrtps libopensplice67 libopensplice69 python3-lark-parser rti-connext-dds-5.3.1 urdfdom_headers" && \
-    python3 -m pip install -U lark-parser
+    python3 -m pip install --user -U lark-parser
 
 # BUILD THE CODE IN THE WORKSPACE
 #RUN . /opt/ros/$CHOOSE_ROS_DISTRO/setup.sh && \
-RUN    colcon build --symlink-install --packages-ignore qt_gui_cpp rqt_gui_cpp --packages-skip ros1_bridge
+# There used to be a --packages-ignore flag here,
+# but apparently, this was just for the ubuntu 16.04
+# case.
+# Also, we turn off build testing (hopefully) so
+# that it will build faster, and also not fail
+# because some of these packages try to test even if
+# it can't find the pytest module (?!?!?!?!). Previously,
+# build took over 23 minutes.
+RUN    colcon build --cmake-args -DBUILD_TESTING=OFF --symlink-install --packages-skip ros1_bridge
 
 # BUILDING THE [ROS1] BRIDGE FROM SOURCE
 # https://github.com/ros2/ros1_bridge/blob/master/README.md#building-the-bridge-from-source

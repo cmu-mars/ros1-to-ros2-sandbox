@@ -44,16 +44,6 @@ alloted to the Docker engine, and if your system is roughly the same,
 it should build successfully in the end. Allotting more memory, if you
 have it, to the Docker engine can decrease the chance of this happening.
 
-And run the resulting image with
-
-```
-docker run -t -i <username>/ros2turtle:<version>
-```
-
-When you enter the container, your working directory is automatically
-`/home/docker/ros2_ws`, the ROS2 workspace created by the
-Dockerfile.
-
 Note: the name can be changed, and is a bit arbitrary, and the
 only reason why I've been using a name is because then you can
 separately run and build, so this is just what I've been doing to
@@ -63,6 +53,54 @@ best practices are, but this seems reasonable.
 I also just include a version so that if I have a working docker
 image and I'm making changes, I can just increase the version number
 so it won't affect the currently "working" docker image.
+
+## Run
+
+If you need to run the resulting image in one terminal, you can use
+
+```
+docker run -t -i <username>/ros2turtle:<version>
+```
+
+If multiple terminals are needed, as is the case especially for
+running something using the [ROS1 bridge](https://github.com/ros2/turtlebot2_demo#run-the-bridge) or 
+any other use case involving a server, first start the image in
+the background with
+
+```
+$ docker run -d -it <username>/ros2turtle:<version>
+<container id>
+$
+```
+
+This should output a `<container id>` as in the above, but if it doesn't,
+then you can run `docker ps` to find the container id. Then in each new
+terminal window, you should be able to do the following.
+
+```
+$ docker exec -it <container id> bash
+docker@<container id>:~/ros2_ws$ 
+```
+
+which shows you an interactive terminal to the container.
+
+When you enter the container, your working directory is automatically
+`/home/docker/ros2_ws`, the ROS2 workspace created by the
+Dockerfile.
+
+### Exiting the Image
+
+No matter how you ran the image, you should be able to exit it with
+
+```
+docker@<container id>$ exit
+$
+```
+
+It may be necessary to kill the container, since it is running in the background.
+If `docker ps` shows that the container `<container id>` is still running, use
+`docker kill <container id>` which will make it exit with status 137.
+
 
 ## Known Issues
 

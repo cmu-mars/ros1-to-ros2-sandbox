@@ -51,9 +51,6 @@ RUN sudo locale-gen en_US.UTF-8
 
 RUN sudo update-locale LC_ALL=en_US.UTF-8 LANG=en_US.UTF-8
 
-# (not sure if this is needed...You're technically supposed to do
-# RUN export LANG=en_US.UTF-8
-# but this won't actually export it. But this ENV statement isn't actually used.)
 ENV LANG=en_US.UTF-8
 
 

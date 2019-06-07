@@ -1,0 +1,3 @@
+source /opt/ros/$ROS1_DISTRO/setup.bash
+
+source /opt/ros/$CHOOSE_ROS_DISTRO/setup.bash

@@ -36,6 +36,9 @@ RUN apt-get update && \
     apt-get install -y ros-$CHOOSE_ROS_DISTRO-desktop && \
     apt-get install -y python3-argcomplete
 
+RUN apt-get update && \
+    apt-get install -y ros-$CHOOSE_ROS_DISTRO-ros1-bridge
+
 ENV ROS1_DISTRO=melodic
 
 # Install turtlebot2
@@ -78,8 +81,8 @@ USER docker
 
 
 # Copy some configuration files to run when the shell opens
-RUN cp /app/my-bashrc ~/.bashrc && \
-    cp /app/my-bash_profile ~/.bash_profile
+RUN cp /app/my-bashrc-bin ~/.bashrc && \
+    cp /app/my-bash_profile-bin ~/.bash_profile
 
 RUN cd ~ && \
     mkdir .ssh && \

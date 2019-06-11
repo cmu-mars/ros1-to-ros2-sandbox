@@ -9,3 +9,7 @@
 *.txt
 
 .\#*
+
+
+# Ignore python virtualenv directories
+/**/env

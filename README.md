@@ -84,4 +84,3 @@ The system installed is also a little bit different because we instantiate a use
 called `docker`, that you enter the image as, instead of being `root` like many
 other Docker containers.
 
-I have been able to 

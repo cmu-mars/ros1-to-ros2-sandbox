@@ -12,6 +12,7 @@ FROM osrf/ros:melodic-desktop-full
 # ones.
 COPY . /app
 
+RUN apt-key adv --keyserver 'hkp://keyserver.ubuntu.com:80' --recv-key C1CF6E31E6BADE8868B172B4F42ED6FBAB17C654
 
 # Setup system for ros2 installation
 RUN apt-get update && \
@@ -70,7 +71,7 @@ ADD ./sudoers.txt /etc/sudoers
 
 RUN chmod 440 /etc/sudoers
 
-
+#RUN xhost +local:docker
 
 
 # Set the user that we enter ubuntu as to be docker
@@ -104,4 +105,4 @@ ADD supervisord/sshd.conf /etc/supervisor/conf.d/sshd.conf
 EXPOSE 22
 
 # fire up the command line
-CMD /bin/bash
+CMD /bin/bashB

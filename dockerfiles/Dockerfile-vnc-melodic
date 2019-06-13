@@ -1,0 +1,121 @@
+# APPARENTLY the ROS docker images are already built on
+# top of the official Ubuntu docker image, so you
+# don't need to actually say FROM ubuntu:18.04, and
+# it comes with ros-melodic already installed.
+# When I built this [2019.06.03], it was specifically
+# built from Ubuntu Bionic (18.04).
+FROM osrf/ros:melodic-desktop-full
+
+# Copy the context of our build to the app directory, at
+# the root. This just contains some dubiously useful
+# configuration files, as well as some actually useful
+# ones.
+COPY . /app
+
+RUN apt-key adv --keyserver 'hkp://keyserver.ubuntu.com:80' --recv-key C1CF6E31E6BADE8868B172B4F42ED6FBAB17C654
+
+# Setup system for ros2 installation
+RUN apt-get update && \
+    apt-get install -y locales
+
+RUN locale-gen en_US en_US.UTF-8 && \
+    update-locale LC_ALL=en_US.UTF-8 LANG=en_US.UTF-8
+
+ENV LANG=en_US.UTF-8
+
+# Get ros2 sources
+RUN apt-get update && \
+    apt-get install -y curl gnupg2 lsb-release && \
+    curl http://repo.ros2.org/repos.key | apt-key add - && \
+    sh -c 'echo "deb [arch=amd64,arm64] http://packages.ros.org/ros2/ubuntu `lsb_release -cs` main" > /etc/apt/sources.list.d/ros2-latest.list'
+
+ENV CHOOSE_ROS_DISTRO=bouncy
+
+
+# Install ros2 and a dependency
+RUN apt-get update && \
+    apt-get install -y ros-$CHOOSE_ROS_DISTRO-desktop && \
+    apt-get install -y python3-argcomplete
+
+RUN apt-get update && \
+    apt-get install -y ros-$CHOOSE_ROS_DISTRO-ros1-bridge
+
+ENV ROS1_DISTRO=melodic
+
+# Install turtlebot2
+RUN apt-get install -y ros-$CHOOSE_ROS_DISTRO-turtlebot2* \
+      ros-$ROS1_DISTRO-kobuki-ftdi
+
+###########################################################
+
+RUN apt-get update && apt-get install -y openssh-server
+RUN mkdir /var/run/sshd
+
+RUN sed 's@session\s*required\s*pam_loginuid.so@session optional pam_loginuid.so@g' -i /etc/pam.d/sshd
+
+
+
+
+
+
+# install sudo, not necessarily best practices
+RUN apt-get update && \
+    apt-get -y install sudo
+
+# Add a user called docker, with password docker,
+# that we will be using (just so that it's easier
+# to copy over the commands from the internet).
+# This is apparently really sketchy and not considered
+# best practices for dockerfiles.
+RUN useradd -m docker && echo "docker:docker" | chpasswd && adduser docker sudo
+
+# This is just so that we can use sudo without having to give a password
+ADD ./sudoers.txt /etc/sudoers
+
+RUN chmod 440 /etc/sudoers
+
+#RUN xhost +local:docker
+
+RUN apt-get install -y firefox terminator dbus-x11
+
+# Replace 1000 with your user / group id
+RUN export uid=1000 gid=1000 && \
+    echo "docker:x:${uid}:${gid}:Docker,,,:/home/docker:/bin/bash" >> /etc/passwd && \
+    echo "docker:x:${uid}:" >> /etc/group && \
+    echo "docker ALL=(ALL) NOPASSWD: ALL" > /etc/sudoers.d/docker && \
+    chmod 0440 /etc/sudoers.d/docker && \
+    chown ${uid}:${gid} -R /home/docker
+
+
+# Set the user that we enter ubuntu as to be docker
+# NOTE: this also makes it so that we actually run all of
+#       the following commands as the user docker
+USER docker
+
+
+
+# Copy some configuration files to run when the shell opens
+RUN cp /app/my-bashrc-bin ~/.bashrc && \
+    cp /app/my-bash_profile-bin ~/.bash_profile
+
+RUN cd ~ && \
+    mkdir .ssh && \
+    cd .ssh && \
+    touch authorized_keys && \
+    chmod 600 authorized_keys && \
+    cd .. && \
+    chmod 700 .ssh
+
+# Make it so that we can ssh into the docker container
+# NOTE: you have to put in your own id_rsa.pub to use
+# this line of code.
+#RUN cat /app/id_rsa.pub >> ~/.ssh/authorized_keys
+ 
+
+ADD supervisord/sshd.conf /etc/supervisor/conf.d/sshd.conf
+
+# Expose port 22, for ssh-ing
+EXPOSE 22
+
+# fire up the command line
+CMD /bin/bash

@@ -1,0 +1,14 @@
+{
+    "std_msgs::String": "std_msgs::msg::String",
+    "ros::Rate": "rclcpp::Rate",
+    "ros::ok": "rclcpp:ok",
+    "<boost/shared_ptr.hpp>" : "<memory>",
+    "boost::shared_ptr" : "std::shared_ptr",
+    "boost::mutex::scoped_lock" : "std::unique_lock<std::mutex>",
+    "boost::mutex" : "std::mutex",
+    "#include <boost/thread/mutex.hpp>" : "#include <mutex>",
+    "#include <boost/unordered_map.hpp>" : "#include <unorder_map>",
+    "boost::unordered_map" : "std::unordered_map",
+    "#include <boost/function.hpp>" : "#include <functional>",
+    "boost::function" : "std::function",
+}

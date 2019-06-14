@@ -1,0 +1,24 @@
+# I think that this should work like this...
+# So basically I want to use this other image I made as the basis for our new image?
+FROM audreyseo/tur2-vnc
+
+RUN ls
+
+COPY . /app
+
+RUN cd ~ && \
+    ls
+
+RUN . /opt/ros/$CHOOSE_ROS_DISTRO/setup.sh && \
+    cd ~ && \
+    ros2 pkg create test1_ros2 --build-type ament_cmake --dependencies rclcpp std_msgs && \
+    cd test1_ros2 && \
+    cp /app/ex1/ros2* src/ && \
+    mkdir launch && \
+    cp /app/ex1/test1_ros2.launch.py launch/ && \
+    cp /app/ex1/CMakeLists.txt ./
+
+WORKDIR /home/docker/test1_ros2
+
+# fire up the command line
+CMD /bin/bash

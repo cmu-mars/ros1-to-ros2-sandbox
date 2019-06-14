@@ -76,10 +76,11 @@ RUN chmod 440 /etc/sudoers
 
 #RUN xhost +local:docker
 
-RUN apt-get install -y firefox terminator dbus-x11
+# Get some basic GUI and editor stuff
+RUN apt-get install -y firefox terminator dbus-x11 emacs
 
 # Replace 1000 with your user / group id
-RUN export uid=1000 gid=1000 && \
+RUN export uid=501 gid=20 && \
     echo "docker:x:${uid}:${gid}:Docker,,,:/home/docker:/bin/bash" >> /etc/passwd && \
     echo "docker:x:${uid}:" >> /etc/group && \
     echo "docker ALL=(ALL) NOPASSWD: ALL" > /etc/sudoers.d/docker && \
@@ -91,7 +92,6 @@ RUN export uid=1000 gid=1000 && \
 # NOTE: this also makes it so that we actually run all of
 #       the following commands as the user docker
 USER docker
-
 
 
 # Copy some configuration files to run when the shell opens
@@ -112,10 +112,24 @@ RUN cd ~ && \
 #RUN cat /app/id_rsa.pub >> ~/.ssh/authorized_keys
  
 
-ADD supervisord/sshd.conf /etc/supervisor/conf.d/sshd.conf
+ADD supervisord/sshd.`conf /etc/supervisor/conf.d/sshd.conf
 
 # Expose port 22, for ssh-ing
 EXPOSE 22
+
+
+
+############################################################
+# Setup ROS2 test1_ros2 package
+RUN . /opt/ros/$CHOOSE_ROS_DISTRO/setup.sh && \
+    cd ~ && \
+    ros2 pkg create test1_ros2 --build-type ament_cmake --dependencies rclcpp std_msgs && \
+    cp /app/ex1/ros2* src/ && \
+    mkdir launch && \
+    cp /app/ex1/test1_ros2.launch.py launch/ && \
+    cp /app/ex1/CMakeLists.txt ./
+
+WORKDIR /home/docker/test1_ros2
 
 # fire up the command line
 CMD /bin/bash

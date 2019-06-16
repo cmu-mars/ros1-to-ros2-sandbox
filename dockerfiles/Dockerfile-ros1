@@ -1,0 +1,45 @@
+FROM osrf/ros:melodic-desktop-full
+
+# Add the updated key, because there was a security issue
+RUN apt-key adv --keyserver 'hkp://keyserver.ubuntu.com:80' --recv-key C1CF6E31E6BADE8868B172B4F42ED6FBAB17C654
+
+
+RUN apt-get update && \
+    apt-get install -y locales
+
+ENV LANG=en_US.UTF-8
+
+
+# install sudo, not necessarily best practices
+RUN apt-get update && \
+    apt-get -y install sudo
+
+# Add a user called docker, with password docker,
+# that we will be using (just so that it's easier
+# to copy over the commands from the internet).
+# This is apparently really sketchy and not considered
+# best practices for dockerfiles.
+RUN useradd -m docker && echo "docker:docker" | chpasswd && adduser docker sudo
+
+# This is just so that we can use sudo without having to give a password
+ADD ./sudoers.txt /etc/sudoers
+
+RUN chmod 440 /etc/sudoers
+
+#RUN xhost +local:docker
+
+# Get some basic GUI and editor stuff
+RUN export DEBIAN_FRONTEND=noninteractive && \
+    apt-get install -y firefox terminator dbus-x11 emacs
+
+
+# Install ROS1-specific build/development tools
+RUN apt-get install -y python-rosinstall python-rosinstall-generator python-wstool build-essential
+
+# Replace 1000 with your user / group id
+#RUN export uid=501 gid=20 && \
+#    echo "docker:x:${uid}:${gid}:Docker,,,:/home/docker:/bin/bash" >> /etc/passwd && \
+#    echo "docker:x:${uid}:" >> /etc/group && \
+#    echo "docker ALL=(ALL) NOPASSWD: ALL" > /etc/sudoers.d/docker && \
+#    chmod 0440 /etc/sudoers.d/docker && \
+#    chown ${uid}:${gid} -R /home/docker

@@ -1,0 +1,56 @@
+ARG USERNAME
+
+FROM ${USERNAME}/ros1-base
+
+
+
+ENV MY_HOME_VAR=/home/docker
+
+ENV MY_ROS1_CATKIN_WS=/home/docker/test1_ros1_ws
+
+RUN touch $MY_HOME_VAR/.bash_profile && \
+    echo "source /opt/ros/melodic/setup.bash" >> $MY_HOME_VAR/.bashrc && \
+    echo "source ${MY_ROS1_CATKIN_WS}/devel/setup.bash" >> $MY_HOME_VAR/.bashrc
+
+USER docker
+
+# Create a catkin workspace
+
+
+
+RUN . /opt/ros/melodic/setup.sh && \
+    mkdir -p ${MY_ROS1_CATKIN_WS}/src && \
+    cd $MY_ROS1_CATKIN_WS && \
+    catkin_make
+
+WORKDIR $MY_ROS1_CATKIN_WS
+
+RUN . devel/setup.sh && \
+    echo $ROS_PACKAGE_PATH && \
+    cd ${MY_ROS1_CATKIN_WS}/src && \
+    catkin_create_pkg test1 std_msgs roscpp
+
+COPY . /app
+
+USER docker
+
+RUN cd src/test1 && \
+    cp /app/ex1/test1_ros1CMakeLists.txt ./CMakeLists.txt
+
+RUN cd $MY_ROS1_CATKIN_WS/src/test1 && \
+    . /opt/ros/melodic/setup.sh && \
+    cp /app/ex1/ros1_* ./src && \
+    ls -al src && \
+    mkdir launch && \
+    cp /app/ex1/test1_ros1.launch launch/
+
+RUN . /opt/ros/melodic/setup.sh && \
+    . devel/setup.sh && \
+    catkin_make
+
+
+#USER docker
+
+#CMD /bin/bash
+#/bin/bash -c "source ~/.bashrc && roslaunch test1_ros1 test1_ros1.launch"
+CMD /bin/bash -c "source /opt/ros/melodic/setup.bash; source /home/docker/test1_ros1_ws/devel/setup.bash; roslaunch test1 test1_ros1.launch"

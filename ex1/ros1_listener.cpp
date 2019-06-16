@@ -1,11 +1,19 @@
 // ROS 1 Listener in C++
+#include <stdlib.h>
 #include "ros/ros.h"
 #include "std_msgs/String.h"
 /**
   * This tutorial demonstrates simple receipt of messages over the ROS system. 
   */
+
+int times = 0;
 void chatterCallback(const std_msgs::String::ConstPtr& msg){
   ROS_INFO("I heard: [%s]", msg->data.c_str());
+  times++;
+  if (times == 10) {
+    ros::shutdown();
+    exit(0);
+  }
 }
 
 int main(int argc, char **argv){
@@ -19,7 +27,7 @@ int main(int argc, char **argv){
     * You must call one of the versions of ros::init() before using any other   
     * part of the ROS system.   
     */
-  ros::init(argc, argv, "listener");
+  ros::init(argc, argv, "listener_node");
   /**   
     * NodeHandle is the main access point to communications with the ROS system.   
     * The first NodeHandle constructed will fully initialize this node, and the last   

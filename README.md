@@ -1,39 +1,73 @@
 # ros1-to-ros2-sandbox
 
+## File Organization
+
+The purposes of the various folders and files:
+
+- `dockerfiles/`: various dockerfiles for different builds
+- `ex1/`: files pertaining to the example ROS1 vs. ROS2 code from the PDF, including launch files
+  - note: as a test, this is referred to as test1 since it is example 1
+- `launch/`: other launch files, for trying to run the turtlebot2_demo
+- `rviz-diff/`: script for comparing ROS1 vs. ROS2 versions of packages
+  - `src/`: outputted diffs for files judged to be the same, specifically for the rviz package
+- `.dockerignore`: patterns that match files and directories that we don't want to be copied/added to a built image
+- `my-bash*`: various basic `.bashrc` and `.bash_profile` files for sourcing different kinds of installations of ROS.
+- `ros1-to-ros2-pack-spec.json`: a specification of how ROS core packages' names and organization changed
+- `sudoers.txt`: file that specifies some permissions information for the user you enter a docker image as, called "docker."
+
+
 ## Docker Configuration
 
 This has been tested on Mac OS X 10.12.6 running Docker Desktop 2.0.0.3, with Docker Engine version 18.09.2.
 
-It's recommended, if possible, to allot at least 4 GiB of memory to Docker via the Docker preferences, otherwise certain parts of the build make take a very long time to run/fail out.
 
 ## Build
 
-All Dockerfiles are now contained within the `dockerfiles` directory. The Dockerfile recommended for building is `dockerfiles/Dockerfile-bin-melodic`, which will install everything from binaries.
+### Dockerfiles
 
-Build like so:
+All Dockerfiles are now contained within `dockerfiles/`. Here are the different Dockerfiles in that directory, which are known to actually build
+
+- `Dockerfile-bin-melodic`: comes with full melodic installation, installs ROS2 Bouncy and turtlebot2_demo from binaries
+- `Dockerfile-ros1`: full melodic installation, also installs ROS developer and package creation/build tools
+- `Dockerfile-vnc-melodic`: same as `Dockerfile-bin-melodic`, but enables X forwarding
+- `Dockerfile-x-dev-melodic`: base image is the one built from `Dockerfile-vnc-melodic, creates a new ROS2 package called `test1_ros2` but doesn't build that package
+  - won't work unless you've already built `Dockerfile-vnc-melodic`'s image as `audreyseo/tur2-vnc`
+  - also requires some build and other processing once you enter the image
+- `test1-ros1`: takes the image you built from `Dockerfile-ros1` (assumes you've called it `<username>/ros1-base`), and creates a package called test1 that will do the ROS1 version of `Dockerfile-x-dev-melodic`
+  - when you run this image, it automatically launches the test1 package
+
+### Building a Dockerfile
 
 ```
-docker build -t <username>/ros2turtle:<version> -f dockerfiles/<dockerfile-name> .
+docker build -t <username>/<image-name>:<version> -f dockerfiles/<dockerfile-name> .
 ```
-Build is now much faster than it was previously.
 
-Note: the name can be changed, and is a bit arbitrary, and the
-only reason why I've been using a name is because then you can
-separately run and build, so this is just what I've been doing to
-get my hands on this in the first place. I'm not sure what Docker
-best practices are, but this seems reasonable.
+For the `dockerfiles/test1-ros1` Dockerfile, an extra command line argument of `--build-arg USERNAME=<insert-username-here>` is needed.
+This ensures that it references the correct image built from `Dockerfile-ros1`.
 
-I also just include a version so that if I have a working docker
-image and I'm making changes, I can just increase the version number
-so it won't affect the currently "working" docker image.
+#### Image Naming and Versioning
+
+For the most part, the names are arbitrary, though it is recommended 
+that the image name at least in part reflects the Dockerfile it came from. There
+are only two instances in which the naming isn't arbitrary, which were detailed in
+[the dockerfile section](#dockerfiles). For the most part, the built image
+should have the same name as the Dockerfile file name, minus the `Dockerfile` part.
+
+The version is entirely optional. I just include it so that if I have a working docker
+image and I'm making potentially breaking changes, I can just increase the version number
+so it won't affect the currently "working" docker image. Be warned that this can eat up
+the storage available to the Docker.
 
 ## Run
 
 If you need to run the resulting image in one terminal, you can use
 
 ```
-docker run -t -i <username>/ros2turtle:<version>
+docker run -t -i <username>/<name-of-image>:<version>
 ```
+
+The naming of the image needs to be made more consistent later, as
+mentioned earlier.
 
 If multiple terminals are needed, as is the case especially for
 running something using the [ROS1 bridge](https://github.com/ros2/turtlebot2_demo#run-the-bridge) or 

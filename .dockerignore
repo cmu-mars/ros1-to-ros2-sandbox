@@ -1,2 +1,9 @@
 rviz-diff
 dockerfiles
+
+# Ignore temp Emacs files
+**/*~
+*~
+
+# Ignore other temp files
+\#*

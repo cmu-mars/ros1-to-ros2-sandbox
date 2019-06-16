@@ -105,4 +105,4 @@ ADD supervisord/sshd.conf /etc/supervisor/conf.d/sshd.conf
 EXPOSE 22
 
 # fire up the command line
-CMD /bin/bashB
+CMD /bin/bash

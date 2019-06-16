@@ -4,21 +4,57 @@ FROM audreyseo/tur2-vnc
 
 RUN ls
 
-COPY . /app
-
 RUN cd ~ && \
     ls
 
+# Development dependencies
+# These should ultimately be moved to the base image someday...
+RUN sudo apt-get update && sudo apt-get install -y \
+      build-essential \
+      cmake \
+      git \
+      python3-colcon-common-extensions \
+      python3-lark-parser \
+      python3-pip \
+      python-rosdep \
+      python3-vcstool \
+      wget && \
+    python3 -m pip install -U \
+      argcomplete \
+      flake8 \
+      flake8-blind-except \
+      flake8-builtins \
+      flake8-class-newline \
+      flake8-comprehensions \
+      flake8-deprecated \
+      flake8-docstrings \
+      flake8-import-order \
+      flake8-quotes \
+      pytest-repeat \
+      pytest-rerunfailures \
+      pytest \
+      pytest-cov \
+      pytest-runner \
+      setuptools && \
+    sudo apt-get install --no-install-recommends -y \
+      libasio-dev \
+      libtinyxml2-dev
+
 RUN . /opt/ros/$CHOOSE_ROS_DISTRO/setup.sh && \
     cd ~ && \
-    ros2 pkg create test1_ros2 --build-type ament_cmake --dependencies rclcpp std_msgs && \
-    cd test1_ros2 && \
-    cp /app/ex1/ros2* src/ && \
+    ros2 pkg create test1_ros2 --build-type ament_cmake --dependencies rclcpp std_msgs
+
+WORKDIR /home/docker/test1_ros2
+
+COPY . /app
+
+
+RUN cp /app/ex1/ros2* src/ && \
     mkdir launch && \
     cp /app/ex1/test1_ros2.launch.py launch/ && \
     cp /app/ex1/CMakeLists.txt ./
 
-WORKDIR /home/docker/test1_ros2
+
 
 # fire up the command line
 CMD /bin/bash

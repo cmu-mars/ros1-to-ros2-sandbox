@@ -25,25 +25,27 @@ This has been tested on Mac OS X 10.12.6 running Docker Desktop 2.0.0.3, with Do
 
 ### Dockerfiles
 
-All Dockerfiles are now contained within `dockerfiles/`. Here are the different Dockerfiles in that directory, which are known to actually build
+All Dockerfiles are now located in `dockerfiles/`. Here are the important ones:
 
-- `Dockerfile-bin-melodic`: comes with full melodic installation, installs ROS2 Bouncy and turtlebot2_demo from binaries
-- `Dockerfile-ros1`: full melodic installation, also installs ROS developer and package creation/build tools
+- `Dockerfile-bin-melodic`: comes with full ROS1 melodic installation, installs ROS2 Bouncy and turtlebot2_demo from binaries
+- `Dockerfile-ros1-base`: full desktop melodic installation, also installs ROS developer and package creation/build tools
+- `Dockerfile-ros2-base`: bouncy desktop install, and ROS developer/build dependencies
 - `Dockerfile-vnc-melodic`: same as `Dockerfile-bin-melodic`, but enables X forwarding
-- `Dockerfile-x-dev-melodic`: base image is the one built from `Dockerfile-vnc-melodic, creates a new ROS2 package called `test1_ros2` but doesn't build that package
-  - won't work unless you've already built `Dockerfile-vnc-melodic`'s image as `audreyseo/tur2-vnc`
-  - also requires some build and other processing once you enter the image
 - `test1-ros1`: takes the image you built from `Dockerfile-ros1` (assumes you've called it `<username>/ros1-base`), and creates a package called test1 that will do the ROS1 version of `Dockerfile-x-dev-melodic`
   - when you run this image, it automatically launches the test1 package
-
+- `test1-ros2`: creates image based on the image built by `Dockerfile-ros2-base`, assumes you've called it `<username>/ros2-base`
+  - creates and builds package, test launches immediately when the image is run
+  
 ### Building a Dockerfile
 
 ```
 docker build -t <username>/<image-name>:<version> -f dockerfiles/<dockerfile-name> .
 ```
 
-For the `dockerfiles/test1-ros1` Dockerfile, an extra command line argument of `--build-arg USERNAME=<insert-username-here>` is needed.
-This ensures that it references the correct image built from `Dockerfile-ros1`.
+For the `test1-ros1` and `test1-ros2` Dockerfiles, an extra command line
+argument of `--build-arg USERNAME=<insert-username-here>` is needed.
+This ensures that it references the correct image built from `Dockerfile-ros1-base`
+or `Dockerfile-ros2-base`, respectively.
 
 #### Image Naming and Versioning
 

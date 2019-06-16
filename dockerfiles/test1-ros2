@@ -1,6 +1,7 @@
 # I think that this should work like this...
 # So basically I want to use this other image I made as the basis for our new image?
-FROM audreyseo/ros2-base
+ARG USERNAME
+FROM ${USERNAME}/ros2-base
 
 RUN ls
 

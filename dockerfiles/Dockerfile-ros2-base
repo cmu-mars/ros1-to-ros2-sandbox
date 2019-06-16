@@ -1,0 +1,105 @@
+FROM osrf/ros:bouncy-desktop
+
+# Copy the context of our build to the app directory, at
+# the root. This just contains some dubiously useful
+# configuration files, as well as some actually useful
+# ones.
+# No longer needed since this is done when you build the
+# image from this one
+#COPY . /app
+
+
+
+# The old key was compromised, unfortunately.
+RUN apt-key adv --keyserver 'hkp://keyserver.ubuntu.com:80' --recv-key C1CF6E31E6BADE8868B172B4F42ED6FBAB17C654
+
+# Setup system for ros2 installation -- even though it already has it
+RUN apt-get update && \
+    apt-get install -y locales
+
+RUN locale-gen en_US en_US.UTF-8 && \
+    update-locale LC_ALL=en_US.UTF-8 LANG=en_US.UTF-8
+
+ENV LANG=en_US.UTF-8
+
+# Get ros2 sources
+RUN apt-get update && \
+    apt-get install -y curl gnupg2 lsb-release && \
+    curl http://repo.ros2.org/repos.key | apt-key add - && \
+    sh -c 'echo "deb [arch=amd64,arm64] http://packages.ros.org/ros2/ubuntu `lsb_release -cs` main" > /etc/apt/sources.list.d/ros2-latest.list'
+
+# Keep this since other images built from this one may use it
+ENV CHOOSE_ROS_DISTRO=bouncy
+
+# Development dependencies
+RUN apt-get update && \
+    apt-get install -y \
+      build-essential \
+      cmake \
+      git \
+      python3-colcon-common-extensions \
+      python3-lark-parser \
+      python3-pip \
+      python-rosdep \
+      python3-vcstool \
+      wget && \
+    python3 -m pip install -U \
+      argcomplete \
+      flake8 \
+      flake8-blind-except \
+      flake8-builtins \
+      flake8-class-newline \
+      flake8-comprehensions \
+      flake8-deprecated \
+      flake8-docstrings \
+      flake8-import-order \
+      flake8-quotes \
+      pytest-repeat \
+      pytest-rerunfailures \
+      pytest \
+      pytest-cov \
+      pytest-runner \
+      setuptools && \
+    apt-get install --no-install-recommends -y \
+      libasio-dev \
+      libtinyxml2-dev
+
+
+###########################################################
+
+RUN apt-get update && apt-get install -y openssh-server
+RUN mkdir /var/run/sshd
+
+
+
+# install sudo, not necessarily best practices
+RUN apt-get update && \
+    apt-get -y install sudo
+
+# Add a user called docker, with password docker,
+# that we will be using (just so that it's easier
+# to copy over the commands from the internet).
+# This is apparently really sketchy and not considered
+# best practices for dockerfiles.
+RUN useradd -m docker && echo "docker:docker" | chpasswd && adduser docker sudo
+
+# This is just so that we can use sudo without having to give a password
+ADD ./sudoers.txt /etc/sudoers
+
+RUN chmod 440 /etc/sudoers
+
+
+RUN touch /home/docker/.bashrc && \
+    touch /home/docker/.bash_profile && \
+    echo "source /opt/ros/bouncy/setup.bash" >> /home/docker/.bashrc && \
+    cat /home/docker/.bashrc >> /home/docker/.bash_profile
+
+
+# Set the user that we enter ubuntu as to be docker
+# NOTE: this also makes it so that we actually run all of
+#       the following commands as the user docker
+USER docker
+
+
+# fire up the command line
+CMD /bin/bash

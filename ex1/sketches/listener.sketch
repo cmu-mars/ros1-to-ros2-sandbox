@@ -13,16 +13,18 @@ void chatterCallback(const std_msgs::String::ConstPtr& msg){
   char* input_string = ??;
   // Needs to find something that will take at least 2 strings?
   // I'm not sure if ROS_INFO has a direct counterpart in ROS2....
+  // If I can, this will basically get mapped to RCL_INFO(string_template, input_string);
   ?? //ROS_INFO("I heard: [%s]", msg->data.c_str());
   times++;
   if (times == 10) {
+    // This hole will get mapped directly rclcpp::shutdown();
     ??         // ros::shutdown();
     exit(0);
   }
 }
 
 int main(int argc, char **argv){
-  // The things that we want it to use:
+  // I've added various literals 
   
   
   /**   
@@ -36,12 +38,14 @@ int main(int argc, char **argv){
     * part of the ROS system.   
     */
   char* node_name = "listener_node";
+  // We will need to map rclcpp::init directly I think
   ?? // ros::init(argc, argv, "listener_node");
   /**   
     * NodeHandle is the main access point to communications with the ROS system.   
     * The first NodeHandle constructed will fully initialize this node, and the last   
     * NodeHandle destructed will close down the node.   
     */
+  // Then it will want to try to use the "listener_node" string???
   ?? // ros::NodeHandle n;
   /**   
     * The subscribe() call is how you tell ROS that you want to receive messages   

@@ -2,6 +2,23 @@
     "function_calls": {
         "ros::ok()": "rclcpp::ok()",
         "ros::shutdown()": "rclcpp::shutdown()",
+        "ros::init": {
+            "pattern": "ros::init\(argc, argv, [^)]*\)",
+            "replace": "rclcpp::init(argc, argv)"
+        },
+        "ROS_INFO": {
+            "node_in_scope": {
+                "pattern": "ROS_INFO(<the-args>) // need a C++ parser!!!",
+                "replace": "RCLCPP_INFO(<node-name>->get_logger(), <the-args>)"
+            },
+            "no_node_in_scope": {
+                "pattern": "ROS_INFO(<the-args>); // really not sure what to do here, really need a C parser for this",
+                "replace": "char* fresh; sprintf(fresh, <the-args>); std::cout << fresh << endl; // this really depends on the first thing in <the-args> being a template string",
+                "req_pkgs": [
+                    "<iostream>"
+                ]
+            }
+        }
     },
     "types": {
         "ros::Rate": "rclcpp::Rate",
@@ -11,6 +28,11 @@
         "boost::mutex" : "std::mutex",
         "boost::unordered_map" : "std::unordered_map",
         "boost::function" : "std::function",
+        "std_msgs::String::ConstPtr&": "std_msgs::msg::String::SharedPtr",
+        "std_msgs::StringConstPtr&": "std_msgs::msg::String::SharedPtr",
+        "boost::shared_ptr<std_msgs::String const>": "const std_msgs::msg::String::SharedPtr",
+        "const boost::shared_ptr<std_msgs::String>&": "const std_msgs::msg::String::SharedPtr",
+        
     }
 
 }

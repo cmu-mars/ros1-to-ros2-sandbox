@@ -8,6 +8,9 @@
 
 int times = 0;
 void chatterCallback(const std_msgs::msg::String::SharedPtr msg){
+  /**
+    * print "I heard: [" + the message + "]" and add a new line, then flush
+    */
   std::cout << "I heard: [" << msg->data << "]" << std::endl;
   times++;
 

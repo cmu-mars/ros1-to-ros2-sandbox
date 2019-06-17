@@ -1,0 +1,16 @@
+{
+    "function_calls": {
+        "ros::ok()": "rclcpp::ok()",
+        "ros::shutdown()": "rclcpp::shutdown()",
+    },
+    "types": {
+        "ros::Rate": "rclcpp::Rate",
+        "std_msgs::String": "std_msgs::msg::String",
+        "boost::shared_ptr" : "std::shared_ptr",
+        "boost::mutex::scoped_lock" : "std::unique_lock<std::mutex>",
+        "boost::mutex" : "std::mutex",
+        "boost::unordered_map" : "std::unordered_map",
+        "boost::function" : "std::function",
+    }
+
+}

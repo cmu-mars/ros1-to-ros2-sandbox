@@ -1,0 +1,157 @@
+{
+    "ros::init(argc,argv,\"listener_node\");": {
+        "ros1": {
+            "ros::init": {
+                "args": [
+                    "int &",
+                    "char**",
+                    "const std::string&",
+                    "uint32_t (=0)"
+                ],
+                "return": "void"
+            },
+            "ref": "http://docs.ros.org/api/roscpp/html/init_8h.html"
+        },
+        "ros2": {
+            "rclcpp::Context::init": {
+                "args": [
+                    "int",
+                    "char const *const",
+                    "const rclcpp::InitOptions& (=rclcpp::InitOptions())"
+                ],
+                "return": "void (virtual function)",
+                "ref": "http://docs.ros2.org/latest/api/rclcpp/classrclcpp_1_1Context.html#a6f938e3bd0a0f1eb3691d22c583ddfed"
+            },
+            "rclcpp::init": {
+                "args": [
+                    "int",
+                    "char const *const",
+                    "const InitOptions& (=InitOptions())"
+                ],
+                "return": "void",
+                "ref": "http://docs.ros2.org/latest/api/rclcpp/namespacerclcpp.html#a2db29afebba8f677bc8660a45bb910bb"
+            }
+        }
+    },
+    "ros::NodeHandle n;": {
+        "ros1": {},
+        "ros2": {
+            "rclcpp::Node::make_shared": {
+                "args": [
+                    "const std::string &",
+                    "const NodeOptions& (=NodeOptions())"
+                ],
+                "return": "shared_ptr<rclcpp::Node>",
+                "ref": [
+                    "https://en.cppreference.com/w/cpp/memory/shared_ptr/make_shared",
+                    "http://docs.ros2.org/latest/api/rclcpp/classrclcpp_1_1Node.html",
+                    "https://en.cppreference.com/w/cpp/memory/enable_shared_from_this"
+                ]
+            }
+        }
+    },
+    "ros::Subscriber sub = n.subscribe(\"chatter\", 1000, chatterCallback);": {
+        "ros1": {
+            "args": [
+                "const std::string&",
+                "uint32_t",
+                "void(*)(const boost::shared_ptr<[MessageType] const>&)",
+                "const TransportHints& (=TransportHints())"
+            ],
+            "return": "ros::Subscriber",
+            "ref": "http://docs.ros.org/melodic/api/roscpp/html/classros_1_1NodeHandle.html#a317fe4c05919e0bf3fb5162ccb2f7c28"
+        },
+        "ros2": {
+            "rclcpp::Node::create_subscription": {
+                "args": [
+                    "const std::string&",
+                    "const rclcpp::QoS&",
+                    "CallbackT &&",
+                    "const SubscriptionOptionsWithAllocator<AllocatorT>& (=SubscriptionOptionsWithAllocator<AllocatorT>())",
+                    "typename rclcpp::message_memory_strategy::MessageMemoryStrategy<typename rclcpp::subscription_traits::has_message_type<CallbackT>::type, AllocatorT>::SharedPtr (=nullptr)"
+                ],
+                "return": "std::shared_ptr<SubscriptionT>",
+                "ref": "http://docs.ros2.org/latest/api/rclcpp/classrclcpp_1_1Node.html#a6dbcf674cc0fe7ec611a44f08b6720fe"
+            },
+            "rclcpp::Subscription<CallbackMessageT,Alloc>::Subscription": {
+                "args": [
+                    "std::shared_ptr<rcl_node_t>",
+                    "const rosidl_message_type_support&",
+                    "const std::string&",
+                    "const rcl_subscription_options_t&",
+                    "AnySubscriptionCallback<CallbackMessageT,Alloc>",
+                    "const SubscriptionEventCallbacks &",
+                    "typename message_memory_strategy::MessageMemoryStrategy<CallbackMessageT, Alloc>::SharedPtr (=message_memory_strategy::MessageMemoryStrategy<CallbackMessageT, Alloc>::create_default())"
+                ],
+                "func_type": "constructor",
+                "note": "should never be called directly, subscriptions should be instantiated through Node::create_subscription",
+                "ref": "http://docs.ros2.org/latest/api/rclcpp/classrclcpp_1_1Subscription.html#aa7b78e26ddad5afd6af447b557335580"
+            }
+        }
+    },
+    "ros::spin();": {
+        "ros1": {
+            "ros::spin": [
+                {
+                    "args": [],
+                    "return": "void",
+                    "ref": "http://docs.ros.org/api/roscpp/html/namespaceros.html#a1c2b7585d433f76809f8681f7dc71e73"
+                }, {
+                    "args": ["Spinner &"],
+                    "return": "void",
+                    "ref": "http://docs.ros.org/api/roscpp/html/namespaceros.html#a4ebc62689bb00ab5d9dc239c61ad0611"
+                }
+            ]
+        },
+        "ros2": {
+            "rclcpp::spin": {
+                "args": ["rclcpp::Node::SharedPtr"],
+                "return": "void",
+                "ref": "http://docs.ros2.org/latest/api/rclcpp/namespacerclcpp.html#a4bb335bc95a6fa8546a6bfcfd087eb57"
+            }
+        }
+    },
+    "ros::shutdown();": {
+        "ros1": {
+            "ros::shutdown": {
+                "args": [],
+                "return": "void",
+                "ref": "http://docs.ros.org/api/roscpp/html/namespaceros.html#a2d29113188d411e78f2c221aa7a7473e",
+            }
+        },
+        "ros2": {
+            "rclcpp::shutdown": {
+                "args": [
+                    "rclcpp::Context::SharedPtr (=nullptr)",
+                    "const std::string& (=\"user called rclcpp::shutdown()\")"
+                ],
+                "return": "bool",
+                "ref": "http://docs.ros2.org/latest/api/rclcpp/namespacerclcpp.html#a493714a679d1591142800416a286689f"
+            }
+        }
+    },
+    "ROS_INFO(\"I heard: [%s]\", msg->data.c_str());": {
+        "ros1": {
+            "ROS_INFO": {
+                "type": "macro",
+                "args": ["*"],
+                "ref": "http://docs.ros.org/api/rosconsole/html/macros__generated_8h.html#a20d5da22f16df09d52a7577227636a83"
+            }
+        },
+        "ros2": {
+            "RCLCPP_INFO": {
+                "type": "macro",
+                "args": ["rclcpp::Logger", "* | std::string"],
+                "include": {
+                    "direct": "rclcpp/logging.hpp",
+                },
+                "ref": "http://docs.ros2.org/latest/api/rclcpp/logging_8hpp.html#aeb160b6dd1edb7273480560c1027b264"
+            },
+            "cout": {
+                "include": {
+                    "direct": "<iostream>"
+                }
+            }
+        }
+    }
+}

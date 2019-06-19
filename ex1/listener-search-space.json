@@ -62,17 +62,45 @@
             "ref": "http://docs.ros.org/melodic/api/roscpp/html/classros_1_1NodeHandle.html#a317fe4c05919e0bf3fb5162ccb2f7c28"
         },
         "ros2": {
-            "rclcpp::Node::create_subscription": {
-                "args": [
-                    "const std::string&",
-                    "const rclcpp::QoS&",
-                    "CallbackT &&",
-                    "const SubscriptionOptionsWithAllocator<AllocatorT>& (=SubscriptionOptionsWithAllocator<AllocatorT>())",
-                    "typename rclcpp::message_memory_strategy::MessageMemoryStrategy<typename rclcpp::subscription_traits::has_message_type<CallbackT>::type, AllocatorT>::SharedPtr (=nullptr)"
-                ],
-                "return": "std::shared_ptr<SubscriptionT>",
-                "ref": "http://docs.ros2.org/latest/api/rclcpp/classrclcpp_1_1Node.html#a6dbcf674cc0fe7ec611a44f08b6720fe"
-            },
+            "rclcpp::Node::create_subscription": [
+                {
+                    "args": [
+                        "const std::string&",
+                        "const rclcpp::QoS&",
+                        "CallbackT &&",
+                        "const SubscriptionOptionsWithAllocator<AllocatorT>& (=SubscriptionOptionsWithAllocator<AllocatorT>())",
+                        "typename rclcpp::message_memory_strategy::MessageMemoryStrategy<typename rclcpp::subscription_traits::has_message_type<CallbackT>::type, AllocatorT>::SharedPtr (=nullptr)"
+                    ],
+                    "return": "std::shared_ptr<SubscriptionT>",
+                    "ref": "http://docs.ros2.org/latest/api/rclcpp/classrclcpp_1_1Node.html#a6dbcf674cc0fe7ec611a44f08b6720fe"
+                },
+                {
+                    "args": [
+                        "const std::string&",
+                        "CallbackT &&",
+                        "const rmw_qos_profile_t& (=rmw_qos_profile_default)",
+                        "rclcpp::callback_group::CallbackGroup::SharedPtr (=nullptr)",
+                        "bool (=false)",
+                        "typename rclcpp::message_memory_strategy::MessageMemoryStrategy<typename rclcpp::subscription_traits::has_message_type<CallbackT>::type, AllocatorT>::SharedPtr (=nullptr)",
+                        "std::shared_ptr<Alloc> (=nullptr)"
+                    ],
+                    "return": "std::shared_ptr<SubscriptionT>",
+                    "ref": "http://docs.ros2.org/latest/api/rclcpp/classrclcpp_1_1Node.html#a2978c294db9f39677020d76d5bb14d53"
+                },
+                {
+                    "args": [
+                        "const std::string&",
+                        "CallbackT &&",
+                        "size_t",
+                        "rclcpp::callback_group::CallbackGroup::SharedPtr (=nullptr)",
+                        "bool (=false)",
+                        "typename rclcpp::message_memory_strategy::MessageMemoryStrategy<typename rclcpp::subscription_traits::has_message_type<CallbackT>::type, AllocatorT>::SharedPtr (=nullptr)",
+                        "std::shared_ptr<Alloc> (=nullptr)"
+                    ],
+                    "return": "std::shared_ptr<SubscriptionT>",
+                    "ref": "http://docs.ros2.org/latest/api/rclcpp/classrclcpp_1_1Node.html#a283fb006c46470cf43a4ae5ef4a16ccd"
+                }
+            ],
             "rclcpp::Subscription<CallbackMessageT,Alloc>::Subscription": {
                 "args": [
                     "std::shared_ptr<rcl_node_t>",
@@ -116,7 +144,7 @@
             "ros::shutdown": {
                 "args": [],
                 "return": "void",
-                "ref": "http://docs.ros.org/api/roscpp/html/namespaceros.html#a2d29113188d411e78f2c221aa7a7473e",
+                "ref": "http://docs.ros.org/api/roscpp/html/namespaceros.html#a2d29113188d411e78f2c221aa7a7473e"
             }
         },
         "ros2": {
@@ -133,17 +161,17 @@
     "ROS_INFO(\"I heard: [%s]\", msg->data.c_str());": {
         "ros1": {
             "ROS_INFO": {
-                "type": "macro",
-                "args": ["*"],
+                "func_type": "macro",
+                "args": ["std::string..."],
                 "ref": "http://docs.ros.org/api/rosconsole/html/macros__generated_8h.html#a20d5da22f16df09d52a7577227636a83"
             }
         },
         "ros2": {
             "RCLCPP_INFO": {
-                "type": "macro",
-                "args": ["rclcpp::Logger", "* | std::string"],
+                "func_type": "macro",
+                "args": ["rclcpp::Logger", "std::string..."],
                 "include": {
-                    "direct": "rclcpp/logging.hpp",
+                    "direct": "rclcpp/logging.hpp"
                 },
                 "ref": "http://docs.ros2.org/latest/api/rclcpp/logging_8hpp.html#aeb160b6dd1edb7273480560c1027b264"
             },

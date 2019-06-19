@@ -13,3 +13,10 @@
 
 # Ignore python virtualenv directories
 /**/env
+
+
+
+/build/
+
+.settings
+.externalToolBuilders

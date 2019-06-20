@@ -11,5 +11,6 @@
 		</attributes>
 	</classpathentry>
 	<classpathentry kind="lib" path="/Users/audrey/Personal/School/College/summer2019/ros1-to-ros2-sandbox/ros2sy/lib/gson-2.8.5.jar"/>
+	<classpathentry kind="lib" path="ros2sy/lib/apt.jar"/>
 	<classpathentry kind="output" path="build"/>
 </classpath>

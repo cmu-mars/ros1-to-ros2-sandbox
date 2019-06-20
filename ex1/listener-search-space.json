@@ -19,14 +19,14 @@
                     "char const *const",
                     "const rclcpp::InitOptions& (=rclcpp::InitOptions())"
                 ],
-                "return": "void (virtual function)",
+                "return": "void",
                 "ref": "http://docs.ros2.org/latest/api/rclcpp/classrclcpp_1_1Context.html#a6f938e3bd0a0f1eb3691d22c583ddfed"
             },
             "rclcpp::init": {
                 "args": [
                     "int",
                     "char const *const",
-                    "const InitOptions& (=InitOptions())"
+                    "const rclcpp::InitOptions& (=InitOptions())"
                 ],
                 "return": "void",
                 "ref": "http://docs.ros2.org/latest/api/rclcpp/namespacerclcpp.html#a2db29afebba8f677bc8660a45bb910bb"
@@ -38,7 +38,7 @@
         "ros2": {
             "rclcpp::Node::make_shared": {
                 "args": [
-                    "const std::string &",
+                    "const std::string&",
                     "const NodeOptions& (=NodeOptions())"
                 ],
                 "return": "shared_ptr<rclcpp::Node>",
@@ -111,6 +111,7 @@
                     "const SubscriptionEventCallbacks &",
                     "typename message_memory_strategy::MessageMemoryStrategy<CallbackMessageT, Alloc>::SharedPtr (=message_memory_strategy::MessageMemoryStrategy<CallbackMessageT, Alloc>::create_default())"
                 ],
+                "return": "rclcpp::Subscription<CallbackMessageT,Alloc>",
                 "func_type": "constructor",
                 "note": "should never be called directly, subscriptions should be instantiated through Node::create_subscription",
                 "ref": "http://docs.ros2.org/latest/api/rclcpp/classrclcpp_1_1Subscription.html#aa7b78e26ddad5afd6af447b557335580"
@@ -142,7 +143,7 @@
     "ros::shutdown();": {
         "ros1": {
             "ros::shutdown": {
-                "args": [],
+                "args": ["void"],
                 "return": "void",
                 "ref": "http://docs.ros.org/api/roscpp/html/namespaceros.html#a2d29113188d411e78f2c221aa7a7473e"
             }
@@ -150,6 +151,7 @@
         "ros2": {
             "rclcpp::shutdown": {
                 "args": [
+                    "void",
                     "rclcpp::Context::SharedPtr (=nullptr)",
                     "const std::string& (=\"user called rclcpp::shutdown()\")"
                 ],
@@ -162,6 +164,7 @@
         "ros1": {
             "ROS_INFO": {
                 "func_type": "macro",
+                "return": "void",
                 "args": ["std::string..."],
                 "ref": "http://docs.ros.org/api/rosconsole/html/macros__generated_8h.html#a20d5da22f16df09d52a7577227636a83"
             }
@@ -170,6 +173,7 @@
             "RCLCPP_INFO": {
                 "func_type": "macro",
                 "args": ["rclcpp::Logger", "std::string..."],
+                "return": "void",
                 "include": {
                     "direct": "rclcpp/logging.hpp"
                 },

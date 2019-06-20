@@ -11,6 +11,9 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
+import ros2sy.petri.*;
+
+import uniol.apt.adt.pn.*;
 
 /**
  * Create Method objects from a JSON file
@@ -52,8 +55,11 @@ public class ParseJson {
 				
 				if (jo.has("func_type")) {
 					String funcType = jo.get("func_type").getAsString();
-					
-					methods.add(new Method(key, args, "", funcType));
+					if (jo.has("return")) {
+						methods.add(new Method(key, args, jo.get("return").getAsString(), funcType));
+					} else {
+						methods.add(new Method(key, args, "", funcType));						
+					}
 				} else {
 					if (jo.has("return")) {
 						String returnType = jo.get("return").getAsString();
@@ -74,7 +80,7 @@ public class ParseJson {
 			Iterator<JsonElement> iter = jarray.iterator();
 			
 			while (iter.hasNext()) {
-				methods.addAll(ParseJson.unwrap("NONE", iter.next()));
+				methods.addAll(ParseJson.unwrap(key, iter.next()));
 			}
 		}
 		
@@ -105,6 +111,11 @@ public class ParseJson {
 				for (Method m : methods) {
 					System.out.println(m);
 				}
+				
+				PetriNet pn = MethodsToPetriNet.convert(methods);
+				
+				
+				MethodsToPetriNet.createDotFile(pn);
 				
 			}
 			

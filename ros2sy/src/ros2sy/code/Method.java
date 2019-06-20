@@ -84,6 +84,41 @@ public class Method {
 			str = str + ", " + (((Arg) argsArray[i]).toString());
 		}
 		str = str + ") -> ";
-		return str + this.returnType.toString();
+		return this.name + ": " + str + this.returnType.toString();
+	}
+	
+	
+	public boolean hasOptionalArgs() {		
+		for (Arg a : this.args) { 
+			if (a.hasDefault) {
+				return true;
+			}
+		}
+		
+		return false;
+	}
+	
+	public ArrayList<Arg> getMandatoryArgs() {
+		ArrayList<Arg> man = new ArrayList<Arg>();
+		
+		for (Arg a : this.args) {
+			if (!a.hasDefault) {
+				man.add(a);
+			}
+		}
+		
+		return man;
+	}
+	
+	public ArrayList<Arg> getOptionalArgs() {
+		ArrayList<Arg> opt = new ArrayList<Arg>();
+		
+		for (Arg a : this.args) {
+			if (a.hasDefault) {
+				opt.add(a);
+			}
+		}
+		
+		return opt;
 	}
 }

@@ -5,6 +5,7 @@
 			<attribute name="org.eclipse.jdt.launching.CLASSPATH_ATTR_LIBRARY_PATH_ENTRY" value="../lib"/>
 		</attributes>
 	</classpathentry>
+	<classpathentry kind="lib" path="/Users/audrey/Personal/School/College/summer2019/ros1-to-ros2-sandbox/build/classes/ros2sy"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER">
 		<attributes>
 			<attribute name="module" value="true"/>

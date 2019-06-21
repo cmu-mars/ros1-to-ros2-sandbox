@@ -41,7 +41,8 @@
                     "const std::string&",
                     "const NodeOptions& (=NodeOptions())"
                 ],
-                "return": "shared_ptr<rclcpp::Node>",
+                "return": "std::shared_ptr<rclcpp::Node>",
+                "func_type": "constructor",
                 "ref": [
                     "https://en.cppreference.com/w/cpp/memory/shared_ptr/make_shared",
                     "http://docs.ros2.org/latest/api/rclcpp/classrclcpp_1_1Node.html",

@@ -1,11 +1,25 @@
 package ros2sy.code;
 
+import ros2sy.exception.ArgParseException;
+
+/**
+ * A class that represents an argument to a method, and holds the type
+ * of the argument as well as the default value, in a method's signature.
+ * 
+ * @author audrey
+ *
+ */
 public class Arg {
 	public Type argType;
 	public boolean hasDefault;
 	public final String defaultValue;
 	public final boolean takesMany;
 	
+	/**
+	 * Constructor for the Arg class
+	 * 
+	 * @param myNewType	a Type object that is the type of this argument
+	 */
 	public Arg(Type myNewType) {
 		this.argType = myNewType;
 		this.hasDefault = false;
@@ -13,6 +27,20 @@ public class Arg {
 		this.takesMany = false;
 	}
 	
+	/**
+	 * Constructor for an Arg, that may have a default value.
+	 * 
+	 * If the default value is given as an empty string, it is assumed
+	 * that this Arg has no default value. Therefore, if you want the
+	 * default value to be an actual empty string, the string should
+	 * really be "\"\"".
+	 * 
+	 * Similarly, all Strings should be surrounded in escaped quotes.
+	 * 
+	 * @param myNewType				the Type of this argument
+	 * @param myDefaultValue		a String representing the default value of
+	 * 												the arg
+	 */
 	public Arg(Type myNewType, String myDefaultValue) {
 		this.argType = myNewType;
 		this.hasDefault = myDefaultValue.length() > 0;
@@ -20,6 +48,13 @@ public class Arg {
 		this.takesMany = false;
 	}
 	
+	/**
+	 * Constructor for an Arg, given a String containing the type of the
+	 * 
+	 * 
+	 * @param argString
+	 * @throws ArgParseException
+	 */
 	public Arg(String argString) throws ArgParseException {
 		this.takesMany = argString.indexOf("...") >= 0;
 		
@@ -47,6 +82,9 @@ public class Arg {
 		}
 	}
 	
+	/**
+	 * 
+	 */
 	@Override
 	public String toString() {
 		return this.argType.toString() + ((this.hasDefault) ? " [" + this.defaultValue + "]" : "");

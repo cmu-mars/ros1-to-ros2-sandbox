@@ -153,7 +153,18 @@ public class MethodsToPetriNet {
 			
 			MethodsToPetriNet.addTransition(pn, "std::shared_ptr<rclcpp::Node>", "rclcpp::Node::SharedPtr");
 			
+		}		
+		
+		for (Place p : places) {
+			int max = 0;
+			for (Flow f : p.getPostsetEdges()) {
+				if (f.getWeight() > max) {
+					max = f.getWeight();
+				}
+			}
+			p.setMaxToken(max + 1);
 		}
+		
 		return pn;
 	}
 	

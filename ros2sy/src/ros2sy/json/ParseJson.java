@@ -7,6 +7,9 @@ import java.util.*;
 
 import java.io.FileReader;
 import com.google.gson.JsonParser;
+
+import ros2py.synthesis.Synthesis;
+
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
@@ -146,6 +149,14 @@ public class ParseJson {
 //				}
 				
 				PetriNet pn = MethodsToPetriNet.convert(methods);
+				
+				
+				// Dummy input array for testing the synthesis aspect
+				ArrayList<String> input = new ArrayList<String>();
+				input.add("char const *const");
+				input.add("int");
+				
+				Synthesis.synthesizeAll(pn, input, 1);
 				
 				
 				MethodsToPetriNet.createDotFile(pn);

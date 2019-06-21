@@ -9,7 +9,7 @@ import ros2sy.logic.Variable;
 
 public class Synthesis {
 
-	public void synthesizeAll(PetriNet net, List<String> inputs, int max_loc) {
+	public static void synthesizeAll(PetriNet net, List<String> inputs, int max_loc) {
 		int loc = 1;
 
 		while (loc <= max_loc) {

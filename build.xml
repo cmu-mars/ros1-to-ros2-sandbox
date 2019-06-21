@@ -31,8 +31,11 @@
     <target name="run" depends="jar">
         <java fork="true" classname="${main-class}">
         	<classpath>
-        		<path refid="classpath"/>
-        		<path location="${jar.dir}/${ant.project.name}.jar"/>
+        		<pathelement location="${jar.dir}/ros2sy.jar"/>
+        		<pathelement location="${lib.dir}/sat4j-pb.jar"/>
+        		            <pathelement location="${lib.dir}/apt.jar"/>
+        		            <pathelement location="${lib.dir}/commons-lang3-3.4.jar"/>
+        		            <pathelement location="${lib.dir}/gson-2.8.5.jar"/>
         	</classpath>
         </java>
     </target>

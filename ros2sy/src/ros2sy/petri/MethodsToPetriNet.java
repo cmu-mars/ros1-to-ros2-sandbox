@@ -1,6 +1,6 @@
 package ros2sy.petri;
-import ros2sy.code.*;
 import ros2sy.exception.ArgParseException;
+import ros2sy.sig.*;
 
 import java.io.FileWriter;
 import java.util.ArrayList;
@@ -22,13 +22,133 @@ import uniol.apt.adt.pn.*;
  *
  */
 public class MethodsToPetriNet {
+	Method dummy = new Method("*DUMMY*", new ArrayList<String>(), "void");
+	ArrayList<String> silly;
+	HashMap<String, String> typeAliases;
+	ArrayList<Method> methods;
+	public PetriNet net;
+	HashMap<String, Method> methodAliases;
 	
 	/**
+	 * Instantiate the a MethodsToPetriNet object, which contains information
+	 * about how the APIs of interest relate to a PetriNet.
 	 * 
-	 * @param methods
-	 * @return
+	 * @param methods			the ArrayList of Method objects
+	 * @param dontClone		an ArrayList, containing descriptions of types that
+	 * 										should not have clone edges.
 	 */
-	public static PetriNet convert(ArrayList<Method> methods) {
+	public MethodsToPetriNet(ArrayList<Method> methods, ArrayList<String> dontClone) {
+		this.methods = methods;
+		this.silly = dontClone;
+		this.typeAliases = new HashMap<String, String>();
+		
+		this.typeAliases.put("int", "size_t");
+		this.methodAliases = new HashMap<String, Method>();
+		
+		// Get a bare-bones petri net, containing only what you can gather from
+		// the methods themselves.
+		this.net = MethodsToPetriNet.convert(this, this.methods);
+		
+		Set<Place> places = this.net.getPlaces();
+		Place[] placeArray = new Place [places.size()];
+		places.toArray(placeArray);
+		
+		this.addParamEquivalences();
+		
+		// Add clones
+		for (int i = 0; i < placeArray.length; i++) {
+			if (!this.isOptional(placeArray[i]) && !this.silly.contains(placeArray[i].getId())) {
+				MethodsToPetriNet.addClone(net, placeArray[i]);
+			}
+		}
+		
+		if (net.containsPlace("size_t") && net.containsPlace("int")) {
+			Place size_t = net.getPlace("size_t");
+			Place integer = net.getPlace("int");
+			
+			MethodsToPetriNet.addTransition(net, "int", "size_t");
+		}
+		
+		if (net.containsPlace("char const *const") && !net.containsPlace("char**")) {
+			MethodsToPetriNet.addTransition(net, "char**", "char const *const");
+			MethodsToPetriNet.addClone(net, net.getPlace("char**"));
+		}
+		
+		if (net.containsPlace("rclcpp::Node::SharedPtr") && net.containsPlace("std::shared_ptr<rclcpp::Node>")) {
+			MethodsToPetriNet.addTransition(net, "rclcpp::Node::SharedPtr", "std::shared_ptr<rclcpp::Node>");
+			
+			MethodsToPetriNet.addTransition(net, "std::shared_ptr<rclcpp::Node>", "rclcpp::Node::SharedPtr");
+		}
+		
+		for (Place p : places) {
+			int max = 0;
+			for (Flow f : p.getPostsetEdges()) {
+				if (f.getWeight() > max) {
+					max = f.getWeight();
+				}
+			}
+			p.setMaxToken(max + 1);
+		}
+	}
+	
+	private void addParamEquivalences() {
+		Set<Place> places = this.net.getPlaces();
+		Place[] placeArray = new Place [places.size()];
+		places.toArray(placeArray);
+		
+		for (int i = 0; i < placeArray.length-1; i++) {
+			for (int j = i+1; j < placeArray.length; j++) {
+				String aid = placeArray[i].getId();
+				String bid = placeArray[j].getId();
+				Type ta = new Type(this.removeOptSuffix(aid));
+				Type tb = new Type(this.removeOptSuffix(bid));
+				
+				if (ta.asParamsEqual(tb)) {
+					boolean orderer = ta.isConstValue || ta.isReference || MethodsToPetriNet.isOptional(net.getNode(aid));
+					
+					String source = (orderer) ? bid : aid;
+					
+					if (!source.endsWith("(OPT)")) {
+						String target = (orderer) ? aid : bid;
+						MethodsToPetriNet.addTransition(net, source, target);						
+					}
+				} else if (ta.valueTypeName.contentEquals("rclcpp::Node") && tb.valueTypeName.contentEquals("rcl_node_t") && (ta.isSharedPointer == tb.isSharedPointer)) {
+					MethodsToPetriNet.addTransition(net, aid, bid);
+				}
+			}
+		}
+	}
+	
+	public boolean isOptional(String id) {
+		return id.indexOf("(OPT)") > -1;
+	}
+	
+	public boolean isOptional(Place n) {
+		return n.getId().indexOf("(OPT)") > -1;
+	}
+	
+	public boolean isOptional(Transition t) {
+		return false;
+	}
+	
+	public void addMethodNickname(Method m, String nickname) {
+		if (!this.methodAliases.containsKey(nickname)) {
+			this.methodAliases.put(nickname, m);
+		}
+	}
+	
+	/**
+	 * Convert the methods of the given MethodsToPetriNet object into a PetriNet.
+	 * 
+	 * @param mt 			MethodsToPetriNet object that holds a list of methods,
+	 * 								as well as different correspondences between a PetriNet and
+	 * 								the names of its methods
+	 * @param methods	ArrayList<Method> object that contains all of the methods
+	 * 								to represent in the PetriNet
+	 * @return					PetriNet representing the arguments and methods contained 
+	 * 								in the given ArrayList
+	 */
+	public static PetriNet convert(MethodsToPetriNet mt, ArrayList<Method> methods) {
 		PetriNet pn = new PetriNet();
 		
 		HashMap<String, Integer> nameCounts = new HashMap<String, Integer>();
@@ -39,7 +159,10 @@ public class MethodsToPetriNet {
 			}
 			nameCounts.put(m.name, nameCounts.get(m.name) + 1);
 			
-			Transition t = MethodsToPetriNet.makeMethodTransition(m, pn, nameCounts);				
+			Transition t = MethodsToPetriNet.makeMethodTransition(m, pn, nameCounts);
+			
+			mt.addMethodNickname(m, t.getId());
+			
 			if (m.isClassMethod) {
 				String instanceType = m.fromClass.toString();
 				
@@ -47,27 +170,18 @@ public class MethodsToPetriNet {
 				pn.createFlow(inst, t);
 			}
 			
-			
 			String returnType = m.returnType.toString();
 			Place ret = MethodsToPetriNet.getPetriPlace(pn, returnType);
 			if (m.returnType.isSharedPointer) {
-				String internalValueType = m.returnType.valueTypeName;
-				String transName = internalValueType + "::Shared_to_unshared";
-				MethodsToPetriNet.addTransition(pn, returnType, transName, internalValueType);
+				String transName = m.returnType.valueTypeName + "::Shared_to_unshared";
+				mt.addMethodNickname(m, transName);
 				
-//				Place internVal = MethodsToPetriNet.getPetriPlace(pn, internalValueType);
-//				
-//				Transition unptr = (pn.containsTransition(transName)) ? pn.getTransition(transName) : pn.createTransition(transName);
-//				
-//				
-//				MethodsToPetriNet.addFlowToPetri(pn, ret, unptr);
-//				MethodsToPetriNet.addFlowToPetri(pn, unptr, internVal);
+				MethodsToPetriNet.addTransition(pn, returnType, transName, m.returnType.valueTypeName);
 			}
 			
 			if (!m.hasOptionalArgs()) {
 				MethodsToPetriNet.addTransitionFlowToPetri(pn, m.args, t, ret);
 			} else {
-				
 				ArrayList<Arg> mandatory = m.getMandatoryArgs();
 				if (m.isClassMethod) {
 					String instType = m.fromClass.toString();
@@ -83,91 +197,57 @@ public class MethodsToPetriNet {
 				
 				ArrayList<Arg> options = m.getOptionalArgs();
 				
-				
 				for (int i = 0; i < options.size(); i++) {
 					Transition opt = pn.createTransition(t.getId() + "(ALT-" + Integer.toString(i) + ")");
+					mt.addMethodNickname(m, opt.getId());
+					
 					mandatory.add(options.get(i));
-					
-					
 					
 					MethodsToPetriNet.addTransitionFlowToPetri(pn, mandatory, opt, ret);
 				}	
 			}
 		}
 		
-		Set<Place> places = pn.getPlaces();
-		Place[] placeArray = new Place [places.size()];
-		places.toArray(placeArray);
-		
-		
-		for (int i = 0; i < placeArray.length-1; i++) {
-			for (int j = i+1; j < placeArray.length; j++) {
-				Place a = placeArray[i];
-				Place b = placeArray[j];
-				String aid = a.getId();
-				String bid = b.getId();
-				Type ta = new Type(MethodsToPetriNet.removeOptSuffix(aid));
-				Type tb = new Type(MethodsToPetriNet.removeOptSuffix(bid));
-				
-				if (ta.asParamsEqual(tb)) {
-					boolean decider = (ta.isConstValue || ta.isReference) || MethodsToPetriNet.isOptional(pn.getNode(aid));
-					
-					String source = (decider) ? bid : aid;
-					String target = (decider) ? aid : bid;
-//					String a_or_b = source + "_to_" + target;
-					
-					if (!source.endsWith("(OPT)")) {
-						MethodsToPetriNet.addTransition(pn, source, target);						
-					}
-					
-				} else if (ta.valueTypeName.contentEquals("rclcpp::Node") && tb.valueTypeName.contentEquals("rcl_node_t") && (ta.isSharedPointer == tb.isSharedPointer)) {
-					MethodsToPetriNet.addTransition(pn, aid, bid);
-				}
-			}
-		}
-		
-		for (int i = 0; i < placeArray.length; i++) {
-			if (!MethodsToPetriNet.isOptional(placeArray[i])) {
-				MethodsToPetriNet.addClone(pn, placeArray[i]);
-				
-			}
-		}
-		
-		if (pn.containsPlace("size_t") && pn.containsPlace("int")) {
-			Place size_t = pn.getPlace("size_t");
-			Place integer = pn.getPlace("int");
-			
-			Transition convert = pn.createTransition("int_to_size_t");
-			
-			MethodsToPetriNet.addFlowToPetri(pn, integer, convert);
-			MethodsToPetriNet.addFlowToPetri(pn, convert, size_t);
-		}
-		
-		if (pn.containsPlace("char const *const") && !pn.containsPlace("char**")) {
-			MethodsToPetriNet.addTransition(pn, "char**", "char const *const");
-			MethodsToPetriNet.addClone(pn, pn.getPlace("char**"));
-		}
-		
-		if (pn.containsPlace("rclcpp::Node::SharedPtr") && pn.containsPlace("std::shared_ptr<rclcpp::Node>")) {
-			MethodsToPetriNet.addTransition(pn, "rclcpp::Node::SharedPtr", "std::shared_ptr<rclcpp::Node>");
-			
-			MethodsToPetriNet.addTransition(pn, "std::shared_ptr<rclcpp::Node>", "rclcpp::Node::SharedPtr");
-			
-		}		
-		
-		for (Place p : places) {
-			int max = 0;
-			for (Flow f : p.getPostsetEdges()) {
-				if (f.getWeight() > max) {
-					max = f.getWeight();
-				}
-			}
-			p.setMaxToken(max + 1);
-		}
-		
 		return pn;
 	}
 	
+	/**
+	 * Add a clone transition to this MethodToPetriNet's PetriNet net, at place p,
+	 * which should be a Place in the petri net.
+	 * 
+	 * @param p		a Place assumed to be inside of the PetriNet net
+	 */
+	public void addClone(Place p) {
+		Transition t = this.createTransition(p.getId() + "_clone", dummy);
+		this.net.createFlow(p, t);
+		Flow f = this.net.createFlow(t, p);
+		f.setWeight(2);
+	}
+	
+	/**
+	 * Create a transition with a given name that represents the given method.
+	 * 
+	 * This also adds the transition's name as an "alias" for the method, so that
+	 * a sequence of transitions can be translated back into a sequence of methods.
+	 * 
+	 * @param name		String, the desired name for this transition
+	 * @param m			Method, the method that the transition returned will represent
+	 * @return				Transition, the transition created with this name
+	 */
+	private Transition createTransition(String name, Method m) {
+		Transition t = this.net.createTransition(name);
+		this.addMethodNickname(m, name);
+		return t;
+	}
+	
+	
+	/**
+	 * Add a clone transition, and the appropriate edges, to the place p in the
+	 * petri net pn.
+	 * 
+	 * @param pn		a PetriNet to add the clone transition in
+	 * @param p		some Place in pn to add the clone transition to
+	 */
 	private static void addClone(PetriNet pn, Place p) {
 		Transition t = pn.createTransition(p.getId() + "_clone");
 		pn.createFlow(p, t);
@@ -176,7 +256,15 @@ public class MethodsToPetriNet {
 		
 	}
 	
-	private static String removeOptSuffix(String name) {
+	/**
+	 * Removes the suffix "(OPT)" from a given string. This is handy for looking
+	 * at the names of many Place nodes.
+	 * 
+	 * @param name		the String to remove the string "(OPT)" from.
+	 * @return				String, either the same string (if there was no string "(OPT)",
+	 * 							or all of the string preceding the part with "(OPT)".
+	 */
+	private String removeOptSuffix(String name) {
 		int index = name.indexOf("(OPT)");
 		if (index < 0) {
 			return name;
@@ -186,97 +274,71 @@ public class MethodsToPetriNet {
 	
 	
 	/**
+	 * Get the Place node from a petri net with a given id, if it exists.
 	 * 
-	 * @param pn
-	 * @param id
-	 * @return
+	 * If it doesn't, create that Place, and then return it.
+	 * 
+	 * @param pn		the PetriNet to look for the id in
+	 * @param id		String, the desired id of the Place
+	 * @return			Place, one of the nodes representing a type in the Petri Net
 	 */
 	private static Place getPetriPlace(PetriNet pn, String id) {
 		return (!pn.containsPlace(id)) ? pn.createPlace(id) : pn.getPlace(id);
 	}
 	
 	/**
+	 * Creates a dot file written using the DOT language in order to create a
+	 * graphical representation of the given Petri Net.
 	 * 
-	 * @param pn
+	 * @param pn	 	a PetriNet object to encode as a graph using DOT
 	 */
 	public static void createDotFile(PetriNet pn) {
 		try {			
 			FileWriter w = new FileWriter("dot/petri.dot");
 			
-			w.write("digraph {\n");
-			w.write("\trankdir=LR;");
-			w.write(" nodesep=1;");
-			w.write("\tranksep=2;\n");
+			HashMap<String, String> graphOptions = new HashMap<String, String>();
+			graphOptions.put("rankdir", "LR");
+			graphOptions.put("nodesep", "1");
+			graphOptions.put("ranksep", "2");
 			
-			Set<Node> nodes = pn.getNodes();
+			HashMap<String, String> colorEdgesFrom = new HashMap<String, String>();
+			colorEdgesFrom.put("const std::string&", "red");
+			colorEdgesFrom.put("CallbackT &&", "blue");
+			colorEdgesFrom.put("bool(OPT)", "orange");
+			
+			w.write("digraph {\n");
+			
+			for (String key : graphOptions.keySet()) {
+				w.write("\t" + key + "=" + graphOptions.get(key) + ";\n");
+			}
+			
 			
 			Set<Transition> trans = pn.getTransitions();
 			
 			for (Transition t : trans) {
 				w.write("\t\"" + t.getId() + "\" [shape=box,style=filled,color=black,fontcolor=white];\n");
 			}
-			
-			HashMap<Node, Set<Node>> nodeMap = new HashMap<Node, Set<Node>>();
-			boolean dashed = false;
-			
+						
 			Set<Flow> flows = pn.getEdges();
 			
+			// Draw all of the edges
 			for (Flow f : flows) {
 				Node n = f.getSource();
 				Node p = f.getTarget();
 				
+			  // Label the edges with their weights
 				w.write("\"" + n.getId() + "\" -> \"" + p.getId() + "\" [label=\"" + Integer.toString(f.getWeight()) + "\"");
 				
 				if (MethodsToPetriNet.isOptional(n)) {
+					// Make optional args' edges dotted.
 					w.write(",style=dotted");
 				}
-				
-				if (n.getId().equals("const std::string&")) {
-					w.write(",color=red");
-				} else if (n.getId().equals("CallbackT &&")) {
-					w.write(",color=blue");
-				} else if (n.getId().equals("bool(OPT)")) {
-					w.write(",color=orange");
+				if (colorEdgesFrom.containsKey(n.getId())) {
+					w.write(",color=" + colorEdgesFrom.get(n.getId()));
 				}
-				
 				w.write("];\n");
 			}
 			
-			
-//			for (Node n : nodes) {
-//				nodeMap.put(n, new HashSet<Node>());
-//				
-//				HashSet<Node> posts = new HashSet<Node>(pn.getPostsetNodes(n));
-//				if (posts.size() > 0) {
-//					w.write("\t\"" + n.getId() + "\" -> {");
-//					for (Node p : posts) {
-//						
-//						w.write("\"" + p.getId() + "\" ");	
-//					}
-//					w.write("}");
-//					
-//					if (MethodsToPetriNet.isOptional(n)) {
-//						// Just style the optional edges as
-//						// either dotted or dashed, so that
-//						// they're visually lightened, and
-//						// there's at least some variety so
-//						// it's easier to discern which edges
-//						// came from where
-//						String style = (dashed) ? "dotted" : "dashed";
-//						w.write(" [style=" + style + "]");
-//						dashed = !dashed;
-//					}
-//					if (n.getId().equals("const std::string&")) {
-//						w.write(" [color=red]");
-//					} else if (n.getId().equals("CallbackT &&")) {
-//						w.write(" [color=blue]");
-//					} else if (n.getId().equals("bool(OPT)")) {
-//						w.write(" [color=orange]");
-//					}
-//					w.write(";\n");
-//				}
-//			}
-//			w.write("}\n");
 			w.write("}\n");
 			
 			w.flush();
@@ -306,24 +368,6 @@ public class MethodsToPetriNet {
 			Place p = (!pn.containsPlace(strType)) ? pn.createPlace(strType) : pn.getPlace(strType);
 			MethodsToPetriNet.addFlowToPetri(pn, p, t);
 			
-//			try {
-//				// Creates a flow with default weight 1
-//				pn.createFlow(p, t);
-//			} catch (FlowExistsException e) {
-//				System.out.println("Caught exception in MethodsToPetriNet.addArgFlowsToPetri:");
-//				System.out.println(e);
-//				
-//				try {
-//					Flow f = pn.getFlow(p.getId(), t.getId());
-//					int wt = f.getWeight();
-//					
-//					// Increase the weight
-//					f.setWeight(wt + 1);
-//				} catch (NoSuchEdgeException e1) {
-//					System.out.println("Caught exception in MethodsToPetriNet.addArgFlowsToPetri:");
-//					System.out.println(e1);
-//				}
-//			}
 		}
 	}
 	
@@ -436,5 +480,7 @@ public class MethodsToPetriNet {
 		return optionals;
 	}
 	
-
+	public PetriNet getNet() {
+		return this.net;
+	}
 }

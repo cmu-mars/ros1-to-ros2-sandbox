@@ -1,21 +1,17 @@
 package ros2sy.json;
 
-import ros2sy.code.Method;
-
 import java.util.*;
 
 
 import java.io.FileReader;
 import com.google.gson.JsonParser;
-
-import ros2py.synthesis.Synthesis;
-
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
 import ros2sy.petri.*;
-
+import ros2sy.sig.Method;
+import ros2sy.synthesis.Synthesis;
 import uniol.apt.adt.pn.*;
 
 /**
@@ -148,7 +144,12 @@ public class ParseJson {
 //					System.out.println(m);
 //				}
 				
-				PetriNet pn = MethodsToPetriNet.convert(methods);
+				ArrayList<String> sillyToClone = new ArrayList<String>();
+				sillyToClone.add("void");
+				
+				MethodsToPetriNet mtpn = new MethodsToPetriNet(methods, sillyToClone);
+				
+				PetriNet pn = mtpn.getNet();
 				
 				
 				// Dummy input array for testing the synthesis aspect

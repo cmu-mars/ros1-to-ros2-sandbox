@@ -1,4 +1,4 @@
-package ros2py.synthesis;
+package ros2sy.synthesis;
 
 import java.util.List;
 import ros2sy.logic.Encoding;

@@ -315,9 +315,7 @@ public class SequentialEncoding implements Encoding {
 	}
 
 	private void dummyConstraints() {
-		System.out.println(nbVariables);
 		for (int v = 1; v <= nbVariables; v++) {
-			System.out.println(v);
 			VecInt constraint = new VecInt();
 			constraint.push(v);
 			solver.addConstraint(constraint, ConstraintType.LTE, 1);
@@ -409,8 +407,6 @@ public class SequentialEncoding implements Encoding {
 		for (Pair<Place, Integer> p : state) {
 			Triple<Place, Integer, Integer> place = new ImmutableTriple<Place, Integer, Integer>(p.getLeft(), timestep,
 					p.getRight());
-			System.out.println(place);
-		  System.out.println(place2variable.get(place));
 			int v = place2variable.get(place).getId();
 			solver.setTrue(v);
 			visited.add(p.getLeft());

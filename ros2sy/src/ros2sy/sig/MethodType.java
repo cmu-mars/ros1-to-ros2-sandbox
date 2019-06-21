@@ -1,4 +1,4 @@
-package ros2sy.code;
+package ros2sy.sig;
 
 public enum MethodType {
 	CONSTRUCTOR,

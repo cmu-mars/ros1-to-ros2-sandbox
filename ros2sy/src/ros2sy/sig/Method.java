@@ -1,4 +1,4 @@
-package ros2sy.code;
+package ros2sy.sig;
 
 import java.util.ArrayList;
 
@@ -220,13 +220,21 @@ public class Method {
 	
 	private ArrayList<Arg> stringListToArgList(ArrayList<String> strs) {
 		ArrayList<Arg> arglist = new ArrayList<Arg>();
-		
-		for (String str : strs) {
+		if (strs.size() > 0) {			
+			for (String str : strs) {
+				try {
+					arglist.add(new Arg(str));
+				} catch (ArgParseException e) {
+					System.err.println("Could not parse arg " + str + " of method " + name);
+					System.err.println(e);
+				}
+			}
+		} else {
 			try {
-				arglist.add(new Arg(str));
+				arglist.add(new Arg("void"));
 			} catch (ArgParseException e) {
-				System.err.println("Could not parse arg " + str + " of method " + name);
-				System.err.println(e);
+				System.err.println("Could not parse void");
+				e.printStackTrace();
 			}
 		}
 		return arglist;

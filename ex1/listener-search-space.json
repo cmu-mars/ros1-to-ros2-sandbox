@@ -186,5 +186,19 @@
                 }
             }
         }
+    },
+    "": {
+        "ros1": {
+            "JUNK": {
+                "return": "void",
+                "args": ["void"]
+            }
+        },
+        "ros2": {
+            "chatterCallback": {
+                "return": "CallbackT",
+                "args": ["void"]
+            }
+        }
     }
 }

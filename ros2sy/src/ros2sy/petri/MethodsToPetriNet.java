@@ -1,5 +1,6 @@
 package ros2sy.petri;
 import ros2sy.code.*;
+import ros2sy.exception.ArgParseException;
 
 import java.io.FileWriter;
 import java.util.ArrayList;
@@ -51,33 +52,125 @@ public class MethodsToPetriNet {
 			Place ret = MethodsToPetriNet.getPetriPlace(pn, returnType);
 			if (m.returnType.isSharedPointer) {
 				String internalValueType = m.returnType.valueTypeName;
-				Place internVal = MethodsToPetriNet.getPetriPlace(pn, internalValueType);
-				
 				String transName = internalValueType + "::Shared_to_unshared";
-				Transition unptr = (pn.containsTransition(transName)) ? pn.getTransition(transName) : pn.createTransition(transName);
-				MethodsToPetriNet.addFlowToPetri(pn, ret, unptr);
-				MethodsToPetriNet.addFlowToPetri(pn, unptr, internVal);
+				MethodsToPetriNet.addTransition(pn, returnType, transName, internalValueType);
 				
+//				Place internVal = MethodsToPetriNet.getPetriPlace(pn, internalValueType);
+//				
+//				Transition unptr = (pn.containsTransition(transName)) ? pn.getTransition(transName) : pn.createTransition(transName);
+//				
+//				
+//				MethodsToPetriNet.addFlowToPetri(pn, ret, unptr);
+//				MethodsToPetriNet.addFlowToPetri(pn, unptr, internVal);
 			}
 			
 			if (!m.hasOptionalArgs()) {
-				
 				MethodsToPetriNet.addTransitionFlowToPetri(pn, m.args, t, ret);
 			} else {
 				
 				ArrayList<Arg> mandatory = m.getMandatoryArgs();
+				if (m.isClassMethod) {
+					String instType = m.fromClass.toString();
+					try {
+						mandatory.add(new Arg(instType));
+					} catch (ArgParseException e) {
+						System.out.println("ArgParseException occurred in MethodsToPetriNet.convert");
+						System.out.println(e);
+					}
+				}
+				
 				MethodsToPetriNet.addTransitionFlowToPetri(pn, mandatory, t, ret);
 				
 				ArrayList<Arg> options = m.getOptionalArgs();
+				
+				
 				for (int i = 0; i < options.size(); i++) {
 					Transition opt = pn.createTransition(t.getId() + "(ALT-" + Integer.toString(i) + ")");
 					mandatory.add(options.get(i));
+					
+					
 					
 					MethodsToPetriNet.addTransitionFlowToPetri(pn, mandatory, opt, ret);
 				}	
 			}
 		}
+		
+		Set<Place> places = pn.getPlaces();
+		Place[] placeArray = new Place [places.size()];
+		places.toArray(placeArray);
+		
+		
+		for (int i = 0; i < placeArray.length-1; i++) {
+			for (int j = i+1; j < placeArray.length; j++) {
+				Place a = placeArray[i];
+				Place b = placeArray[j];
+				String aid = a.getId();
+				String bid = b.getId();
+				Type ta = new Type(MethodsToPetriNet.removeOptSuffix(aid));
+				Type tb = new Type(MethodsToPetriNet.removeOptSuffix(bid));
+				
+				if (ta.asParamsEqual(tb)) {
+					boolean decider = (ta.isConstValue || ta.isReference) || MethodsToPetriNet.isOptional(pn.getNode(aid));
+					
+					String source = (decider) ? bid : aid;
+					String target = (decider) ? aid : bid;
+//					String a_or_b = source + "_to_" + target;
+					
+					if (!source.endsWith("(OPT)")) {
+						MethodsToPetriNet.addTransition(pn, source, target);						
+					}
+					
+				} else if (ta.valueTypeName.contentEquals("rclcpp::Node") && tb.valueTypeName.contentEquals("rcl_node_t") && (ta.isSharedPointer == tb.isSharedPointer)) {
+					MethodsToPetriNet.addTransition(pn, aid, bid);
+				}
+			}
+		}
+		
+		for (int i = 0; i < placeArray.length; i++) {
+			if (!MethodsToPetriNet.isOptional(placeArray[i])) {
+				MethodsToPetriNet.addClone(pn, placeArray[i]);
+				
+			}
+		}
+		
+		if (pn.containsPlace("size_t") && pn.containsPlace("int")) {
+			Place size_t = pn.getPlace("size_t");
+			Place integer = pn.getPlace("int");
+			
+			Transition convert = pn.createTransition("int_to_size_t");
+			
+			MethodsToPetriNet.addFlowToPetri(pn, integer, convert);
+			MethodsToPetriNet.addFlowToPetri(pn, convert, size_t);
+		}
+		
+		if (pn.containsPlace("char const *const") && !pn.containsPlace("char**")) {
+			MethodsToPetriNet.addTransition(pn, "char**", "char const *const");
+			MethodsToPetriNet.addClone(pn, pn.getPlace("char**"));
+		}
+		
+		if (pn.containsPlace("rclcpp::Node::SharedPtr") && pn.containsPlace("std::shared_ptr<rclcpp::Node>")) {
+			MethodsToPetriNet.addTransition(pn, "rclcpp::Node::SharedPtr", "std::shared_ptr<rclcpp::Node>");
+			
+			MethodsToPetriNet.addTransition(pn, "std::shared_ptr<rclcpp::Node>", "rclcpp::Node::SharedPtr");
+			
+		}
 		return pn;
+	}
+	
+	private static void addClone(PetriNet pn, Place p) {
+		Transition t = pn.createTransition(p.getId() + "_clone");
+		pn.createFlow(p, t);
+		Flow f = pn.createFlow(t, p);
+		f.setWeight(2);
+		
+	}
+	
+	private static String removeOptSuffix(String name) {
+		int index = name.indexOf("(OPT)");
+		if (index < 0) {
+			return name;
+		}
+		return name.substring(0, index);
 	}
 	
 	
@@ -221,6 +314,24 @@ public class MethodsToPetriNet {
 //				}
 //			}
 		}
+	}
+	
+	private static void addTransition(PetriNet pn, String p1_id, String t_id, String p2_id) {
+		Place p1 = MethodsToPetriNet.getPetriPlace(pn, p1_id);
+		Place p2 = MethodsToPetriNet.getPetriPlace(pn, p2_id);
+		if (!pn.containsTransition(t_id))	 {
+			Transition t = pn.createTransition(t_id);
+			pn.createFlow(p1, t);
+			pn.createFlow(t, p2);
+		}
+	}
+	
+	private static void addTransition(PetriNet pn, String p1_id, String p2_id) {
+		String t_name = p1_id + "_to_" + p2_id;
+		if (!pn.containsTransition(t_name)) {
+			MethodsToPetriNet.addTransition(pn, p1_id, t_name, p2_id);
+		}
+		
 	}
 	
 	private static void addFlowToPetri(PetriNet pn, Node p, Node t) {

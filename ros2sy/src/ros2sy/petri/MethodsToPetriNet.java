@@ -22,7 +22,10 @@ import uniol.apt.adt.pn.*;
  *
  */
 public class MethodsToPetriNet {
-	Method dummy = new Method("*DUMMY*", new ArrayList<String>(), "void");
+	public static String un_pointer_name = "*DE_PTR*";
+	private Method dummy = new Method("*DUMMY*", new ArrayList<String>(), "void");
+	
+	private Method de_ptr = new Method("*DE_PTR*", new ArrayList<String>(), "void");
 	ArrayList<String> silly;
 	HashMap<String, String> typeAliases;
 	ArrayList<Method> methods;
@@ -71,7 +74,7 @@ public class MethodsToPetriNet {
 		
 		if (net.containsPlace("char const *const") && !net.containsPlace("char**")) {
 			MethodsToPetriNet.addTransition(net, "char**", "char const *const");
-			MethodsToPetriNet.addClone(net, net.getPlace("char**"));
+			this.addClone(net.getPlace("char**"));
 		}
 		
 		if (net.containsPlace("rclcpp::Node::SharedPtr") && net.containsPlace("std::shared_ptr<rclcpp::Node>")) {
@@ -119,6 +122,14 @@ public class MethodsToPetriNet {
 		}
 	}
 	
+	public boolean isPointerFieldAccess(Method m) {
+		return m.equals(de_ptr);
+	}
+	
+	public boolean isNotDummyMethod(Method m) {
+		return !m.equals(this.dummy);
+	}
+	
 	public boolean isOptional(String id) {
 		return id.indexOf("(OPT)") > -1;
 	}
@@ -129,6 +140,14 @@ public class MethodsToPetriNet {
 	
 	public boolean isOptional(Transition t) {
 		return false;
+	}
+	
+	public boolean hasMethodNickname(String possibleNickName) {
+		return this.methodAliases.containsKey(possibleNickName);
+	}
+	
+	public Method getMethodFromNickname(String nickname) {
+		return this.methodAliases.get(nickname);
 	}
 	
 	public void addMethodNickname(Method m, String nickname) {
@@ -174,7 +193,7 @@ public class MethodsToPetriNet {
 			Place ret = MethodsToPetriNet.getPetriPlace(pn, returnType);
 			if (m.returnType.isSharedPointer) {
 				String transName = m.returnType.valueTypeName + "::Shared_to_unshared";
-				mt.addMethodNickname(m, transName);
+				mt.addMethodNickname(mt.dummy, transName);
 				
 				MethodsToPetriNet.addTransition(pn, returnType, transName, m.returnType.valueTypeName);
 			}
@@ -253,7 +272,6 @@ public class MethodsToPetriNet {
 		pn.createFlow(p, t);
 		Flow f = pn.createFlow(t, p);
 		f.setWeight(2);
-		
 	}
 	
 	/**

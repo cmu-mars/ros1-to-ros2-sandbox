@@ -97,7 +97,7 @@ public class Type {
 		this.valueTypeName = this.valueTypeName.trim();
 		
 		if (valueTypeName.matches("^std::shared_ptr<.+>$")) {
-			System.out.println("This valueTypeName matches a shared pointer: <" + valueTypeName + ">, <" + this.typeName + ">");
+//			System.out.println("This valueTypeName matches a shared pointer: <" + valueTypeName + ">, <" + this.typeName + ">");
 			
 			int first = "std::shared_ptr<".length();
 			
@@ -111,7 +111,18 @@ public class Type {
 		
 		this.typeName.trim();
 		
-		System.out.println("<" + this.valueTypeName + ">");
+//		System.out.println("<" + this.valueTypeName + ">");
+	}
+	
+	public String getPlainType() {
+		String plain = this.valueTypeName;
+		if (this.isPointer) {
+			plain = plain + " ";
+		}
+		for (int i = 0; i < this.pointerLevel; i++) {
+			plain = plain + "*";
+		}
+		return plain;
 	}
 	
 	/**

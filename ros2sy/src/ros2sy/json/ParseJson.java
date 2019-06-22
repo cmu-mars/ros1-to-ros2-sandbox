@@ -9,6 +9,8 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
+
+import ros2sy.code.CppCode;
 import ros2sy.petri.*;
 import ros2sy.sig.Method;
 import ros2sy.synthesis.Synthesis;
@@ -156,9 +158,19 @@ public class ParseJson {
 				ArrayList<String> input = new ArrayList<String>();
 				input.add("char const *const");
 				input.add("int");
+//				input.add("std::string");
+//				input.add("std::string");
+//				input.add("const rclcpp::QoS&");
 				
-				Synthesis.synthesizeAll(pn, input, 1);
 				
+				ArrayList<ArrayList<String>> strss = Synthesis.synthesizeAll(pn, input, 3);
+				
+				int last = strss.size() - 11;
+				CppCode cpp = new CppCode(mtpn, strss.get(last));
+				
+				System.out.println(cpp.createCodeWithHoles());
+				
+				System.out.println(strss.size());
 				
 				MethodsToPetriNet.createDotFile(pn);
 				

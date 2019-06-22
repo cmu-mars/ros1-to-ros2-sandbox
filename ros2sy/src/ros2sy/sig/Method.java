@@ -123,6 +123,26 @@ public class Method {
 		return this.name + ": " + str + this.returnType.toString();
 	}
 	
+	public int numArgs() {
+		return this.args.size();
+	}
+	
+	public int numOptionalArgs() {
+		return this.getOptionalArgs().size();
+	}
+	
+	public int numRequiredArgs() {
+		int size = this.getMandatoryArgs().size();
+		
+		if (size == 1) {
+			if (this.args.get(0).argType.valueTypeName.matches("void")) {
+				return 0;
+			}
+		}
+		
+		return size;
+	}
+	
 	/**
 	 * Returns whether this method has any optional args.
 	 * 
@@ -145,6 +165,7 @@ public class Method {
 	 * 				 	required.
 	 */
 	public ArrayList<Arg> getMandatoryArgs() {
+		
 		ArrayList<Arg> man = new ArrayList<Arg>();
 		
 		for (Arg a : this.args) {

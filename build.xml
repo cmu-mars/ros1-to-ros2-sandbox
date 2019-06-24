@@ -33,9 +33,9 @@
         	<classpath>
         		<pathelement location="${jar.dir}/ros2sy.jar"/>
         		<pathelement location="${lib.dir}/sat4j-pb.jar"/>
-        		            <pathelement location="${lib.dir}/apt.jar"/>
-        		            <pathelement location="${lib.dir}/commons-lang3-3.4.jar"/>
-        		            <pathelement location="${lib.dir}/gson-2.8.5.jar"/>
+        		<pathelement location="${lib.dir}/apt.jar"/>
+        		<pathelement location="${lib.dir}/commons-lang3-3.4.jar"/>
+        		<pathelement location="${lib.dir}/gson-2.8.5.jar"/>
         	</classpath>
         </java>
     </target>

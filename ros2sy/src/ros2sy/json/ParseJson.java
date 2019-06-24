@@ -12,7 +12,7 @@ import com.google.gson.JsonParseException;
 
 import ros2sy.code.CppCode;
 import ros2sy.petri.*;
-import ros2sy.sig.Method;
+import ros2sy.sig.*;
 import ros2sy.synthesis.Synthesis;
 import uniol.apt.adt.pn.*;
 
@@ -166,9 +166,33 @@ public class ParseJson {
 				ArrayList<ArrayList<String>> strss = Synthesis.synthesizeAll(pn, input, 3);
 				
 				int last = strss.size() - 11;
-				CppCode cpp = new CppCode(mtpn, strss.get(last));
+				
+				ArrayList<String> apiStrings = new ArrayList<String>();
+				apiStrings.add("rclcpp::init");
+				apiStrings.add("rclcpp::Node::make_shared");
+				apiStrings.add("rclcpp::Node::Shared_to_unshared");
+				apiStrings.add("rclcpp::Node::create_subscription");
+				apiStrings.add("rclcpp::spin");
+				apiStrings.add("rclcpp::shutdown");
+				
+				CppCode cpp = new CppCode(mtpn, apiStrings);
 				
 				System.out.println(cpp.createCodeWithHoles());
+				
+				HashMap<String, Type> inputTypes = new HashMap<String, Type>();
+				
+				Type std_string = new Type("std::string");
+				
+				inputTypes.put("argc", new Type("int"));
+				inputTypes.put("argv", new Type("char *"));
+				inputTypes.put("nodeName", std_string);
+				inputTypes.put("topicName", std_string);
+				inputTypes.put("rmw_qos_profile_system_default", new Type("rclcpp::QoS"));
+				inputTypes.put("chatterCallback", new Type("CallbackT"));
+				
+				
+				
+				System.out.println(cpp.generateCodeWithInputs(inputTypes));
 				
 				System.out.println(strss.size());
 				

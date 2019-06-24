@@ -157,6 +157,22 @@ public class Method {
 		return false;
 	}
 	
+	public ArrayList<Arg> getActualArgs(int numOptArgsUsing) {
+		int numReq = this.numRequiredArgs();
+		if (numReq == 0 && !this.hasOptionalArgs()) {
+			return new ArrayList<Arg>();
+		}
+		ArrayList<Arg> mandatory = new ArrayList<Arg>(this.getMandatoryArgs().subList(0, numReq));		
+		
+		ArrayList<Arg> optionals = this.getOptionalArgs();
+		if (numOptArgsUsing >= this.numOptionalArgs()) {
+			mandatory.addAll(optionals);
+		} else {
+			mandatory.addAll(optionals.subList(0, numOptArgsUsing));
+		}
+		return mandatory;
+	}
+	
 	/**
 	 * Get the list of all of the non-optional, i.e. mandatory
 	 * args to this method.
@@ -225,12 +241,15 @@ public class Method {
 	 * @return
 	 */
 	private static boolean stringContains(String str, String[] tests) {
-		boolean contains = false;	
+//		boolean contains = false;	
 		for (String test : tests) {
-			contains = contains || (str.indexOf(test) > -1);
+			if (str.indexOf(test) > -1) {
+				return true;
+			}
+//			contains = contains || (str.indexOf(test) > -1);
 		}
 		
-		return contains;
+		return false;
 	}
 	
 	/**

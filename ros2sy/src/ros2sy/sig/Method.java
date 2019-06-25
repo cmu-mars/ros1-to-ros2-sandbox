@@ -19,6 +19,7 @@ public class Method {
 	public Type fromClass;
 	public MethodType methodType;
 	public String instanceNeeded;
+	public String ros1Name = "";
 	private static String [] rclcpp_classes = {
 		"Node", "Publisher", "Subscriber", "Rate"
 	};
@@ -105,6 +106,10 @@ public class Method {
 				this.fromClass = new Type("rclcpp::" + Method.rclcpp_classes[lowestIndex]);
 			}
 		}
+	}
+	
+	public void setRos1Name(String name) {
+		this.ros1Name = name;
 	}
 	
 	

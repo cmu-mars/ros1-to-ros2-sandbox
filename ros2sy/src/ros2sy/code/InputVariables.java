@@ -3,6 +3,9 @@ package ros2sy.code;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import org.apache.commons.lang3.tuple.ImmutablePair;
+import org.apache.commons.lang3.tuple.Pair;
+
 import ros2sy.sig.*;
 
 public class InputVariables {
@@ -10,6 +13,8 @@ public class InputVariables {
 	private HashMap<String, Type> plainTypeToType = new HashMap<String, Type>();
 	private HashMap<Type, ArrayList<String>> namesByType = new HashMap<Type, ArrayList<String>>();
 	private HashMap<String, Type> inputs;
+	
+	private ArrayList<ArrayList<Pair<String, Type>>> resultsAvailable = new ArrayList<ArrayList<Pair<String, Type>>>();
 	
 	public InputVariables(HashMap<String, Type> inputs) {
 		this.inputs = inputs;
@@ -63,5 +68,45 @@ public class InputVariables {
 	
 	public String getName(String typeName, int index) {
 		return this.getNamesForString(typeName).get(index);			
+	}
+	
+	public void addNewResult(String name, Type t, int line) {
+		if (resultsAvailable.size() < line) {
+			int size = resultsAvailable.size();
+			for (int i = size; i < line + 1; i++) {
+				resultsAvailable.add(new ArrayList<Pair<String, Type>>());
+			}
+		}
+		
+		resultsAvailable.get(line).add(new ImmutablePair<String, Type>(name, t));
+	}
+	
+	public ArrayList<String> resultsOfTypeAvailable(int line, Type t) {
+		if (line < 0) {
+			line = 0;
+		}
+		if (line >= this.resultsAvailable.size()) {
+			line = this.resultsAvailable.size() - 1;
+		}
+		
+		ArrayList<String> names = new ArrayList<String>();
+		if (line < this.resultsAvailable.size()) {			
+			for (int i = line; i > -1; i--) {
+				if (this.resultsAvailable.get(i).size() > 0) {
+					for (int j = 0; j < this.resultsAvailable.get(i).size(); j++) {
+						Pair<String, Type> pair = this.resultsAvailable.get(i).get(j);
+						Type paramType = pair.getRight();
+						if (paramType.asParamsEqual(t)) {
+							names.add(pair.getLeft());
+						} else if (paramType.isSharedPointer && (paramType.valueTypeName.equals(t.valueTypeName))) {
+							names.add(pair.getLeft());
+						} else {
+							System.out.println("The type " + paramType.toString() + " and " + t.toString() + " are not equivalent as parameters.");
+						}
+					}
+				}
+			}
+		}
+		return names;
 	}
 }

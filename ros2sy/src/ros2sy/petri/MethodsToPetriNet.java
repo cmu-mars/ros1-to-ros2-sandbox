@@ -23,14 +23,28 @@ import uniol.apt.adt.pn.*;
  */
 public class MethodsToPetriNet {
 	public static String un_pointer_name = "*DE_PTR*";
+	
+	/**
+	 * The fake Method signature for dummy transitions such as clones and fake
+	 * "type casts".
+	 * This provides an easy way of identifying whether the method a transition
+	 * represents is actually a real API.
+	 */
 	private Method dummy = new Method("*DUMMY*", new ArrayList<String>(), "void");
 	
-	private Method de_ptr = new Method("*DE_PTR*", new ArrayList<String>(), "void");
+	/**
+	 * The fake method that transitions use for taking a
+	 * SharedPtr/std::shared_ptr to the object inside. This is really just a way
+	 * of encoding the pointer field accesses.
+	 */
+	private Method de_ptr = new Method(un_pointer_name, new ArrayList<String>(), "void");
 	ArrayList<String> silly;
 	HashMap<String, String> typeAliases;
 	ArrayList<Method> methods;
 	public PetriNet net;
 	HashMap<String, Method> methodAliases;
+	
+	HashMap<Method, ArrayList<String>> aliasesForMethods = new HashMap<Method, ArrayList<String>>();
 	
 	/**
 	 * Instantiate the a MethodsToPetriNet object, which contains information
@@ -142,17 +156,42 @@ public class MethodsToPetriNet {
 		return false;
 	}
 	
-	public boolean hasMethodNickname(String possibleNickName) {
+	public boolean hasMethodWithNickname(String possibleNickName) {
 		return this.methodAliases.containsKey(possibleNickName);
 	}
 	
+	public boolean hasNicknamesOfMethod(Method m) {
+		return this.aliasesForMethods.containsKey(m);
+	}
+	
+	public boolean hasParticularNicknameOfMethod(Method m, String name) {
+		return this.hasNicknamesOfMethod(m) && this.aliasesForMethods.get(m).contains(name);
+	}
+		
 	public Method getMethodFromNickname(String nickname) {
 		return this.methodAliases.get(nickname);
+	}
+	
+	public ArrayList<String> getNicknamesOfMethod(Method m) {
+		return this.aliasesForMethods.get(m);
 	}
 	
 	public void addMethodNickname(Method m, String nickname) {
 		if (!this.methodAliases.containsKey(nickname)) {
 			this.methodAliases.put(nickname, m);
+		}
+		if (!this.hasNicknamesOfMethod(m)) {
+			this.aliasesForMethods.put(m, new ArrayList<String>());
+		}
+		ArrayList<String> nicknames = this.aliasesForMethods.get(m);
+		if (!this.hasParticularNicknameOfMethod(m, nickname)) {
+			// Just trying to verify that it does this...
+			this.aliasesForMethods.get(m).add(nickname);
+//			System.out.println("Before:");
+//			System.out.println(this.aliasesForMethods.get(m));
+//			nicknames.add(nickname);
+//			System.out.println("After:");
+//			System.out.println(this.aliasesForMethods.get(m));
 		}
 	}
 	
@@ -217,9 +256,11 @@ public class MethodsToPetriNet {
 				ArrayList<Arg> options = m.getOptionalArgs();
 				
 				for (int i = 0; i < options.size(); i++) {
-					Transition opt = pn.createTransition(t.getId() + "(ALT-" + Integer.toString(i) + ")");
+					Transition opt = MethodsToPetriNet.createAlternateTransition(pn, t, i);
+					//pn.createTransition(t.getId() + "(ALT-" + Integer.toString(i) + ")");
 					mt.addMethodNickname(m, opt.getId());
 					
+					// Add an additional arg that this transition will need to take
 					mandatory.add(options.get(i));
 					
 					MethodsToPetriNet.addTransitionFlowToPetri(pn, mandatory, opt, ret);
@@ -228,6 +269,10 @@ public class MethodsToPetriNet {
 		}
 		
 		return pn;
+	}
+	
+	private static Transition createAlternateTransition(PetriNet pn, Transition t, int altNumber) {
+		return pn.createTransition(t.getId() + "(ALT-"  + Integer.toString(altNumber) + ")");
 	}
 	
 	/**

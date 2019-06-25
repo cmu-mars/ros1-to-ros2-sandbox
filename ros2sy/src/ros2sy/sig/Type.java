@@ -7,7 +7,6 @@ import java.util.ArrayList;
  * 
  * @author audrey
  */
-
 public class Type {
 	private String typeName;
 	

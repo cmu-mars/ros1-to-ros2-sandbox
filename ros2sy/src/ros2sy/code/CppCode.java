@@ -44,7 +44,7 @@ public class CppCode {
 		this.numHolesPerApi = new ArrayList<Integer>();
 		this.holeTypes = new ArrayList<Type>();
 		for (String a : apis) {
-			if (mt.hasMethodNickname(a)) {
+			if (mt.hasMethodWithNickname(a)) {
 				Method m = mt.getMethodFromNickname(a);
 				
 				if (mt.isNotDummyMethod(m)) {
@@ -110,7 +110,7 @@ public class CppCode {
 	 * 
 	 * @return a string, containing the code
 	 */
-	public String createCodeWithHoles() throws CodeGenerationException {
+	public String createCodeWithHoles(InputVariables in) throws CodeGenerationException {
 		String code = "";
 		int holes = 0;
 		boolean isPointerFieldAccess = false;
@@ -122,6 +122,7 @@ public class CppCode {
 				int numHolesOffset = 0;
 				if (!m.returnType.getPlainType().equals("void")) {
 					String id = this.getFreshId();
+					in.addNewResult(id, m.returnType, i);
 					code += m.returnType.toString() + " " + id + " = ";
 				}
 				if (m.isClassMethod) {
@@ -156,12 +157,13 @@ public class CppCode {
 		return code;
 	}
 	
-	public String generateCodeWithInputs(HashMap<String, Type> inputs) throws CodeGenerationException {
-		String holeyCode = this.createCodeWithHoles();
-		
+	public ArrayList<String> generateCodeWithInputs(HashMap<String, Type> inputs) throws CodeGenerationException {
 		// Enumerates how many of each type we have, as well as contains convenience
 		// methods for different ways of querying the inputs.
 		InputVariables in = new InputVariables(inputs);
+		String holeyCode = this.createCodeWithHoles(in);
+		System.out.println("Hole-y code:");
+		System.out.println(holeyCode);
 		
 		// I want to have some notion of what's available at certain points in
 		// the code? Since we store all of the results of each API call
@@ -171,12 +173,26 @@ public class CppCode {
 		for (int i = 0; i < this.holeTypes.size(); i++) {
 			Type t = this.holeTypes.get(i);
 			String plain = t.getPlainType();
+			String holeTag = "#" + Integer.toString(i);
 			
 			if (!in.hasTypeCountsForString(plain)) {
 				System.out.println("Cannot find key <" + plain + "> as one of the inputs!");
+				int lineNumber = this.getLineNumberByHoleNumber(i);
+				ArrayList<String> possibleNames = in.resultsOfTypeAvailable(lineNumber, t);
+				System.out.print("The line number computed: ");
+				System.out.println(lineNumber);
+				if (possibleNames.size() > 0) {
+					possibles *= possibleNames.size();
+					if (possibleNames.size() == 1) {
+						System.out.println("We have exactly one possible name!");
+						
+						holeyCode = holeyCode.replaceFirst(holeTag, possibleNames.get(0));
+					}
+				} else {
+					System.out.println("No possible names found for type " + plain);
+				}
 			} else {
 				Integer numPossibleHoleFillers = in.numTypesForString(plain);
-				String holeTag = "#" + Integer.toString(i);
 				System.out.println(holeTag + ": " + numPossibleHoleFillers.toString() + " possibilities");
 				if (numPossibleHoleFillers > 0) {
 					possibles *= numPossibleHoleFillers;
@@ -197,10 +213,27 @@ public class CppCode {
 		for (String fill : possibleFills) {
 			System.out.println("A possible way of filling the holes:\n\n" + fill + "\n");
 		}
-
-		return holeyCode;
+		
+		
+		// Should hopefully be filled by now
+//		return holeyCode;
+		return possibleFills;
 	}
 	
+	private int getLineNumberByHoleNumber(int holeNumber) {
+		int lineNumber;
+		int holes = 0;
+		
+		for (lineNumber = 0; lineNumber < this.numHolesPerApi.size(); lineNumber++) {
+			holes += this.numHolesPerApi.get(lineNumber);
+			if (holeNumber < holes) {
+				break;
+			}
+		}
+		
+		return lineNumber;
+	}
+		
 	private ArrayList<String> fillRemainingHoles(String holeyCode, InputVariables in, ArrayList<Integer> remainingHoleIndices) {
 		ArrayList<String> possibleFills = new ArrayList<String>();
 		System.out.println(remainingHoleIndices.size());
@@ -269,6 +302,4 @@ public class CppCode {
 		// Add one because it's actually zero-indexed
 		return Integer.valueOf(nameSub).intValue() + 1;
 	}
-	
-	
 }

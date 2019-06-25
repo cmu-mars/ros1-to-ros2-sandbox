@@ -8,9 +8,9 @@
                     "const std::string&",
                     "uint32_t (=0)"
                 ],
-                "return": "void"
-            },
-            "ref": "http://docs.ros.org/api/roscpp/html/init_8h.html"
+                "return": "void",
+                "ref": "http://docs.ros.org/api/roscpp/html/init_8h.html"
+            }
         },
         "ros2": {
             "rclcpp::Context::init": {
@@ -34,7 +34,11 @@
         }
     },
     "ros::NodeHandle n;": {
-        "ros1": {},
+        "ros1": {
+            "ros::NodeHandle": {
+                "func_type": "constructor"
+            }
+        },
         "ros2": {
             "rclcpp::Node::make_shared": {
                 "args": [
@@ -53,14 +57,16 @@
     },
     "ros::Subscriber sub = n.subscribe(\"chatter\", 1000, chatterCallback);": {
         "ros1": {
-            "args": [
-                "const std::string&",
-                "uint32_t",
-                "void(*)(const boost::shared_ptr<[MessageType] const>&)",
-                "const TransportHints& (=TransportHints())"
-            ],
-            "return": "ros::Subscriber",
-            "ref": "http://docs.ros.org/melodic/api/roscpp/html/classros_1_1NodeHandle.html#a317fe4c05919e0bf3fb5162ccb2f7c28"
+            "ros::NodeHandle::subscribe": {
+                "args": [
+                    "const std::string&",
+                    "uint32_t",
+                    "void(*)(const boost::shared_ptr<[MessageType] const>&)",
+                    "const TransportHints& (=TransportHints())"
+                ],
+                "return": "ros::Subscriber",
+                "ref": "http://docs.ros.org/melodic/api/roscpp/html/classros_1_1NodeHandle.html#a317fe4c05919e0bf3fb5162ccb2f7c28"
+            }
         },
         "ros2": {
             "rclcpp::Node::create_subscription": [

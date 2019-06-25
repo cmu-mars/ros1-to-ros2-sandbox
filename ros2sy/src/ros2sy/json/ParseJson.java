@@ -192,6 +192,7 @@ public class ParseJson {
 		
 		MethodsToPetriNet mtpn = new MethodsToPetriNet(methods, sillyToClone);
 		HashMap<String, ArrayList<String>> blockByRos1Name = new HashMap<String, ArrayList<String>>();
+		PetriNet pn = mtpn.getNet();
 		
 		for (Method m : methods) {
 			if (!blockByRos1Name.containsKey(m.ros1Name)) {
@@ -209,15 +210,6 @@ public class ParseJson {
 		blocks.get(1).addAll(blockByRos1Name.get("ros::NodeHandle::subscribe"));
 		blocks.add(blockByRos1Name.get("ros::spin"));
 		
-		System.out.println("Blocks:");
-		for (ArrayList<String> array : blocks) {
-			System.out.println(array);
-		}
-		
-		PetriNet pn = mtpn.getNet();
-		
-		
-		
 		// Dummy input array for testing the synthesis aspect
 		ArrayList<String> input = new ArrayList<String>();
 		input.add("char const *const");
@@ -226,10 +218,24 @@ public class ParseJson {
 //		input.add("std::string");
 //		input.add("const rclcpp::QoS&");
 		
+		ArrayList<ArrayList<CppCode>> snippets = new ArrayList<ArrayList<CppCode>>();
+		int index = 0;
+		System.out.println("Blocks:");
 		
-		ArrayList<ArrayList<String>> strss = Synthesis.synthesizeAll(pn, input, 3);
+		// We don't really want to do this until we have the actual synthesis code that is directed by things
+//		for (ArrayList<String> array : blocks) {
+//			System.out.println(array);
+//			
+//			ArrayList<ArrayList<String>> strss = Synthesis.synthesizeAll(pn, input, 3);
+//		System.out.println(strss.size());
+//			
+//			snippets.add(new ArrayList<CppCode>());
+//			for (ArrayList<String> strs : strss.subList(0, 10)) {
+//				snippets.get(index).add(new CppCode(mtpn, strs));
+//			}
+//			index++;
+//		}
 		
-		int last = strss.size() - 11;
 		
 		ArrayList<String> apiStrings = new ArrayList<String>();
 		apiStrings.add("rclcpp::init");
@@ -241,6 +247,11 @@ public class ParseJson {
 		
 		CppCode cpp = new CppCode(mtpn, apiStrings);
 		
+		
+		
+		
+		
+		
 //		System.out.println(cpp.createCodeWithHoles());
 		
 		HashMap<String, Type> inputTypes = new HashMap<String, Type>();
@@ -249,8 +260,8 @@ public class ParseJson {
 		
 		inputTypes.put("argc", new Type("int"));
 		inputTypes.put("argv", new Type("char *"));
-		inputTypes.put("nodeName", std_string);
-		inputTypes.put("topicName", std_string);
+		inputTypes.put("node_name", std_string);
+		inputTypes.put("topic_name", std_string);
 		inputTypes.put("rmw_qos_profile_system_default", new Type("rclcpp::QoS"));
 		inputTypes.put("chatterCallback", new Type("CallbackT"));
 		
@@ -291,7 +302,6 @@ public class ParseJson {
 						
 //		System.out.println(cpp.generateCodeWithInputs(inputTypes));
 		
-		System.out.println(strss.size());
 		
 		MethodsToPetriNet.createDotFile(pn);
 		

@@ -27,6 +27,8 @@ public class CppCode {
 	public int numHolesToFill;
 	ArrayList<Type> holeTypes;
 	
+	public HashMap<String, Type> results = new HashMap<String, Type>();
+	
 	
 	private int fresh_id = -1;
 	
@@ -95,16 +97,6 @@ public class CppCode {
 		}
 	}
 	
-	private String holesPerApiString() {
-		String descrip = "";
-		
-		for (int i = 0; i < this.apis.size(); i++) {
-			descrip += apis.get(i).name + ": " + this.numHolesPerApi.get(i).toString() + "\n";
-		}
-		
-		return descrip;
-	}
-	
 	/**
 	 * Produces the C++ code with holes that this CppCode object represents.
 	 * 
@@ -122,6 +114,7 @@ public class CppCode {
 				int numHolesOffset = 0;
 				if (!m.returnType.getPlainType().equals("void")) {
 					String id = this.getFreshId();
+					this.results.put(id, m.returnType);
 					in.addNewResult(id, m.returnType, i);
 					code += m.returnType.toString() + " " + id + " = ";
 				}
@@ -220,6 +213,36 @@ public class CppCode {
 		return possibleFills;
 	}
 	
+	public ArrayList<String> getResultTypeNames() {
+		ArrayList<String> resultTypes = new ArrayList<String>();
+		
+		for (String key : this.results.keySet()) {
+			resultTypes.add(this.results.get(key).toString());
+		}
+		
+		return resultTypes;
+	}
+	
+	public ArrayList<Type> getResultTypes() {
+		ArrayList<Type> types = new ArrayList<Type>();
+		
+		for (String key: this.results.keySet()) {
+			types.add(this.results.get(key));
+		}
+		
+		return types;
+	}
+	
+	private String holesPerApiString() {
+		String descrip = "";
+		
+		for (int i = 0; i < this.apis.size(); i++) {
+			descrip += apis.get(i).name + ": " + this.numHolesPerApi.get(i).toString() + "\n";
+		}
+		
+		return descrip;
+	}
+
 	private int getLineNumberByHoleNumber(int holeNumber) {
 		int lineNumber;
 		int holes = 0;

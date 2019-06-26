@@ -23,8 +23,8 @@ public interface Encoding {
 	
 	public void setState(Set<Pair<Place, Integer>> state, int timestep);
 	
-	public void setHints(List<String> atLeastK);
-	
+	public void refactorInfo(List<List<String>> knowledge);
+		
 	public void createConstraints();
 	
 	public void createVariables();

@@ -13,8 +13,17 @@ import ros2sy.logic.Variable;
 import ros2sy.synthesis.*;
 
 public class Synthesis {
-
+	
 	public static ArrayList<ArrayList<String>> synthesizeAll(PetriNet net, List<String> inputs, int max_loc) {
+		List<List<String>> k = new ArrayList<>();
+		ArrayList<String> k1 = new ArrayList<>();
+		k1.add("rclcpp::init");
+		k.add(k1);
+		
+		return Synthesis.synthesizeAll(net, inputs, max_loc, k);
+	}
+
+	public static ArrayList<ArrayList<String>> synthesizeAll(PetriNet net, List<String> inputs, int max_loc, List<List<String>> k) {
 		int loc = 1;
 
 		List<Result> unsorted_result = new ArrayList<>();
@@ -28,22 +37,19 @@ public class Synthesis {
 			encoding.setState(EncodingUtil.setInitialState(net, inputs), 0);
 
 			// example on how to add some information from the previous code
-			List<List<String>> k = new ArrayList<>();
-			ArrayList<String> k1 = new ArrayList<>();
-			k1.add("rclcpp::init");
-			k.add(k1);
+			
 			encoding.refactorInfo(k);
 
 			// reachability analysis
 			List<Variable> result = Encoding.solver.findPath(loc);
 			while (!result.isEmpty()) {
-				// System.out.println("============================");
+//				 System.out.println("============================");
 				ArrayList<String> api_result = new ArrayList<>();
 				for (Variable s : result) {
 					api_result.add(s.getName());
-					// System.out.println(s.getName());
+//					 System.out.println(s.getName());
 				}
-				// System.out.println("Cost = " + Encoding.solver.getCost());
+//				System.out.println("Cost = " + Encoding.solver.getCost());
 				Result r = new Result(api_result, Encoding.solver.getCost());
 				unsorted_result.add(r);
 				result = Encoding.solver.findPath(loc);
@@ -61,9 +67,9 @@ public class Synthesis {
 		}
 
 		for (List<String> l : sorted_result) {
-			System.out.println("============================");
+//			System.out.println("============================");
 			for (String s : l) {
-				System.out.println(s);
+//				System.out.println(s);
 			}
 		}
 

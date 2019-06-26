@@ -214,6 +214,18 @@ public class ParseJson {
 		ArrayList<String> input = new ArrayList<String>();
 		input.add("char const *const");
 		input.add("int");
+		
+		ArrayList<ArrayList<String>> inputs = new ArrayList<>();
+		inputs.add(input);
+		inputs.add(new ArrayList<String>());
+		inputs.get(1).add("std::string");
+		inputs.get(1).add("const std::string&");
+		inputs.get(1).add("const rclcpp::QoS&");
+		inputs.get(1).add("CallbackT &&");
+		inputs.add(new ArrayList<String>(inputs.get(1)));
+		inputs.get(2).add("std::shared_ptr<rclcpp::Node>");
+		inputs.get(2).add("std::shared_ptr<SubscriptionT>");
+		
 //		input.add("std::string");
 //		input.add("std::string");
 //		input.add("const rclcpp::QoS&");
@@ -223,82 +235,99 @@ public class ParseJson {
 		System.out.println("Blocks:");
 		
 		// We don't really want to do this until we have the actual synthesis code that is directed by things
-//		for (ArrayList<String> array : blocks) {
-//			System.out.println(array);
-//			
-//			ArrayList<ArrayList<String>> strss = Synthesis.synthesizeAll(pn, input, 3);
-//		System.out.println(strss.size());
-//			
-//			snippets.add(new ArrayList<CppCode>());
-//			for (ArrayList<String> strs : strss.subList(0, 10)) {
-//				snippets.get(index).add(new CppCode(mtpn, strs));
-//			}
-//			index++;
-//		}
-		
-		
-		ArrayList<String> apiStrings = new ArrayList<String>();
-		apiStrings.add("rclcpp::init");
-		apiStrings.add("rclcpp::Node::make_shared");
-		apiStrings.add("rclcpp::Node::Shared_to_unshared");
-		apiStrings.add("rclcpp::Node::create_subscription");
-		apiStrings.add("rclcpp::spin");
-//		apiStrings.add("rclcpp::shutdown");
-		
-		CppCode cpp = new CppCode(mtpn, apiStrings);
-		
-		
-		
-		
-		
-		
-//		System.out.println(cpp.createCodeWithHoles());
-		
-		HashMap<String, Type> inputTypes = new HashMap<String, Type>();
-		
-		Type std_string = new Type("std::string");
-		
-		inputTypes.put("argc", new Type("int"));
-		inputTypes.put("argv", new Type("char *"));
-		inputTypes.put("node_name", std_string);
-		inputTypes.put("topic_name", std_string);
-		inputTypes.put("rmw_qos_profile_system_default", new Type("rclcpp::QoS"));
-		inputTypes.put("chatterCallback", new Type("CallbackT"));
-		
-		ArrayList<String> holeFillers = cpp.generateCodeWithInputs(inputTypes);
-		
-		// Get the sketch
-		String sketchContents = new String(Files.readAllBytes(Paths.get("ex1/sketches/listener.sketch")));
-		ArrayList<String> filledOutSketches = new ArrayList<String>();
-		for (String fill : holeFillers) {
-			String [] splits = fill.split("\n");
-			String replaceTag = "\\?\\?";
-			String sketch = sketchContents;
-			int i = 0;
-			while (sketch.indexOf("??") > -1 && i < splits.length) {
-				System.out.println("Replacing an instance of ?? in the replace string.");
-				sketch = sketch.replaceFirst(replaceTag, splits[i]);
-				i++;
-			}
-			filledOutSketches.add(sketch);
-		}
-		
-		int times = 0;
-		for (String sketch : filledOutSketches) {
-			System.out.println("the full sketch: ");
-			System.out.println(sketch);
+		for (int i = 0; i < blocks.size(); i++) {
+			System.out.print("Block: ");
+			System.out.println(blocks.get(i));
+			List<List<String>> k = new ArrayList<>();
+			k.add(blocks.get(i));
 			
-			try {
-				FileWriter fw = new FileWriter("ex1/sketches/listener" + Integer.toString(times) + ".cpp");
-				
-				fw.write(sketch);
-				fw.flush();
-				fw.close();
-			} catch (Exception e) {
-				System.out.println(e);
+			ArrayList<ArrayList<String>> strss = Synthesis.synthesizeAll(pn, inputs.get(i), 3, k);
+			System.out.print("Number of possibilities generated for block ");
+			
+			
+			String blocksSubstring = blocks.get(i).toString().substring(0, Math.min(blocks.get(i).toString().length(), 54));
+			blocksSubstring = blocksSubstring + ((blocksSubstring.length() < blocks.get(i).toString().length()) ? "...]" : "");
+			System.out.print(blocksSubstring);
+			System.out.print(": ");
+			System.out.println(strss.size());
+			
+			int maxShown = 250;
+			
+			System.out.println("The top " + Integer.toString(maxShown) + ":");
+			snippets.add(new ArrayList<CppCode>());
+			for (ArrayList<String> strs : strss.subList(0, Math.min(strss.size(), maxShown))) {
+				System.out.println(strs);
+				snippets.get(index).add(new CppCode(mtpn, strs));
 			}
-			times++;
+			index++;
 		}
+		
+		for (ArrayList<CppCode> snips : snippets) {
+			System.out.print(snips);
+		}
+		
+//		ArrayList<String> apiStrings = new ArrayList<String>();
+//		apiStrings.add("rclcpp::init");
+//		apiStrings.add("rclcpp::Node::make_shared");
+//		apiStrings.add("rclcpp::Node::Shared_to_unshared");
+//		apiStrings.add("rclcpp::Node::create_subscription");
+//		apiStrings.add("rclcpp::spin");
+////		apiStrings.add("rclcpp::shutdown");
+//		
+//		CppCode cpp = new CppCode(mtpn, apiStrings);
+//		
+//		
+//		
+//		
+//		
+//		
+////		System.out.println(cpp.createCodeWithHoles());
+//		
+//		HashMap<String, Type> inputTypes = new HashMap<String, Type>();
+//		
+//		Type std_string = new Type("std::string");
+//		
+//		inputTypes.put("argc", new Type("int"));
+//		inputTypes.put("argv", new Type("char *"));
+//		inputTypes.put("node_name", std_string);
+//		inputTypes.put("topic_name", std_string);
+//		inputTypes.put("rmw_qos_profile_system_default", new Type("rclcpp::QoS"));
+//		inputTypes.put("chatterCallback", new Type("CallbackT"));
+//		
+//		ArrayList<String> holeFillers = cpp.generateCodeWithInputs(inputTypes);
+//		
+//		// Get the sketch
+//		String sketchContents = new String(Files.readAllBytes(Paths.get("ex1/sketches/listener.sketch")));
+//		ArrayList<String> filledOutSketches = new ArrayList<String>();
+//		for (String fill : holeFillers) {
+//			String [] splits = fill.split("\n");
+//			String replaceTag = "\\?\\?";
+//			String sketch = sketchContents;
+//			int i = 0;
+//			while (sketch.indexOf("??") > -1 && i < splits.length) {
+//				System.out.println("Replacing an instance of ?? in the replace string.");
+//				sketch = sketch.replaceFirst(replaceTag, splits[i]);
+//				i++;
+//			}
+//			filledOutSketches.add(sketch);
+//		}
+//		
+//		int times = 0;
+//		for (String sketch : filledOutSketches) {
+//			System.out.println("the full sketch: ");
+//			System.out.println(sketch);
+//			
+//			try {
+//				FileWriter fw = new FileWriter("ex1/sketches/listener" + Integer.toString(times) + ".cpp");
+//				
+//				fw.write(sketch);
+//				fw.flush();
+//				fw.close();
+//			} catch (Exception e) {
+//				System.out.println(e);
+//			}
+//			times++;
+//		}
 						
 //		System.out.println(cpp.generateCodeWithInputs(inputTypes));
 		

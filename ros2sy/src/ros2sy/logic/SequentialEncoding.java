@@ -38,6 +38,24 @@ public class SequentialEncoding implements Encoding {
 		createConstraints();
 		createObjectiveFunction();
 	}
+	
+	public void doesNotOccur(List<String> knowledge) {
+		
+		for (String hint : knowledge) {
+			for (Transition tr : pnet.getTransitions()) {
+				if (tr.getId().equals(hint)) {
+					int v = solver.loc_variables.last();
+					solver.loc_variables.pop();
+
+					VecInt constraint = new VecInt();
+					constraint.push(-v);
+					solver.addClause(constraint);
+					break;
+				}
+			}
+		}
+		
+	}
 
 	public void refactorInfo(List<List<String>> knowledge) {
 

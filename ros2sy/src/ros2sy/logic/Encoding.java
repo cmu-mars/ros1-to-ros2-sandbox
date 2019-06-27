@@ -24,6 +24,8 @@ public interface Encoding {
 	public void setState(Set<Pair<Place, Integer>> state, int timestep);
 	
 	public void refactorInfo(List<List<String>> knowledge);
+	
+	public void doesNotOccur(List<String> knowledge);
 		
 	public void createConstraints();
 	

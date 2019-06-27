@@ -108,34 +108,6 @@ public class MethodsToPetriNet {
 		}
 	}
 	
-	private void addParamEquivalences() {
-		Set<Place> places = this.net.getPlaces();
-		Place[] placeArray = new Place [places.size()];
-		places.toArray(placeArray);
-		
-		for (int i = 0; i < placeArray.length-1; i++) {
-			for (int j = i+1; j < placeArray.length; j++) {
-				String aid = placeArray[i].getId();
-				String bid = placeArray[j].getId();
-				Type ta = new Type(this.removeOptSuffix(aid));
-				Type tb = new Type(this.removeOptSuffix(bid));
-				
-				if (ta.asParamsEqual(tb)) {
-					boolean orderer = ta.isConstValue || ta.isReference || MethodsToPetriNet.isOptional(net.getNode(aid));
-					
-					String source = (orderer) ? bid : aid;
-					
-					if (!source.endsWith("(OPT)")) {
-						String target = (orderer) ? aid : bid;
-						MethodsToPetriNet.addTransition(net, source, target);						
-					}
-				} else if (ta.valueTypeName.contentEquals("rclcpp::Node") && tb.valueTypeName.contentEquals("rcl_node_t") && (ta.isSharedPointer == tb.isSharedPointer)) {
-					MethodsToPetriNet.addTransition(net, aid, bid);
-				}
-			}
-		}
-	}
-	
 	public boolean isPointerFieldAccess(Method m) {
 		return m.equals(de_ptr);
 	}
@@ -195,6 +167,83 @@ public class MethodsToPetriNet {
 		}
 	}
 	
+	/**
+	 * Add a clone transition to this MethodToPetriNet's PetriNet net, at place p,
+	 * which should be a Place in the petri net.
+	 * 
+	 * @param p		a Place assumed to be inside of the PetriNet net
+	 */
+	public void addClone(Place p) {
+		Transition t = this.createTransition(p.getId() + "_clone", dummy);
+		this.net.createFlow(p, t);
+		Flow f = this.net.createFlow(t, p);
+		f.setWeight(2);
+	}
+	
+	public PetriNet getNet() {
+		return this.net;
+	}
+
+	private void addParamEquivalences() {
+		Set<Place> places = this.net.getPlaces();
+		Place[] placeArray = new Place [places.size()];
+		places.toArray(placeArray);
+		
+		for (int i = 0; i < placeArray.length-1; i++) {
+			for (int j = i+1; j < placeArray.length; j++) {
+				String aid = placeArray[i].getId();
+				String bid = placeArray[j].getId();
+				Type ta = new Type(this.removeOptSuffix(aid));
+				Type tb = new Type(this.removeOptSuffix(bid));
+				
+				if (ta.asParamsEqual(tb)) {
+					boolean orderer = ta.isConstValue || ta.isReference || MethodsToPetriNet.isOptional(net.getNode(aid));
+					
+					String source = (orderer) ? bid : aid;
+					
+					if (!source.endsWith("(OPT)")) {
+						String target = (orderer) ? aid : bid;
+						MethodsToPetriNet.addTransition(net, source, target);						
+					}
+				} else if (ta.valueTypeName.contentEquals("rclcpp::Node") && tb.valueTypeName.contentEquals("rcl_node_t") && (ta.isSharedPointer == tb.isSharedPointer)) {
+					MethodsToPetriNet.addTransition(net, aid, bid);
+				}
+			}
+		}
+	}
+
+	/**
+	 * Create a transition with a given name that represents the given method.
+	 * 
+	 * This also adds the transition's name as an "alias" for the method, so that
+	 * a sequence of transitions can be translated back into a sequence of methods.
+	 * 
+	 * @param name		String, the desired name for this transition
+	 * @param m			Method, the method that the transition returned will represent
+	 * @return				Transition, the transition created with this name
+	 */
+	private Transition createTransition(String name, Method m) {
+		Transition t = this.net.createTransition(name);
+		this.addMethodNickname(m, name);
+		return t;
+	}
+
+	/**
+	 * Removes the suffix "(OPT)" from a given string. This is handy for looking
+	 * at the names of many Place nodes.
+	 * 
+	 * @param name		the String to remove the string "(OPT)" from.
+	 * @return				String, either the same string (if there was no string "(OPT)",
+	 * 							or all of the string preceding the part with "(OPT)".
+	 */
+	private String removeOptSuffix(String name) {
+		int index = name.indexOf("(OPT)");
+		if (index < 0) {
+			return name;
+		}
+		return name.substring(0, index);
+	}
+
 	/**
 	 * Convert the methods of the given MethodsToPetriNet object into a PetriNet.
 	 * 
@@ -270,85 +319,7 @@ public class MethodsToPetriNet {
 		
 		return pn;
 	}
-	
-	private static Transition createAlternateTransition(PetriNet pn, Transition t, int altNumber) {
-		return pn.createTransition(t.getId() + "(ALT-"  + Integer.toString(altNumber) + ")");
-	}
-	
-	/**
-	 * Add a clone transition to this MethodToPetriNet's PetriNet net, at place p,
-	 * which should be a Place in the petri net.
-	 * 
-	 * @param p		a Place assumed to be inside of the PetriNet net
-	 */
-	public void addClone(Place p) {
-		Transition t = this.createTransition(p.getId() + "_clone", dummy);
-		this.net.createFlow(p, t);
-		Flow f = this.net.createFlow(t, p);
-		f.setWeight(2);
-	}
-	
-	/**
-	 * Create a transition with a given name that represents the given method.
-	 * 
-	 * This also adds the transition's name as an "alias" for the method, so that
-	 * a sequence of transitions can be translated back into a sequence of methods.
-	 * 
-	 * @param name		String, the desired name for this transition
-	 * @param m			Method, the method that the transition returned will represent
-	 * @return				Transition, the transition created with this name
-	 */
-	private Transition createTransition(String name, Method m) {
-		Transition t = this.net.createTransition(name);
-		this.addMethodNickname(m, name);
-		return t;
-	}
-	
-	
-	/**
-	 * Add a clone transition, and the appropriate edges, to the place p in the
-	 * petri net pn.
-	 * 
-	 * @param pn		a PetriNet to add the clone transition in
-	 * @param p		some Place in pn to add the clone transition to
-	 */
-	private static void addClone(PetriNet pn, Place p) {
-		Transition t = pn.createTransition(p.getId() + "_clone");
-		pn.createFlow(p, t);
-		Flow f = pn.createFlow(t, p);
-		f.setWeight(2);
-	}
-	
-	/**
-	 * Removes the suffix "(OPT)" from a given string. This is handy for looking
-	 * at the names of many Place nodes.
-	 * 
-	 * @param name		the String to remove the string "(OPT)" from.
-	 * @return				String, either the same string (if there was no string "(OPT)",
-	 * 							or all of the string preceding the part with "(OPT)".
-	 */
-	private String removeOptSuffix(String name) {
-		int index = name.indexOf("(OPT)");
-		if (index < 0) {
-			return name;
-		}
-		return name.substring(0, index);
-	}
-	
-	
-	/**
-	 * Get the Place node from a petri net with a given id, if it exists.
-	 * 
-	 * If it doesn't, create that Place, and then return it.
-	 * 
-	 * @param pn		the PetriNet to look for the id in
-	 * @param id		String, the desired id of the Place
-	 * @return			Place, one of the nodes representing a type in the Petri Net
-	 */
-	private static Place getPetriPlace(PetriNet pn, String id) {
-		return (!pn.containsPlace(id)) ? pn.createPlace(id) : pn.getPlace(id);
-	}
-	
+
 	/**
 	 * Creates a dot file written using the DOT language in order to create a
 	 * graphical representation of the given Petri Net.
@@ -410,6 +381,37 @@ public class MethodsToPetriNet {
 			System.out.println("Exception caught while attempting to write dot file in MethodsToPetriNet.");
 			System.out.println(e);
 		}
+	}
+
+	private static Transition createAlternateTransition(PetriNet pn, Transition t, int altNumber) {
+		return pn.createTransition(t.getId() + "(ALT-"  + Integer.toString(altNumber) + ")");
+	}
+
+	/**
+	 * Add a clone transition, and the appropriate edges, to the place p in the
+	 * petri net pn.
+	 * 
+	 * @param pn		a PetriNet to add the clone transition in
+	 * @param p		some Place in pn to add the clone transition to
+	 */
+	private static void addClone(PetriNet pn, Place p) {
+		Transition t = pn.createTransition(p.getId() + "_clone");
+		pn.createFlow(p, t);
+		Flow f = pn.createFlow(t, p);
+		f.setWeight(2);
+	}
+	
+	/**
+	 * Get the Place node from a petri net with a given id, if it exists.
+	 * 
+	 * If it doesn't, create that Place, and then return it.
+	 * 
+	 * @param pn		the PetriNet to look for the id in
+	 * @param id		String, the desired id of the Place
+	 * @return			Place, one of the nodes representing a type in the Petri Net
+	 */
+	private static Place getPetriPlace(PetriNet pn, String id) {
+		return (!pn.containsPlace(id)) ? pn.createPlace(id) : pn.getPlace(id);
 	}
 	
 	/**
@@ -541,9 +543,5 @@ public class MethodsToPetriNet {
 			}
 		}
 		return optionals;
-	}
-	
-	public PetriNet getNet() {
-		return this.net;
 	}
 }

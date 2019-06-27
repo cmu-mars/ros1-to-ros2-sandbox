@@ -131,6 +131,13 @@ public class ParseJson {
 		return methods;
 	}
 	
+	/**
+	 * Parse out Method objects from a JSON file.
+	 * 
+	 * @param fileName		the name of the file to parse
+	 * @return						an ArrayList containing all of the methods parsed out
+	 * 									from the JSON file
+	 */
 	public static ArrayList<Method> parseOutMethods(String fileName) {
 		ArrayList<Method> methods = new ArrayList<Method>();
 		try {

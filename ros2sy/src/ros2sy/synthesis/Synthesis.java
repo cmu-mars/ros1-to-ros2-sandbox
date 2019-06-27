@@ -39,7 +39,8 @@ public class Synthesis {
 			// example on how to add some information from the previous code
 			
 			encoding.refactorInfo(k);
-
+			
+			
 			// reachability analysis
 			List<Variable> result = Encoding.solver.findPath(loc);
 			while (!result.isEmpty()) {

@@ -61,16 +61,18 @@ public class SATSolver {
 	}
 
 	public void setNbVariables(int vars) {
+		
+		int extra_vars = 100;
 
 		// version for additional variables
-		for (int i = vars + 1; i <= vars + 100; i++)
+		for (int i = vars + 1; i <= vars + extra_vars; i++)
 			loc_variables.push(i);
-		nbVariables = vars + 100;
-		solver.newVar(nbVariables + 100);
+		nbVariables = vars + extra_vars;
+		solver.newVar(nbVariables + extra_vars);
 
 		// dummy constraints for the additional variables
 		// each variable much appear at least once in the solver
-		for (int i = vars + 1; i <= 100; i++) {
+		for (int i = vars + 1; i <= extra_vars; i++) {
 			try {
 				solver.addAtLeast(new VecInt(new int[] { i }), 1);
 			} catch (ContradictionException e) {

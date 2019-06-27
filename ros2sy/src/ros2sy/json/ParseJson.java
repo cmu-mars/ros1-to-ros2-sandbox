@@ -212,15 +212,25 @@ public class ParseJson {
 		
 		// Our three blocks. This will be figured out programmatically in the
 		// future.
-		blocks.add(blockByRos1Name.get("ros::init"));
-		blocks.add(new ArrayList<String>(blockByRos1Name.get("ros::NodeHandle")));
-		blocks.get(1).addAll(blockByRos1Name.get("ros::NodeHandle::subscribe"));
-		blocks.add(blockByRos1Name.get("ros::spin"));
+		blocks.add(new ArrayList<String>());
+		blocks.get(0).add("ros::init");
+		blocks.add(new ArrayList<String>());
+		blocks.get(1).add("ros::NodeHandle");
+		blocks.get(1).add("ros::NodeHandle::subscribe");
+		blocks.add(new ArrayList<String>());
+		blocks.get(2).add("ros::spin");
+//		blocks.add(blockByRos1Name.get("ros::init"));
+//		blocks.add(new ArrayList<String>(blockByRos1Name.get("ros::NodeHandle")));
+//		blocks.get(1).addAll(blockByRos1Name.get("ros::NodeHandle::subscribe"));
+//		blocks.add(blockByRos1Name.get("ros::spin"));
 		
 		// Dummy input array for testing the synthesis aspect
 		ArrayList<String> input = new ArrayList<String>();
 		input.add("char const *const");
 		input.add("int");
+		
+		ArrayList<String> neverUse = new ArrayList<String>();
+		neverUse.add("rclcpp::shutdown");
 		
 		ArrayList<ArrayList<String>> inputs = new ArrayList<>();
 		inputs.add(input);
@@ -233,6 +243,21 @@ public class ParseJson {
 		inputs.get(2).add("std::shared_ptr<rclcpp::Node>");
 		inputs.get(2).add("std::shared_ptr<SubscriptionT>");
 		
+//		ArrayList<ArrayList<String>> dontUse = new ArrayList<ArrayList<String>>();
+//		dontUse.add(new ArrayList<String>());
+//		dontUse.get(0).addAll(blocks.get(1));
+//		dontUse.get(0).addAll(blocks.get(2));
+//		dontUse.add(new ArrayList<String>());
+//		dontUse.get(1).addAll(blocks.get(0));
+//		dontUse.get(1).addAll(blocks.get(2));
+//		dontUse.add(new ArrayList<String>());
+//		dontUse.get(2).addAll(blocks.get(0));
+//		dontUse.get(2).addAll(blocks.get(1));
+//		
+//		for (ArrayList<String> dont : dontUse) {
+//			dont.addAll(neverUse);
+//		}
+		
 //		input.add("std::string");
 //		input.add("std::string");
 //		input.add("const rclcpp::QoS&");
@@ -243,22 +268,38 @@ public class ParseJson {
 		
 		// We don't really want to do this until we have the actual synthesis code that is directed by things
 		for (int i = 0; i < blocks.size(); i++) {
-			System.out.print("Block: ");
-			System.out.println(blocks.get(i));
 			List<List<String>> k = new ArrayList<>();
-			k.add(blocks.get(i));
+			k.add(new ArrayList<String>());
+			for (int j = 0 ; j < blocks.get(i).size(); j++) {
+				k.get(0).addAll(blockByRos1Name.get(blocks.get(i).get(j)));
+			}
+			ArrayList<String> dontUse = new ArrayList<String>();
+			for (int j = 0; j < blocks.size(); j++) {
+				if (i != j) {
+					for (int l = 0; l < blocks.get(j).size(); l++) {
+						dontUse.addAll(blockByRos1Name.get(blocks.get(j).get(l)));
+					}
+				}
+			}
 			
-			ArrayList<ArrayList<String>> strss = Synthesis.synthesizeAll(pn, inputs.get(i), 3, k);
+			dontUse.addAll(neverUse);
+			
+			System.out.print("Block: ");
+			System.out.println(k);
+//			k.add(blocks.get(i));
+			System.out.println(dontUse);
+			
+			ArrayList<ArrayList<String>> strss = Synthesis.synthesizeAll(pn, inputs.get(i), 3, k, dontUse);
 			System.out.print("Number of possibilities generated for block ");
 			
 			
-			String blocksSubstring = blocks.get(i).toString().substring(0, Math.min(blocks.get(i).toString().length(), 54));
-			blocksSubstring = blocksSubstring + ((blocksSubstring.length() < blocks.get(i).toString().length()) ? "...]" : "");
+			String blocksSubstring = k.toString().substring(0, Math.min(k.toString().length(), 54));
+			blocksSubstring = blocksSubstring + ((blocksSubstring.length() < k.toString().length()) ? "...]" : "");
 			System.out.print(blocksSubstring);
 			System.out.print(": ");
 			System.out.println(strss.size());
 			
-			int maxShown = 250;
+			int maxShown = 280;
 			
 			System.out.println("The top " + Integer.toString(maxShown) + ":");
 			snippets.add(new ArrayList<CppCode>());

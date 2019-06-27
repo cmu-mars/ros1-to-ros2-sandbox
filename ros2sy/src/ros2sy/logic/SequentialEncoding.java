@@ -41,9 +41,13 @@ public class SequentialEncoding implements Encoding {
 	
 	public void doesNotOccur(List<String> knowledge) {
 		
+//		System.out.print("Knowledge: ");
+//		System.out.println(knowledge);
+		
 		for (String hint : knowledge) {
 			for (Transition tr : pnet.getTransitions()) {
 				if (tr.getId().equals(hint)) {
+//					System.out.println("Preventing " + hint + " from occurring.");
 					int v = solver.loc_variables.last();
 					solver.loc_variables.pop();
 
@@ -76,6 +80,7 @@ public class SequentialEncoding implements Encoding {
 			for (String hint : info) {
 				for (Transition tr : pnet.getTransitions()) {
 					if (tr.getId().equals(hint)) {
+						System.out.println("Found a transition that matches " + hint);
 						int v = solver.loc_variables.last();
 						solver.loc_variables.pop();
 

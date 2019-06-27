@@ -20,10 +20,10 @@ public class Synthesis {
 		k1.add("rclcpp::init");
 		k.add(k1);
 		
-		return Synthesis.synthesizeAll(net, inputs, max_loc, k);
+		return Synthesis.synthesizeAll(net, inputs, max_loc, k, new ArrayList<String>());
 	}
 
-	public static ArrayList<ArrayList<String>> synthesizeAll(PetriNet net, List<String> inputs, int max_loc, List<List<String>> k) {
+	public static ArrayList<ArrayList<String>> synthesizeAll(PetriNet net, List<String> inputs, int max_loc, List<List<String>> k, List<String> prevent) {
 		int loc = 1;
 
 		List<Result> unsorted_result = new ArrayList<>();
@@ -39,6 +39,7 @@ public class Synthesis {
 			// example on how to add some information from the previous code
 			
 			encoding.refactorInfo(k);
+			encoding.doesNotOccur(prevent);
 			
 			
 			// reachability analysis

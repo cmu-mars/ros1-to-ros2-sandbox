@@ -190,23 +190,25 @@ public class MethodsToPetriNet {
 		places.toArray(placeArray);
 		
 		for (int i = 0; i < placeArray.length-1; i++) {
-			for (int j = i+1; j < placeArray.length; j++) {
-				String aid = placeArray[i].getId();
-				String bid = placeArray[j].getId();
-				Type ta = new Type(this.removeOptSuffix(aid));
-				Type tb = new Type(this.removeOptSuffix(bid));
-				
-				if (ta.asParamsEqual(tb)) {
-					boolean orderer = ta.isConstValue || ta.isReference || MethodsToPetriNet.isOptional(net.getNode(aid));
+			for (int j = 0; j < placeArray.length; j++) {
+				if (i != j) {					
+					String aid = placeArray[i].getId();
+					String bid = placeArray[j].getId();
+					Type ta = new Type(this.removeOptSuffix(aid));
+					Type tb = new Type(this.removeOptSuffix(bid));
 					
-					String source = (orderer) ? bid : aid;
-					
-					if (!source.endsWith("(OPT)")) {
-						String target = (orderer) ? aid : bid;
-						MethodsToPetriNet.addTransition(net, source, target);						
+					if (ta.asParamsEqual(tb)) {
+						boolean orderer = ta.isConstValue || ta.isReference || MethodsToPetriNet.isOptional(net.getNode(aid));
+						
+						String source = (orderer) ? bid : aid;
+						
+						if (!source.endsWith("(OPT)")) {
+							String target = (orderer) ? aid : bid;
+							MethodsToPetriNet.addTransition(net, source, target);						
+						}
+					} else if (ta.valueTypeName.contentEquals("rclcpp::Node") && tb.valueTypeName.contentEquals("rcl_node_t") && (ta.isSharedPointer == tb.isSharedPointer)) {
+						MethodsToPetriNet.addTransition(net, aid, bid);
 					}
-				} else if (ta.valueTypeName.contentEquals("rclcpp::Node") && tb.valueTypeName.contentEquals("rcl_node_t") && (ta.isSharedPointer == tb.isSharedPointer)) {
-					MethodsToPetriNet.addTransition(net, aid, bid);
 				}
 			}
 		}

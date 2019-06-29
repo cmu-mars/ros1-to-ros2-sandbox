@@ -1,0 +1,86 @@
+{
+    "rclcpp::Publisher<::Publisher": [
+        {
+            "args": [
+                "rclcpp::node_interfaces::NodeBaseInterface",
+                "const std::string&",
+                "const rcl_publisher_options_t&",
+                "const PublisherEventCallbacks&",
+                "const std::shared_ptr< MessageAlloc>&"
+            ],
+            "ref": "http://docs.ros2.org/latest/api/rclcpp/classrclcpp_1_1Publisher.html#aa5f38fe7d4caaecf845b10499209e08e",
+            "func_type": "constructor",
+            "return": "",
+            "include": "publisher.hpp"
+        }
+    ],
+    "rclcpp::Publisher<::make_mapped_ring_buffer": [
+        {
+            "args": [
+                "size_t"
+            ],
+            "ref": "http://docs.ros2.org/latest/api/rclcpp/classrclcpp_1_1Publisher.html#adb330b42f444cdde85eb08912c172ee8",
+            "return": "mapped_ring_buffer::MappedRingBufferBase::SharedPtr"
+        }
+    ],
+    "rclcpp::Publisher<::publish": [
+        {
+            "args": [
+                "std::unique_ptr<MessageT, MessageDeleter>"
+            ],
+            "ref": "http://docs.ros2.org/latest/api/rclcpp/classrclcpp_1_1Publisher.html#ac1ebb44f82f908c469864f8c3ba82ced",
+            "return": "virtual void"
+        },
+        {
+            "args": [
+                "const std::shared_ptr< const MessageT>&"
+            ],
+            "ref": "http://docs.ros2.org/latest/api/rclcpp/classrclcpp_1_1Publisher.html#a5d7f018dfbefa16d20e724b4e9f902ae",
+            "return": "virtual void"
+        },
+        {
+            "args": [
+                "const MessageT&"
+            ],
+            "ref": "http://docs.ros2.org/latest/api/rclcpp/classrclcpp_1_1Publisher.html#a0b4acb5e7d57b9e0cce84564c86caab3",
+            "return": "virtual void"
+        },
+        {
+            "args": [
+                "const MessageT"
+            ],
+            "ref": "http://docs.ros2.org/latest/api/rclcpp/classrclcpp_1_1Publisher.html#afe24c65235f80bb331994595453d6798",
+            "return": "virtual void"
+        },
+        {
+            "args": [
+                "const rcl_serialized_message_t&"
+            ],
+            "ref": "http://docs.ros2.org/latest/api/rclcpp/classrclcpp_1_1Publisher.html#ae3c01c294aa92d63ef2aaaed90280ef5",
+            "return": "void"
+        },
+        {
+            "args": [
+                "const rcl_serialized_message_t"
+            ],
+            "ref": "http://docs.ros2.org/latest/api/rclcpp/classrclcpp_1_1Publisher.html#aa6255c4fdce4c645e8c5061cb6c19b29",
+            "return": "void"
+        },
+        {
+            "args": [
+                "std::shared_ptr< const rcl_serialized_message_t>"
+            ],
+            "ref": "http://docs.ros2.org/latest/api/rclcpp/classrclcpp_1_1Publisher.html#a897ef4622de42252260a1975cb368c7f",
+            "return": "void"
+        }
+    ],
+    "rclcpp::Publisher<::get_allocator": [
+        {
+            "args": [
+                "void"
+            ],
+            "ref": "http://docs.ros2.org/latest/api/rclcpp/classrclcpp_1_1Publisher.html#a79e2292d6b777c18c9e2e4407895cd06",
+            "return": "std::shared_ptr<MessageAlloc>"
+        }
+    ]
+}

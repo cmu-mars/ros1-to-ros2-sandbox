@@ -1,0 +1,285 @@
+{
+    "rclcpp::get_contexts": [
+        {
+            "args": [
+                "void"
+            ],
+            "ref": "http://docs.ros2.org/latest/api/rclcpp/namespacerclcpp.html#af73bf64bfc1b01f030012cd6d2e6e43c",
+            "return": "std::vector<Context::SharedPtr>"
+        }
+    ],
+    "rclcpp::spin_some": [
+        {
+            "args": [
+                "rclcpp::node_interfaces::NodeBaseInterface::SharedPtr"
+            ],
+            "ref": "http://docs.ros2.org/latest/api/rclcpp/namespacerclcpp.html#ad48c7a9cc4fa34989a0849d708d8f7de",
+            "return": "void"
+        },
+        {
+            "args": [
+                "rclcpp::Node::SharedPtr"
+            ],
+            "ref": "http://docs.ros2.org/latest/api/rclcpp/namespacerclcpp.html#a5e16488d62cc48e5520101f9f4f4102a",
+            "return": "void"
+        }
+    ],
+    "rclcpp::spin": [
+        {
+            "args": [
+                "rclcpp::node_interfaces::NodeBaseInterface::SharedPtr"
+            ],
+            "ref": "http://docs.ros2.org/latest/api/rclcpp/namespacerclcpp.html#a21e13577f5bcc5992de1d7dd08d8652b",
+            "return": "void"
+        },
+        {
+            "args": [
+                "rclcpp::Node::SharedPtr"
+            ],
+            "ref": "http://docs.ros2.org/latest/api/rclcpp/namespacerclcpp.html#a4bb335bc95a6fa8546a6bfcfd087eb57",
+            "return": "void"
+        }
+    ],
+    "rclcpp::expand_topic_or_service_name": [
+        {
+            "args": [
+                "const std::string&",
+                "const std::string&",
+                "const std::string&",
+                "bool (=false)"
+            ],
+            "ref": "http://docs.ros2.org/latest/api/rclcpp/namespacerclcpp.html#a1855b992b1b77f1ed75bab5192aaf2bd",
+            "return": "std::string"
+        }
+    ],
+    "rclcpp::get_logger": [
+        {
+            "args": [
+                "const std::string&"
+            ],
+            "ref": "http://docs.ros2.org/latest/api/rclcpp/namespacerclcpp.html#ae7295751947c08312aa69f45fd673171",
+            "return": "Logger"
+        }
+    ],
+    "rclcpp::get_node_logger": [
+        {
+            "args": [
+                "const rcl_node_t"
+            ],
+            "ref": "http://docs.ros2.org/latest/api/rclcpp/namespacerclcpp.html#a32cf150e9157d8ae52206bbb7f1a9310",
+            "return": "Logger"
+        }
+    ],
+    "rclcpp::extend_name_with_sub_namespace": [
+        {
+            "args": [
+                "const std::string&",
+                "const std::string&"
+            ],
+            "ref": "http://docs.ros2.org/latest/api/rclcpp/namespacerclcpp.html#a575513c28b9d018ab59102e53f49f57d",
+            "return": "RCLCPP_LOCAL std::string"
+        }
+    ],
+    "rclcpp::_to_json_dict_entry": [
+        {
+            "args": [
+                "const Parameter&"
+            ],
+            "ref": "http://docs.ros2.org/latest/api/rclcpp/namespacerclcpp.html#a4d8f47054b6c550888eca755f3203f05",
+            "return": "std::string"
+        }
+    ],
+    "rclcpp::operator<<": [
+        {
+            "args": [
+                "std::ostream&",
+                "const rclcpp::Parameter&"
+            ],
+            "ref": "http://docs.ros2.org/latest/api/rclcpp/namespacerclcpp.html#a6980e39627cfc70b542040ada42ca607",
+            "return": "std::ostream &"
+        },
+        {
+            "args": [
+                "std::ostream&",
+                "const std::vector< Parameter>&"
+            ],
+            "ref": "http://docs.ros2.org/latest/api/rclcpp/namespacerclcpp.html#a0e9c5f2bb49142b5f5ad11a8cf1c9328",
+            "return": "std::ostream &"
+        },
+        {
+            "args": [
+                "std::ostream&",
+                "ParameterType"
+            ],
+            "ref": "http://docs.ros2.org/latest/api/rclcpp/namespacerclcpp.html#aed5caea480fefe503c1a7a02b4024dca",
+            "return": "std::ostream &"
+        }
+    ],
+    "rclcpp::parameter_map_from": [
+        {
+            "args": [
+                "const rcl_params_t *const"
+            ],
+            "ref": "http://docs.ros2.org/latest/api/rclcpp/namespacerclcpp.html#aa974dc62646d9123ab206ca602c5e089",
+            "return": "ParameterMap"
+        }
+    ],
+    "rclcpp::parameter_value_from": [
+        {
+            "args": [
+                "const rcl_variant_t *const"
+            ],
+            "ref": "http://docs.ros2.org/latest/api/rclcpp/namespacerclcpp.html#aa1a3f3243d1e335570334169979080cd",
+            "return": "ParameterValue"
+        }
+    ],
+    "rclcpp::to_string": [
+        {
+            "args": [
+                "ParameterType"
+            ],
+            "ref": "http://docs.ros2.org/latest/api/rclcpp/namespacerclcpp.html#a36b93cd43e33e496e2a43f3eb9504b12",
+            "return": "std::string"
+        },
+        {
+            "args": [
+                "const ParameterValue&"
+            ],
+            "ref": "http://docs.ros2.org/latest/api/rclcpp/namespacerclcpp.html#acc7cfb4c8905865fb02f3c8018657057",
+            "return": "std::string"
+        }
+    ],
+    "rclcpp::operator+": [
+        {
+            "args": [
+                "const rclcpp::Duration&",
+                "const rclcpp::Time&"
+            ],
+            "ref": "http://docs.ros2.org/latest/api/rclcpp/namespacerclcpp.html#a31b2ba48a94966a93b36de2e52cae2bb",
+            "return": "Time"
+        }
+    ],
+    "rclcpp::init": [
+        {
+            "args": [
+                "int",
+                "char const *const []",
+                "const InitOptions& (=InitOptions())"
+            ],
+            "ref": "http://docs.ros2.org/latest/api/rclcpp/namespacerclcpp.html#a2db29afebba8f677bc8660a45bb910bb",
+            "return": "void"
+        }
+    ],
+    "rclcpp::install_signal_handlers": [
+        {
+            "args": [
+                "void"
+            ],
+            "ref": "http://docs.ros2.org/latest/api/rclcpp/namespacerclcpp.html#a98aab08c64d725e46dee33ee5d705277",
+            "return": "bool"
+        }
+    ],
+    "rclcpp::signal_handlers_installed": [
+        {
+            "args": [
+                "void"
+            ],
+            "ref": "http://docs.ros2.org/latest/api/rclcpp/namespacerclcpp.html#a3944023ee7719c1b3eab2a1cd4e0f3f3",
+            "return": "bool"
+        }
+    ],
+    "rclcpp::uninstall_signal_handlers": [
+        {
+            "args": [
+                "void"
+            ],
+            "ref": "http://docs.ros2.org/latest/api/rclcpp/namespacerclcpp.html#ad74690adaed20915f98b36c0e93d3231",
+            "return": "bool"
+        }
+    ],
+    "rclcpp::init_and_remove_ros_arguments": [
+        {
+            "args": [
+                "int",
+                "char const *const []",
+                "const InitOptions& (=InitOptions())"
+            ],
+            "ref": "http://docs.ros2.org/latest/api/rclcpp/namespacerclcpp.html#ae27196203387b54cc4345b8d1303e45a",
+            "return": "std::vector<std::string>"
+        }
+    ],
+    "rclcpp::remove_ros_arguments": [
+        {
+            "args": [
+                "int",
+                "char const *const []"
+            ],
+            "ref": "http://docs.ros2.org/latest/api/rclcpp/namespacerclcpp.html#ad4968a767791995c011c57be22cd40c8",
+            "return": "std::vector<std::string>"
+        }
+    ],
+    "rclcpp::ok": [
+        {
+            "args": [
+                "rclcpp::Context::SharedPtr (=nullptr)"
+            ],
+            "ref": "http://docs.ros2.org/latest/api/rclcpp/namespacerclcpp.html#adbe8ffd2b1769e897f2c50d560812b43",
+            "return": "bool"
+        }
+    ],
+    "rclcpp::is_initialized": [
+        {
+            "args": [
+                "rclcpp::Context::SharedPtr (=nullptr)"
+            ],
+            "ref": "http://docs.ros2.org/latest/api/rclcpp/namespacerclcpp.html#ac9460447dae147a331cab70668a7ddd2",
+            "return": "bool"
+        }
+    ],
+    "rclcpp::shutdown": [
+        {
+            "args": [
+                "rclcpp::Context::SharedPtr (=nullptr)",
+                "const std::string& (=\"user called rclcpp::shutdown()\")"
+            ],
+            "ref": "http://docs.ros2.org/latest/api/rclcpp/namespacerclcpp.html#a493714a679d1591142800416a286689f",
+            "return": "bool"
+        }
+    ],
+    "rclcpp::on_shutdown": [
+        {
+            "args": [
+                "std::function< void()>",
+                "rclcpp::Context::SharedPtr (=nullptr)"
+            ],
+            "ref": "http://docs.ros2.org/latest/api/rclcpp/namespacerclcpp.html#a01e2c223964ccca7ede393af47fac025",
+            "return": "void"
+        }
+    ],
+    "rclcpp::sleep_for": [
+        {
+            "args": [
+                "const std::chrono::nanoseconds&",
+                "rclcpp::Context::SharedPtr (=nullptr)"
+            ],
+            "ref": "http://docs.ros2.org/latest/api/rclcpp/namespacerclcpp.html#ac305329e4e97948d4bb216e894caa4ae",
+            "return": "bool"
+        }
+    ],
+    "rclcpp::get_c_string": [
+        {
+            "args": [
+                "const char"
+            ],
+            "ref": "http://docs.ros2.org/latest/api/rclcpp/namespacerclcpp.html#a1fdf023cdc167cb3d4d353353cd4cced",
+            "return": "const char *"
+        },
+        {
+            "args": [
+                "const std::string&"
+            ],
+            "ref": "http://docs.ros2.org/latest/api/rclcpp/namespacerclcpp.html#a7743e6192ef035115abdeeb90227c45c",
+            "return": "const char *"
+        }
+    ]
+}

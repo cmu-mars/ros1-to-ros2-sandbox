@@ -1,93 +1,220 @@
 {
-    "rclcpp::Subscription<::Subscription": [
-        {
-            "args": [
-                "std::shared_ptr< rcl_node_t>",
-                "const rosidl_message_type_support_t&",
-                "const std::string&",
-                "const rcl_subscription_options_t&",
-                "AnySubscriptionCallback<CallbackMessageT, Alloc>",
-                "const SubscriptionEventCallbacks&",
-                "typename message_memory_strategy::MessageMemoryStrategy<CallbackMessageT, Alloc>::SharedPtr (=message_memory_strategy::MessageMemoryStrategy<CallbackMessageT, Alloc>::create_default())"
-            ],
-            "ref": "http://docs.ros2.org/latest/api/rclcpp/classrclcpp_1_1Subscription.html#aa7b78e26ddad5afd6af447b557335580",
-            "func_type": "constructor",
-            "return": "",
-            "include": "subscription.hpp"
-        }
-    ],
-    "rclcpp::Subscription<::set_message_memory_strategy": [
-        {
-            "args": [
-                "typename message_memory_strategy::MessageMemoryStrategy<CallbackMessageT, Alloc>::SharedPtr"
-            ],
-            "ref": "http://docs.ros2.org/latest/api/rclcpp/classrclcpp_1_1Subscription.html#afdb540ff34152b5059cf9e19d51913a2",
-            "return": "void"
-        }
-    ],
-    "rclcpp::Subscription<::create_message": [
-        {
-            "args": [
-                "void"
-            ],
-            "ref": "http://docs.ros2.org/latest/api/rclcpp/classrclcpp_1_1Subscription.html#a7ecacb43bdad4223635024280221ebd2",
-            "return": "std::shared_ptr<void>"
-        }
-    ],
-    "rclcpp::Subscription<::create_serialized_message": [
-        {
-            "args": [
-                "void"
-            ],
-            "ref": "http://docs.ros2.org/latest/api/rclcpp/classrclcpp_1_1Subscription.html#a2ba44894f540888ab734e841fe5ae7a9",
-            "return": "std::shared_ptr<rcl_serialized_message_t>"
-        }
-    ],
-    "rclcpp::Subscription<::handle_message": [
-        {
-            "args": [
-                "std::shared_ptr< void>&",
-                "const rmw_message_info_t&"
-            ],
-            "ref": "http://docs.ros2.org/latest/api/rclcpp/classrclcpp_1_1Subscription.html#a04af146c2c1f2bdc8c3880d288428e8c",
-            "return": "void"
-        }
-    ],
-    "rclcpp::Subscription<::return_message": [
-        {
-            "args": [
-                "std::shared_ptr< void>&"
-            ],
-            "ref": "http://docs.ros2.org/latest/api/rclcpp/classrclcpp_1_1Subscription.html#a8b35e43529e960d1ef9d83c3921b65da",
-            "return": "void"
-        }
-    ],
-    "rclcpp::Subscription<::return_serialized_message": [
-        {
-            "args": [
-                "std::shared_ptr< rcl_serialized_message_t>&"
-            ],
-            "ref": "http://docs.ros2.org/latest/api/rclcpp/classrclcpp_1_1Subscription.html#a130b6f88513a1d47c7819d15f22f8ed3",
-            "return": "void"
-        }
-    ],
-    "rclcpp::Subscription<::handle_intra_process_message": [
-        {
-            "args": [
-                "rcl_interfaces::msg::IntraProcessMessage&",
-                "const rmw_message_info_t&"
-            ],
-            "ref": "http://docs.ros2.org/latest/api/rclcpp/classrclcpp_1_1Subscription.html#aa018feb30bcb01b13b0d65adcebc24f1",
-            "return": "void"
-        }
-    ],
-    "rclcpp::Subscription<::get_intra_process_subscription_handle": [
-        {
-            "args": [
-                "void"
-            ],
-            "ref": "http://docs.ros2.org/latest/api/rclcpp/classrclcpp_1_1Subscription.html#aaa77cab8497688b42b388f265a01d0f4",
-            "return": "const std::shared_ptr<rcl_subscription_t>"
-        }
-    ]
+    "rclcpp::Subscription<CallbackMessageT, Alloc>::Subscription": {
+        "args": [
+            "std::shared_ptr< rcl_node_t >",
+            "const rosidl_message_type_support_t &",
+            "const std::string &",
+            "const rcl_subscription_options_t &",
+            "AnySubscriptionCallback< CallbackMessageT, Alloc >",
+            "const SubscriptionEventCallbacks &",
+            "typename message_memory_strategy::MessageMemoryStrategy< CallbackMessageT, Alloc >::SharedPtr (=message_memory_strategy::MessageMemoryStrategy<CallbackMessageT,\u00a0Alloc>::create_default())"
+        ],
+        "return": "rclcpp::Subscription< CallbackMessageT, Alloc",
+        "template": [
+            {
+                "name": "CallbackMessageT"
+            },
+            {
+                "name": "Alloc",
+                "value": "std::allocator<void>"
+            }
+        ],
+        "include": "rclcpp/subscription.hpp",
+        "ref": [
+            "http://docs.ros2.org/latest/api/rclcpp/classrclcpp_1_1Subscription.html#aa7b78e26ddad5afd6af447b557335580",
+            "http://en.cppreference.com/w/cpp/memory/shared_ptr.html",
+            "http://docs.ros2.org/dashing/api/rcl/structrcl__node__t.html",
+            "http://en.cppreference.com/w/cpp/string/basic_string.html",
+            "http://docs.ros2.org/dashing/api/rcl/structrcl__subscription__options__t.html",
+            "http://docs.ros2.org/latest/api/rclcpp/classrclcpp_1_1Subscription.html",
+            "http://docs.ros2.org/latest/api/rclcpp/classrclcpp_1_1AnySubscriptionCallback.html",
+            "http://docs.ros2.org/latest/api/rclcpp/structrclcpp_1_1SubscriptionEventCallbacks.html",
+            "http://docs.ros2.org/latest/api/rclcpp/classrclcpp_1_1message__memory__strategy_1_1MessageMemoryStrategy.html",
+            "http://docs.ros2.org/latest/api/rclcpp/classrclcpp_1_1Node.html#a6dbcf674cc0fe7ec611a44f08b6720fe",
+            "http://docs.ros2.org/latest/api/rclcpp/namespacerclcpp_1_1memory__strategy.html"
+        ],
+        "func_type": "constructor"
+    },
+    "rclcpp::Subscription<CallbackMessageT, Alloc>::set_message_memory_strategy": {
+        "args": [
+            "typename message_memory_strategy::MessageMemoryStrategy< CallbackMessageT, Alloc >::SharedPtr"
+        ],
+        "return": "void rclcpp::Subscription< CallbackMessageT, Alloc",
+        "template": [
+            {
+                "name": "CallbackMessageT"
+            },
+            {
+                "name": "Alloc",
+                "value": "std::allocator<void>"
+            }
+        ],
+        "include": "rclcpp/subscription.hpp",
+        "ref": [
+            "http://docs.ros2.org/latest/api/rclcpp/classrclcpp_1_1Subscription.html#afdb540ff34152b5059cf9e19d51913a2",
+            "http://docs.ros2.org/latest/api/rclcpp/classrclcpp_1_1Subscription.html",
+            "http://docs.ros2.org/latest/api/rclcpp/classrclcpp_1_1message__memory__strategy_1_1MessageMemoryStrategy.html",
+            "http://docs.ros2.org/latest/api/rclcpp/namespacerclcpp_1_1message__memory__strategy.html"
+        ]
+    },
+    "rclcpp::Subscription<CallbackMessageT, Alloc>::create_message": {
+        "args": [
+            "void"
+        ],
+        "return": "std::shared_ptr<void> rclcpp::Subscription< CallbackMessageT, Alloc",
+        "template": [
+            {
+                "name": "CallbackMessageT"
+            },
+            {
+                "name": "Alloc",
+                "value": "std::allocator<void>"
+            }
+        ],
+        "include": "rclcpp/subscription.hpp",
+        "ref": [
+            "http://docs.ros2.org/latest/api/rclcpp/classrclcpp_1_1Subscription.html#a7ecacb43bdad4223635024280221ebd2",
+            "http://en.cppreference.com/w/cpp/memory/shared_ptr.html",
+            "http://docs.ros2.org/latest/api/rclcpp/classrclcpp_1_1Subscription.html",
+            "http://docs.ros2.org/latest/api/rclcpp/classrclcpp_1_1SubscriptionBase.html#a82e353f7653570b836051428f02a2171"
+        ]
+    },
+    "rclcpp::Subscription<CallbackMessageT, Alloc>::create_serialized_message": {
+        "args": [
+            "void"
+        ],
+        "return": "std::shared_ptr<rcl_serialized_message_t> rclcpp::Subscription< CallbackMessageT, Alloc",
+        "template": [
+            {
+                "name": "CallbackMessageT"
+            },
+            {
+                "name": "Alloc",
+                "value": "std::allocator<void>"
+            }
+        ],
+        "include": "rclcpp/subscription.hpp",
+        "ref": [
+            "http://docs.ros2.org/latest/api/rclcpp/classrclcpp_1_1Subscription.html#a2ba44894f540888ab734e841fe5ae7a9",
+            "http://en.cppreference.com/w/cpp/memory/shared_ptr.html",
+            "http://docs.ros2.org/dashing/api/rcl/types_8h.html#aacac4adc45d07815b73188eafd77d705",
+            "http://docs.ros2.org/latest/api/rclcpp/classrclcpp_1_1Subscription.html",
+            "http://docs.ros2.org/latest/api/rclcpp/classrclcpp_1_1SubscriptionBase.html#ac614ca8f6e374e79a8339606b112c2d7"
+        ]
+    },
+    "rclcpp::Subscription<CallbackMessageT, Alloc>::handle_message": {
+        "args": [
+            "std::shared_ptr< void > &",
+            "const rmw_message_info_t &"
+        ],
+        "return": "void rclcpp::Subscription< CallbackMessageT, Alloc",
+        "template": [
+            {
+                "name": "CallbackMessageT"
+            },
+            {
+                "name": "Alloc",
+                "value": "std::allocator<void>"
+            }
+        ],
+        "include": "rclcpp/subscription.hpp",
+        "ref": [
+            "http://docs.ros2.org/latest/api/rclcpp/classrclcpp_1_1Subscription.html#a04af146c2c1f2bdc8c3880d288428e8c",
+            "http://en.cppreference.com/w/cpp/memory/shared_ptr.html",
+            "http://docs.ros2.org/dashing/api/rmw/structrmw__message__info__t.html",
+            "http://docs.ros2.org/latest/api/rclcpp/classrclcpp_1_1Subscription.html",
+            "http://docs.ros2.org/latest/api/rclcpp/classrclcpp_1_1SubscriptionBase.html#a3de3d6bfe7c7cbfbf36fafbfddc73928"
+        ]
+    },
+    "rclcpp::Subscription<CallbackMessageT, Alloc>::return_message": {
+        "args": [
+            "std::shared_ptr< void > &"
+        ],
+        "return": "void rclcpp::Subscription< CallbackMessageT, Alloc",
+        "template": [
+            {
+                "name": "CallbackMessageT"
+            },
+            {
+                "name": "Alloc",
+                "value": "std::allocator<void>"
+            }
+        ],
+        "include": "rclcpp/subscription.hpp",
+        "ref": [
+            "http://docs.ros2.org/latest/api/rclcpp/classrclcpp_1_1Subscription.html#a8b35e43529e960d1ef9d83c3921b65da",
+            "http://en.cppreference.com/w/cpp/memory/shared_ptr.html",
+            "http://docs.ros2.org/latest/api/rclcpp/classrclcpp_1_1Subscription.html",
+            "http://docs.ros2.org/latest/api/rclcpp/classrclcpp_1_1SubscriptionBase.html#ac44162910e6e0c184eaa1bf729287c55"
+        ]
+    },
+    "rclcpp::Subscription<CallbackMessageT, Alloc>::return_serialized_message": {
+        "args": [
+            "std::shared_ptr< rcl_serialized_message_t > &"
+        ],
+        "return": "void rclcpp::Subscription< CallbackMessageT, Alloc",
+        "template": [
+            {
+                "name": "CallbackMessageT"
+            },
+            {
+                "name": "Alloc",
+                "value": "std::allocator<void>"
+            }
+        ],
+        "include": "rclcpp/subscription.hpp",
+        "ref": [
+            "http://docs.ros2.org/latest/api/rclcpp/classrclcpp_1_1Subscription.html#a130b6f88513a1d47c7819d15f22f8ed3",
+            "http://en.cppreference.com/w/cpp/memory/shared_ptr.html",
+            "http://docs.ros2.org/dashing/api/rcl/types_8h.html#aacac4adc45d07815b73188eafd77d705",
+            "http://docs.ros2.org/latest/api/rclcpp/classrclcpp_1_1Subscription.html",
+            "http://docs.ros2.org/latest/api/rclcpp/classrclcpp_1_1SubscriptionBase.html#a0dae15fd8e9834b24a63cd7eda93da9c"
+        ]
+    },
+    "rclcpp::Subscription<CallbackMessageT, Alloc>::handle_intra_process_message": {
+        "args": [
+            "rcl_interfaces::msg::IntraProcessMessage &",
+            "const rmw_message_info_t &"
+        ],
+        "return": "void rclcpp::Subscription< CallbackMessageT, Alloc",
+        "template": [
+            {
+                "name": "CallbackMessageT"
+            },
+            {
+                "name": "Alloc",
+                "value": "std::allocator<void>"
+            }
+        ],
+        "include": "rclcpp/subscription.hpp",
+        "ref": [
+            "http://docs.ros2.org/latest/api/rclcpp/classrclcpp_1_1Subscription.html#aa018feb30bcb01b13b0d65adcebc24f1",
+            "http://docs.ros2.org/dashing/api/rmw/structrmw__message__info__t.html",
+            "http://docs.ros2.org/latest/api/rclcpp/classrclcpp_1_1Subscription.html",
+            "http://docs.ros2.org/latest/api/rclcpp/classrclcpp_1_1SubscriptionBase.html#a37acb5793918f9fa6c9eedd6eafe4f71"
+        ]
+    },
+    "rclcpp::Subscription<CallbackMessageT, Alloc>::get_intra_process_subscription_handle": {
+        "args": [
+            "void"
+        ],
+        "return": "const std::shared_ptr<rcl_subscription_t> rclcpp::Subscription< CallbackMessageT, Alloc",
+        "template": [
+            {
+                "name": "CallbackMessageT"
+            },
+            {
+                "name": "Alloc",
+                "value": "std::allocator<void>"
+            }
+        ],
+        "include": "rclcpp/subscription.hpp",
+        "ref": [
+            "http://docs.ros2.org/latest/api/rclcpp/classrclcpp_1_1Subscription.html#aaa77cab8497688b42b388f265a01d0f4",
+            "http://en.cppreference.com/w/cpp/memory/shared_ptr.html",
+            "http://docs.ros2.org/dashing/api/rcl/structrcl__subscription__t.html",
+            "http://docs.ros2.org/latest/api/rclcpp/classrclcpp_1_1Subscription.html",
+            "http://docs.ros2.org/latest/api/rclcpp/classrclcpp_1_1SubscriptionBase.html#a47cadafc74de578b58ba3b4c5c77d9f1"
+        ]
+    }
 }

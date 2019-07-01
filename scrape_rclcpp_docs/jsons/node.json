@@ -50,6 +50,7 @@
             "void"
         ],
         "return": "const char*",
+        "include": "rclcpp/node.hpp",
         "ref": [
             "http://docs.ros2.org/latest/api/rclcpp/classrclcpp_1_1Node.html#a1e162104495b21f50c1e9aa11460fb93"
         ]
@@ -59,6 +60,7 @@
             "void"
         ],
         "return": "const char*",
+        "include": "rclcpp/node.hpp",
         "ref": [
             "http://docs.ros2.org/latest/api/rclcpp/classrclcpp_1_1Node.html#a7be04e55e2934e05df992b188d9dce6d",
             "http://docs.ros2.org/latest/api/rclcpp/classrclcpp_1_1Node.html#afe4790bba38942b795d24b6ccb3e9c5a",
@@ -70,6 +72,7 @@
             "void"
         ],
         "return": "const char*",
+        "include": "rclcpp/node.hpp",
         "ref": [
             "http://docs.ros2.org/latest/api/rclcpp/classrclcpp_1_1Node.html#a57f81aa79665cd9d16a591bddf762747"
         ]
@@ -79,6 +82,7 @@
             "void"
         ],
         "return": "rclcpp::Logger",
+        "include": "rclcpp/node.hpp",
         "ref": [
             "http://docs.ros2.org/latest/api/rclcpp/classrclcpp_1_1Node.html#a884ebededa2125cb8316998852ca3fc5",
             "http://docs.ros2.org/latest/api/rclcpp/classrclcpp_1_1Logger.html"
@@ -89,6 +93,7 @@
             "rclcpp::callback_group::CallbackGroupType"
         ],
         "return": "rclcpp::callback_group::CallbackGroup::SharedPtr",
+        "include": "rclcpp/node.hpp",
         "ref": [
             "http://docs.ros2.org/latest/api/rclcpp/classrclcpp_1_1Node.html#a5465f425d2fa3b3dc1df6e901eb5a608",
             "http://docs.ros2.org/latest/api/rclcpp/namespacerclcpp_1_1callback__group.html#a0dc3fb88dd5871c2230be09da1a342d4"
@@ -99,11 +104,253 @@
             "void"
         ],
         "return": "const std::vector<rclcpp::callback_group::CallbackGroup::WeakPtr>&",
+        "include": "rclcpp/node.hpp",
         "ref": [
             "http://docs.ros2.org/latest/api/rclcpp/classrclcpp_1_1Node.html#a3bd80800f1b692c1c3d35c695ec0348c",
             "http://en.cppreference.com/w/cpp/container/vector.html"
         ]
     },
+    "rclcpp::Node::create_publisher": [
+        {
+            "args": [
+                "const std::string &",
+                "const rclcpp::QoS &",
+                "const PublisherOptionsWithAllocator<AllocatorT> & (=PublisherOptionsWithAllocator<AllocatorT>())"
+            ],
+            "return": "std::shared_ptr<PublisherT>",
+            "template": [
+                {
+                    "name": "MessageT"
+                },
+                {
+                    "name": "AllocatorT"
+                },
+                {
+                    "name": "PublisherT"
+                }
+            ],
+            "include": "rclcpp/node.hpp",
+            "ref": [
+                "http://docs.ros2.org/latest/api/rclcpp/classrclcpp_1_1Node.html#ad1dfc9d04d67ab93353e04a7df72bc9a",
+                "http://en.cppreference.com/w/cpp/memory/shared_ptr.html",
+                "http://en.cppreference.com/w/cpp/string/basic_string.html",
+                "http://docs.ros2.org/latest/api/rclcpp/classrclcpp_1_1QoS.html",
+                "http://docs.ros2.org/latest/api/rclcpp/structrclcpp_1_1PublisherOptionsWithAllocator.html",
+                "http://docs.ros2.org/latest/api/rclcpp/classrclcpp_1_1Publisher.html",
+                "http://docs.ros2.org/latest/api/rclcpp/structrclcpp_1_1KeepLast.html",
+                "http://docs.ros2.org/latest/api/rclcpp/classrclcpp_1_1Service.html"
+            ]
+        },
+        {
+            "args": [
+                "const std::string &",
+                "size_t",
+                "std::shared_ptr<AllocatorT>"
+            ],
+            "return": "std::shared_ptr<PublisherT>",
+            "template": [
+                {
+                    "name": "MessageT"
+                },
+                {
+                    "name": "AllocatorT"
+                },
+                {
+                    "name": "PublisherT"
+                }
+            ],
+            "include": "rclcpp/node.hpp",
+            "ref": [
+                "http://docs.ros2.org/latest/api/rclcpp/classrclcpp_1_1Node.html#ad1dfc9d04d67ab93353e04a7df72bc9a",
+                "http://en.cppreference.com/w/cpp/memory/shared_ptr.html",
+                "http://en.cppreference.com/w/cpp/string/basic_string.html",
+                "http://docs.ros2.org/latest/api/rclcpp/classrclcpp_1_1Publisher.html"
+            ]
+        },
+        {
+            "args": [
+                "const std::string &",
+                "const rmw_qos_profile_t & (=rmw_qos_profile_default)",
+                "std::shared_ptr<AllocatorT> (=nullptr)"
+            ],
+            "return": "std::shared_ptr<PublisherT>",
+            "template": [
+                {
+                    "name": "MessageT"
+                },
+                {
+                    "name": "AllocatorT"
+                },
+                {
+                    "name": "PublisherT"
+                }
+            ],
+            "include": "rclcpp/node.hpp",
+            "ref": [
+                "http://docs.ros2.org/latest/api/rclcpp/classrclcpp_1_1Node.html#ad1dfc9d04d67ab93353e04a7df72bc9a",
+                "http://en.cppreference.com/w/cpp/memory/shared_ptr.html",
+                "http://en.cppreference.com/w/cpp/string/basic_string.html",
+                "http://docs.ros2.org/dashing/api/rmw/structrmw__qos__profile__t.html",
+                "http://docs.ros2.org/latest/api/rclcpp/classrclcpp_1_1Publisher.html"
+            ]
+        }
+    ],
+    "rclcpp::Node::create_subscription": [
+        {
+            "args": [
+                "const std::string &",
+                "const rclcpp::QoS &",
+                "CallbackT &&",
+                "const SubscriptionOptionsWithAllocator<AllocatorT> & (=SubscriptionOptionsWithAllocator<AllocatorT>())",
+                "typename rclcpp::message_memory_strategy::MessageMemoryStrategy<typename rclcpp::subscription_traits::has_message_type<CallbackT>::type, AllocatorT>::SharedPtr (=nullptr)"
+            ],
+            "return": "std::shared_ptr<SubscriptionT>",
+            "template": [
+                {
+                    "name": "MessageT"
+                },
+                {
+                    "name": "CallbackT"
+                },
+                {
+                    "name": "AllocatorT"
+                },
+                {
+                    "name": "SubscriptionT"
+                }
+            ],
+            "include": "rclcpp/node.hpp",
+            "ref": [
+                "http://docs.ros2.org/latest/api/rclcpp/classrclcpp_1_1Node.html#a6dbcf674cc0fe7ec611a44f08b6720fe",
+                "http://en.cppreference.com/w/cpp/memory/shared_ptr.html",
+                "http://en.cppreference.com/w/cpp/string/basic_string.html",
+                "http://docs.ros2.org/latest/api/rclcpp/classrclcpp_1_1QoS.html",
+                "http://docs.ros2.org/latest/api/rclcpp/structrclcpp_1_1SubscriptionOptionsWithAllocator.html",
+                "http://docs.ros2.org/latest/api/rclcpp/classrclcpp_1_1message__memory__strategy_1_1MessageMemoryStrategy.html",
+                "http://docs.ros2.org/latest/api/rclcpp/structrclcpp_1_1subscription__traits_1_1has__message__type.html",
+                "http://docs.ros2.org/latest/api/rclcpp/classrclcpp_1_1Subscription.html"
+            ]
+        },
+        {
+            "args": [
+                "const std::string &",
+                "CallbackT &&",
+                "const rmw_qos_profile_t & (=rmw_qos_profile_default)",
+                "rclcpp::callback_group::CallbackGroup::SharedPtr (=nullptr)",
+                "bool (=false)",
+                "typename rclcpp::message_memory_strategy::MessageMemoryStrategy<typename rclcpp::subscription_traits::has_message_type<CallbackT>::type, Alloc>::SharedPtr (=nullptr)",
+                "std::shared_ptr<Alloc> (=nullptr)"
+            ],
+            "return": "std::shared_ptr<SubscriptionT>",
+            "template": [
+                {
+                    "name": "MessageT"
+                },
+                {
+                    "name": "CallbackT"
+                },
+                {
+                    "name": "Alloc"
+                },
+                {
+                    "name": "SubscriptionT"
+                }
+            ],
+            "include": "rclcpp/node.hpp",
+            "ref": [
+                "http://docs.ros2.org/latest/api/rclcpp/classrclcpp_1_1Node.html#a6dbcf674cc0fe7ec611a44f08b6720fe",
+                "http://en.cppreference.com/w/cpp/memory/shared_ptr.html",
+                "http://en.cppreference.com/w/cpp/string/basic_string.html",
+                "http://docs.ros2.org/dashing/api/rmw/structrmw__qos__profile__t.html",
+                "http://docs.ros2.org/latest/api/rclcpp/classrclcpp_1_1message__memory__strategy_1_1MessageMemoryStrategy.html",
+                "http://docs.ros2.org/latest/api/rclcpp/structrclcpp_1_1subscription__traits_1_1has__message__type.html",
+                "http://docs.ros2.org/latest/api/rclcpp/classrclcpp_1_1Subscription.html"
+            ]
+        },
+        {
+            "args": [
+                "const std::string &",
+                "CallbackT &&",
+                "size_t",
+                "rclcpp::callback_group::CallbackGroup::SharedPtr (=nullptr)",
+                "bool (=false)",
+                "typename rclcpp::message_memory_strategy::MessageMemoryStrategy<typename rclcpp::subscription_traits::has_message_type<CallbackT>::type, Alloc>::SharedPtr (=nullptr)",
+                "std::shared_ptr<Alloc> (=nullptr)"
+            ],
+            "return": "std::shared_ptr<SubscriptionT>",
+            "template": [
+                {
+                    "name": "MessageT"
+                },
+                {
+                    "name": "CallbackT"
+                },
+                {
+                    "name": "Alloc"
+                },
+                {
+                    "name": "SubscriptionT"
+                }
+            ],
+            "include": "rclcpp/node.hpp",
+            "ref": [
+                "http://docs.ros2.org/latest/api/rclcpp/classrclcpp_1_1Node.html#a6dbcf674cc0fe7ec611a44f08b6720fe",
+                "http://en.cppreference.com/w/cpp/memory/shared_ptr.html",
+                "http://en.cppreference.com/w/cpp/string/basic_string.html",
+                "http://docs.ros2.org/latest/api/rclcpp/classrclcpp_1_1message__memory__strategy_1_1MessageMemoryStrategy.html",
+                "http://docs.ros2.org/latest/api/rclcpp/structrclcpp_1_1subscription__traits_1_1has__message__type.html",
+                "http://docs.ros2.org/latest/api/rclcpp/classrclcpp_1_1Subscription.html"
+            ]
+        }
+    ],
+    "rclcpp::Node::create_wall_timer": {
+        "args": [
+            "std::chrono::duration<DurationRepT, DurationT>",
+            "CallbackT",
+            "rclcpp::callback_group::CallbackGroup::SharedPtr (=nullptr)"
+        ],
+        "return": "rclcpp::WallTimer<CallbackT>::SharedPtr",
+        "template": [
+            {
+                "name": "DurationRepT"
+            },
+            {
+                "name": "DurationT"
+            },
+            {
+                "name": "CallbackT"
+            }
+        ],
+        "include": "rclcpp/node.hpp",
+        "ref": [
+            "http://docs.ros2.org/latest/api/rclcpp/classrclcpp_1_1Node.html#a72bcd0268e23fafda8766b01f1ce624f",
+            "http://en.cppreference.com/w/cpp/chrono/duration.html",
+            "http://docs.ros2.org/latest/api/rclcpp/classrclcpp_1_1WallTimer.html",
+            "http://docs.ros2.org/latest/api/rclcpp/classrclcpp_1_1Time.html"
+        ]
+    },
+    "rclcpp::Node::create_client": [
+        {
+            "args": [
+                "const std::string &",
+                "const rmw_qos_profile_t &",
+                "rclcpp::callback_group::CallbackGroup::SharedPtr"
+            ],
+            "return": "Client<ServiceT>::SharedPtr",
+            "template": [
+                {
+                    "name": "ServiceT"
+                }
+            ],
+            "include": "rclcpp/node.hpp",
+            "ref": [
+                "http://docs.ros2.org/latest/api/rclcpp/classrclcpp_1_1Node.html#a8e9075a7810bbac1ae60727de69cfa23",
+                "http://en.cppreference.com/w/cpp/string/basic_string.html",
+                "http://docs.ros2.org/dashing/api/rmw/structrmw__qos__profile__t.html",
+                "http://docs.ros2.org/latest/api/rclcpp/classrclcpp_1_1Client.html"
+            ]
+        }
+    ],
     "rclcpp::Node::declare_parameter": [
         {
             "args": [
@@ -112,6 +359,7 @@
                 "const rcl_interfaces::msg::ParameterDescriptor & (=rcl_interfaces::msg::ParameterDescriptor())"
             ],
             "return": "const rclcpp::ParameterValue&",
+            "include": "rclcpp/node.hpp",
             "ref": [
                 "http://docs.ros2.org/latest/api/rclcpp/classrclcpp_1_1Node.html#a64df64d004b6263c3c04f42179fc8f52",
                 "http://en.cppreference.com/w/cpp/string/basic_string.html",
@@ -142,11 +390,57 @@
             ]
         }
     ],
+    "rclcpp::Node::declare_parameters": [
+        {
+            "args": [
+                "const std::string &",
+                "const std::map<std::string, ParameterT> &"
+            ],
+            "return": "std::vector<ParameterT>",
+            "template": [
+                {
+                    "name": "ParameterT"
+                }
+            ],
+            "include": "rclcpp/node.hpp",
+            "ref": [
+                "http://docs.ros2.org/latest/api/rclcpp/classrclcpp_1_1Node.html#a70012f2efbed147a2710343856acace5",
+                "http://en.cppreference.com/w/cpp/container/vector.html",
+                "http://en.cppreference.com/w/cpp/string/basic_string.html",
+                "http://en.cppreference.com/w/cpp/container/map.html",
+                "http://en.cppreference.com/w/cpp/utility/pair.html",
+                "http://docs.ros2.org/latest/api/rclcpp/classrclcpp_1_1exceptions_1_1InvalidParameterValueException.html",
+                "http://docs.ros2.org/latest/api/rclcpp/classrclcpp_1_1exceptions_1_1ParameterAlreadyDeclaredException.html",
+                "http://docs.ros2.org/latest/api/rclcpp/classrclcpp_1_1exceptions_1_1InvalidParametersException.html"
+            ]
+        },
+        {
+            "args": [
+                "const std::string &",
+                "const std::map<std::string, std::pair<ParameterT, rcl_interfaces::msg::ParameterDescriptor>> &"
+            ],
+            "return": "std::vector<ParameterT>",
+            "template": [
+                {
+                    "name": "ParameterT"
+                }
+            ],
+            "include": "rclcpp/node.hpp",
+            "ref": [
+                "http://docs.ros2.org/latest/api/rclcpp/classrclcpp_1_1Node.html#a70012f2efbed147a2710343856acace5",
+                "http://en.cppreference.com/w/cpp/container/vector.html",
+                "http://en.cppreference.com/w/cpp/string/basic_string.html",
+                "http://en.cppreference.com/w/cpp/container/map.html",
+                "http://en.cppreference.com/w/cpp/utility/pair.html"
+            ]
+        }
+    ],
     "rclcpp::Node::undeclare_parameter": {
         "args": [
             "const std::string &"
         ],
         "return": "void",
+        "include": "rclcpp/node.hpp",
         "ref": [
             "http://docs.ros2.org/latest/api/rclcpp/classrclcpp_1_1Node.html#a2c525bd10070bd025bd570e98afd0d7d",
             "http://en.cppreference.com/w/cpp/string/basic_string.html",
@@ -159,6 +453,7 @@
             "const std::string &"
         ],
         "return": "bool",
+        "include": "rclcpp/node.hpp",
         "ref": [
             "http://docs.ros2.org/latest/api/rclcpp/classrclcpp_1_1Node.html#aabb818bb5c848c5a980ddbe745517b7c",
             "http://en.cppreference.com/w/cpp/string/basic_string.html"
@@ -169,6 +464,7 @@
             "const rclcpp::Parameter &"
         ],
         "return": "rcl_interfaces::msg::SetParametersResult",
+        "include": "rclcpp/node.hpp",
         "ref": [
             "http://docs.ros2.org/latest/api/rclcpp/classrclcpp_1_1Node.html#a8c753036cd5cbdf0168ca3b39a193223",
             "http://docs.ros2.org/latest/api/rclcpp/classrclcpp_1_1Parameter.html",
@@ -179,9 +475,10 @@
     },
     "rclcpp::Node::set_parameters": {
         "args": [
-            "const std::vector< rclcpp::Parameter > &"
+            "const std::vector<rclcpp::Parameter> &"
         ],
         "return": "std::vector<rcl_interfaces::msg::SetParametersResult>",
+        "include": "rclcpp/node.hpp",
         "ref": [
             "http://docs.ros2.org/latest/api/rclcpp/classrclcpp_1_1Node.html#a7d8af4dc449c7130ccc396814b86c14d",
             "http://en.cppreference.com/w/cpp/container/vector.html",
@@ -193,9 +490,10 @@
     },
     "rclcpp::Node::set_parameters_atomically": {
         "args": [
-            "const std::vector< rclcpp::Parameter > &"
+            "const std::vector<rclcpp::Parameter> &"
         ],
         "return": "rcl_interfaces::msg::SetParametersResult",
+        "include": "rclcpp/node.hpp",
         "ref": [
             "http://docs.ros2.org/latest/api/rclcpp/classrclcpp_1_1Node.html#a0a6d4b50c0fab975859590c82931e9ae",
             "http://en.cppreference.com/w/cpp/container/vector.html",
@@ -205,12 +503,50 @@
             "http://docs.ros2.org/latest/api/rclcpp/namespacerclcpp.html#a1b307a4b7368b68f325812cd2aeb8784adefddb470d1054265245a0c5dbeccf4e"
         ]
     },
+    "rclcpp::Node::set_parameter_if_not_set": {
+        "args": [
+            "const std::string &",
+            "const ParameterT &"
+        ],
+        "return": "void",
+        "template": [
+            {
+                "name": "ParameterT"
+            }
+        ],
+        "include": "rclcpp/node.hpp",
+        "ref": [
+            "http://docs.ros2.org/latest/api/rclcpp/classrclcpp_1_1Node.html#a179590a0d3b2416636a1210995431c05",
+            "http://en.cppreference.com/w/cpp/string/basic_string.html",
+            "http://docs.ros2.org/latest/api/rclcpp/classrclcpp_1_1Node.html#a64df64d004b6263c3c04f42179fc8f52"
+        ]
+    },
+    "rclcpp::Node::set_parameters_if_not_set": {
+        "args": [
+            "const std::string &",
+            "const std::map<std::string, ParameterT> &"
+        ],
+        "return": "void",
+        "template": [
+            {
+                "name": "ParameterT"
+            }
+        ],
+        "include": "rclcpp/node.hpp",
+        "ref": [
+            "http://docs.ros2.org/latest/api/rclcpp/classrclcpp_1_1Node.html#aa40adbc7ec8e19cb99ab4cfa30ba1e83",
+            "http://en.cppreference.com/w/cpp/string/basic_string.html",
+            "http://en.cppreference.com/w/cpp/container/map.html",
+            "http://docs.ros2.org/latest/api/rclcpp/classrclcpp_1_1Node.html#a70012f2efbed147a2710343856acace5"
+        ]
+    },
     "rclcpp::Node::get_parameter": [
         {
             "args": [
                 "const std::string &"
             ],
             "return": "rclcpp::Parameter",
+            "include": "rclcpp/node.hpp",
             "ref": [
                 "http://docs.ros2.org/latest/api/rclcpp/classrclcpp_1_1Node.html#a0bf1077fba623d72fe1b49805f6c0a5a",
                 "http://en.cppreference.com/w/cpp/string/basic_string.html",
@@ -225,6 +561,7 @@
                 "rclcpp::Parameter &"
             ],
             "return": "bool",
+            "include": "rclcpp/node.hpp",
             "ref": [
                 "http://docs.ros2.org/latest/api/rclcpp/classrclcpp_1_1Node.html#a0bf1077fba623d72fe1b49805f6c0a5a",
                 "http://en.cppreference.com/w/cpp/string/basic_string.html",
@@ -251,12 +588,33 @@
             ]
         }
     ],
+    "rclcpp::Node::get_parameter_or": {
+        "args": [
+            "const std::string &",
+            "ParameterT &",
+            "const ParameterT &"
+        ],
+        "return": "bool",
+        "template": [
+            {
+                "name": "ParameterT"
+            }
+        ],
+        "include": "rclcpp/node.hpp",
+        "ref": [
+            "http://docs.ros2.org/latest/api/rclcpp/classrclcpp_1_1Node.html#a4bba086f9d74de0f1f10ffb8deb4c11a",
+            "http://en.cppreference.com/w/cpp/string/basic_string.html",
+            "http://docs.ros2.org/latest/api/rclcpp/classrclcpp_1_1Node.html#a0bf1077fba623d72fe1b49805f6c0a5a",
+            "http://docs.ros2.org/latest/api/rclcpp/classrclcpp_1_1exceptions_1_1ParameterNotDeclaredException.html"
+        ]
+    },
     "rclcpp::Node::get_parameters": [
         {
             "args": [
-                "const std::vector< std::string > &"
+                "const std::vector<std::string> &"
             ],
             "return": "std::vector<rclcpp::Parameter>",
+            "include": "rclcpp/node.hpp",
             "ref": [
                 "http://docs.ros2.org/latest/api/rclcpp/classrclcpp_1_1Node.html#a25890d01a2cd47ce99af887f556c529b",
                 "http://en.cppreference.com/w/cpp/container/vector.html",
@@ -268,7 +626,7 @@
         {
             "args": [
                 "const std::string &",
-                "std::map< std::string, ParameterT > &"
+                "std::map<std::string, ParameterT> &"
             ],
             "return": "bool",
             "template": [
@@ -288,11 +646,32 @@
             ]
         }
     ],
+    "rclcpp::Node::get_parameter_or_set": {
+        "args": [
+            "const std::string &",
+            "ParameterT &",
+            "const ParameterT &"
+        ],
+        "return": "void",
+        "template": [
+            {
+                "name": "ParameterT"
+            }
+        ],
+        "include": "rclcpp/node.hpp",
+        "ref": [
+            "http://docs.ros2.org/latest/api/rclcpp/classrclcpp_1_1Node.html#a0af66f400fd9ce302cc39ddfb50995b3",
+            "http://en.cppreference.com/w/cpp/string/basic_string.html",
+            "http://docs.ros2.org/latest/api/rclcpp/classrclcpp_1_1Node.html#a64df64d004b6263c3c04f42179fc8f52",
+            "http://docs.ros2.org/latest/api/rclcpp/classrclcpp_1_1Node.html#aabb818bb5c848c5a980ddbe745517b7c"
+        ]
+    },
     "rclcpp::Node::describe_parameter": {
         "args": [
             "const std::string &"
         ],
         "return": "rcl_interfaces::msg::ParameterDescriptor",
+        "include": "rclcpp/node.hpp",
         "ref": [
             "http://docs.ros2.org/latest/api/rclcpp/classrclcpp_1_1Node.html#a39de814a51b5792e86cd9b315e631fe0",
             "http://en.cppreference.com/w/cpp/string/basic_string.html",
@@ -302,9 +681,10 @@
     },
     "rclcpp::Node::describe_parameters": {
         "args": [
-            "const std::vector< std::string > &"
+            "const std::vector<std::string> &"
         ],
         "return": "std::vector<rcl_interfaces::msg::ParameterDescriptor>",
+        "include": "rclcpp/node.hpp",
         "ref": [
             "http://docs.ros2.org/latest/api/rclcpp/classrclcpp_1_1Node.html#adbfb47c0983e14482c39159b274f6308",
             "http://en.cppreference.com/w/cpp/container/vector.html",
@@ -315,9 +695,10 @@
     },
     "rclcpp::Node::get_parameter_types": {
         "args": [
-            "const std::vector< std::string > &"
+            "const std::vector<std::string> &"
         ],
         "return": "std::vector<uint8_t>",
+        "include": "rclcpp/node.hpp",
         "ref": [
             "http://docs.ros2.org/latest/api/rclcpp/classrclcpp_1_1Node.html#af9855812e7873bd35b28afa420d4242b",
             "http://en.cppreference.com/w/cpp/container/vector.html",
@@ -328,10 +709,11 @@
     },
     "rclcpp::Node::list_parameters": {
         "args": [
-            "const std::vector< std::string > &",
+            "const std::vector<std::string> &",
             "uint64_t"
         ],
         "return": "rcl_interfaces::msg::ListParametersResult",
+        "include": "rclcpp/node.hpp",
         "ref": [
             "http://docs.ros2.org/latest/api/rclcpp/classrclcpp_1_1Node.html#a37aa95886a706c174db77c2b160f6d7d",
             "http://en.cppreference.com/w/cpp/container/vector.html",
@@ -344,10 +726,26 @@
             "rclcpp::Node::OnParametersSetCallbackType"
         ],
         "return": "rclcpp::Node::OnParametersSetCallbackType",
+        "include": "rclcpp/node.hpp",
         "ref": [
             "http://docs.ros2.org/latest/api/rclcpp/classrclcpp_1_1Node.html#a24a09463811284400f3b03878e2c8719",
             "http://docs.ros2.org/latest/api/rclcpp/classrclcpp_1_1Node.html#ab403fecdb5ec2eb9f88e3eb7ae6f6d0c",
             "http://docs.ros2.org/latest/api/rclcpp/classrclcpp_1_1Node.html#a64df64d004b6263c3c04f42179fc8f52"
+        ]
+    },
+    "rclcpp::Node::register_param_change_callback": {
+        "args": [
+            "CallbackT &&"
+        ],
+        "return": "void",
+        "template": [
+            {
+                "name": "CallbackT"
+            }
+        ],
+        "include": "rclcpp/node.hpp",
+        "ref": [
+            "http://docs.ros2.org/latest/api/rclcpp/classrclcpp_1_1Node.html#aed9fcbbe42dbe03008ae4bfcfa0452f0"
         ]
     },
     "rclcpp::Node::get_node_names": {
@@ -355,6 +753,7 @@
             "void"
         ],
         "return": "std::vector<std::string>",
+        "include": "rclcpp/node.hpp",
         "ref": [
             "http://docs.ros2.org/latest/api/rclcpp/classrclcpp_1_1Node.html#a9e4302d8e28f17078cbc3b6db93c97ba",
             "http://en.cppreference.com/w/cpp/container/vector.html",
@@ -365,7 +764,8 @@
         "args": [
             "void"
         ],
-        "return": "std::map<std::string, std::vector<std::string> >",
+        "return": "std::map<std::string, std::vector<std::string>>",
+        "include": "rclcpp/node.hpp",
         "ref": [
             "http://docs.ros2.org/latest/api/rclcpp/classrclcpp_1_1Node.html#ab64ee81d61071100f222b819eab3e311",
             "http://en.cppreference.com/w/cpp/container/map.html",
@@ -377,7 +777,8 @@
         "args": [
             "void"
         ],
-        "return": "std::map<std::string, std::vector<std::string> >",
+        "return": "std::map<std::string, std::vector<std::string>>",
+        "include": "rclcpp/node.hpp",
         "ref": [
             "http://docs.ros2.org/latest/api/rclcpp/classrclcpp_1_1Node.html#a0d400bbd606a936a556b747f519eab38",
             "http://en.cppreference.com/w/cpp/container/map.html",
@@ -390,6 +791,7 @@
             "const std::string &"
         ],
         "return": "size_t",
+        "include": "rclcpp/node.hpp",
         "ref": [
             "http://docs.ros2.org/latest/api/rclcpp/classrclcpp_1_1Node.html#a8792429fa0ee5c5d7f9eca537cf4cff0",
             "http://en.cppreference.com/w/cpp/string/basic_string.html"
@@ -400,6 +802,7 @@
             "const std::string &"
         ],
         "return": "size_t",
+        "include": "rclcpp/node.hpp",
         "ref": [
             "http://docs.ros2.org/latest/api/rclcpp/classrclcpp_1_1Node.html#a7aa2ed22450d2f3300ea5b879acd73b8",
             "http://en.cppreference.com/w/cpp/string/basic_string.html"
@@ -410,6 +813,7 @@
             "void"
         ],
         "return": "rclcpp::Event::SharedPtr",
+        "include": "rclcpp/node.hpp",
         "ref": [
             "http://docs.ros2.org/latest/api/rclcpp/classrclcpp_1_1Node.html#a9e5851844ecb1794503b8fc0f9f5c898"
         ]
@@ -420,6 +824,7 @@
             "std::chrono::nanoseconds"
         ],
         "return": "void",
+        "include": "rclcpp/node.hpp",
         "ref": [
             "http://docs.ros2.org/latest/api/rclcpp/classrclcpp_1_1Node.html#ab72e2c59951c08c515fd597bfc9e8cfd",
             "http://en.cppreference.com/w/cpp/chrono/duration.html",
@@ -432,6 +837,7 @@
             "void"
         ],
         "return": "rclcpp::Clock::SharedPtr",
+        "include": "rclcpp/node.hpp",
         "ref": [
             "http://docs.ros2.org/latest/api/rclcpp/classrclcpp_1_1Node.html#aec0332887ae90caed727e5025cb62195"
         ]
@@ -441,6 +847,7 @@
             "void"
         ],
         "return": "Time",
+        "include": "rclcpp/node.hpp",
         "ref": [
             "http://docs.ros2.org/latest/api/rclcpp/classrclcpp_1_1Node.html#af706b231620f1c120b7ccd738ec31867",
             "http://docs.ros2.org/latest/api/rclcpp/classrclcpp_1_1Time.html"
@@ -451,6 +858,7 @@
             "void"
         ],
         "return": "rclcpp::node_interfaces::NodeBaseInterface::SharedPtr",
+        "include": "rclcpp/node.hpp",
         "ref": [
             "http://docs.ros2.org/latest/api/rclcpp/classrclcpp_1_1Node.html#a37e5b136ef0a29853e01d5cecb8e4690",
             "http://docs.ros2.org/latest/api/rclcpp/classrclcpp_1_1Node.html"
@@ -461,6 +869,7 @@
             "void"
         ],
         "return": "rclcpp::node_interfaces::NodeClockInterface::SharedPtr",
+        "include": "rclcpp/node.hpp",
         "ref": [
             "http://docs.ros2.org/latest/api/rclcpp/classrclcpp_1_1Node.html#a5495b9faae261feed33d8d8828840709",
             "http://docs.ros2.org/latest/api/rclcpp/classrclcpp_1_1Node.html"
@@ -471,6 +880,7 @@
             "void"
         ],
         "return": "rclcpp::node_interfaces::NodeGraphInterface::SharedPtr",
+        "include": "rclcpp/node.hpp",
         "ref": [
             "http://docs.ros2.org/latest/api/rclcpp/classrclcpp_1_1Node.html#a2378e5b1486e58afdead52fa14928c2b",
             "http://docs.ros2.org/latest/api/rclcpp/classrclcpp_1_1Node.html"
@@ -481,6 +891,7 @@
             "void"
         ],
         "return": "rclcpp::node_interfaces::NodeLoggingInterface::SharedPtr",
+        "include": "rclcpp/node.hpp",
         "ref": [
             "http://docs.ros2.org/latest/api/rclcpp/classrclcpp_1_1Node.html#af05394f5147dd263af2df15a99f5a4bb",
             "http://docs.ros2.org/latest/api/rclcpp/classrclcpp_1_1Node.html"
@@ -491,6 +902,7 @@
             "void"
         ],
         "return": "rclcpp::node_interfaces::NodeTimersInterface::SharedPtr",
+        "include": "rclcpp/node.hpp",
         "ref": [
             "http://docs.ros2.org/latest/api/rclcpp/classrclcpp_1_1Node.html#aa28869f473b562a08aa581fc7deae867",
             "http://docs.ros2.org/latest/api/rclcpp/classrclcpp_1_1Node.html"
@@ -501,6 +913,7 @@
             "void"
         ],
         "return": "rclcpp::node_interfaces::NodeTopicsInterface::SharedPtr",
+        "include": "rclcpp/node.hpp",
         "ref": [
             "http://docs.ros2.org/latest/api/rclcpp/classrclcpp_1_1Node.html#a5ae76be5bac60aea82486a9b4c6b2ff5",
             "http://docs.ros2.org/latest/api/rclcpp/classrclcpp_1_1Node.html"
@@ -511,6 +924,7 @@
             "void"
         ],
         "return": "rclcpp::node_interfaces::NodeServicesInterface::SharedPtr",
+        "include": "rclcpp/node.hpp",
         "ref": [
             "http://docs.ros2.org/latest/api/rclcpp/classrclcpp_1_1Node.html#a588cb7990fd658e58c532d65e4872df3",
             "http://docs.ros2.org/latest/api/rclcpp/classrclcpp_1_1Node.html"
@@ -521,6 +935,7 @@
             "void"
         ],
         "return": "rclcpp::node_interfaces::NodeWaitablesInterface::SharedPtr",
+        "include": "rclcpp/node.hpp",
         "ref": [
             "http://docs.ros2.org/latest/api/rclcpp/classrclcpp_1_1Node.html#a6708bb439e1d3bb1ea44fbae50e460b2",
             "http://docs.ros2.org/latest/api/rclcpp/classrclcpp_1_1Node.html"
@@ -531,6 +946,7 @@
             "void"
         ],
         "return": "rclcpp::node_interfaces::NodeParametersInterface::SharedPtr",
+        "include": "rclcpp/node.hpp",
         "ref": [
             "http://docs.ros2.org/latest/api/rclcpp/classrclcpp_1_1Node.html#ab6272f2facdfb35f0ef9ce01ffedeec9",
             "http://docs.ros2.org/latest/api/rclcpp/classrclcpp_1_1Node.html"
@@ -541,6 +957,7 @@
             "void"
         ],
         "return": "rclcpp::node_interfaces::NodeTimeSourceInterface::SharedPtr",
+        "include": "rclcpp/node.hpp",
         "ref": [
             "http://docs.ros2.org/latest/api/rclcpp/classrclcpp_1_1Node.html#afa70b6e8bd3ecc39c5928d822024db39",
             "http://docs.ros2.org/latest/api/rclcpp/classrclcpp_1_1Node.html"
@@ -551,6 +968,7 @@
             "void"
         ],
         "return": "const std::string&",
+        "include": "rclcpp/node.hpp",
         "ref": [
             "http://docs.ros2.org/latest/api/rclcpp/classrclcpp_1_1Node.html#aa9ac5055f3f7a3537642482bd505d4bd",
             "http://en.cppreference.com/w/cpp/string/basic_string.html",
@@ -565,6 +983,7 @@
             "void"
         ],
         "return": "const std::string&",
+        "include": "rclcpp/node.hpp",
         "ref": [
             "http://docs.ros2.org/latest/api/rclcpp/classrclcpp_1_1Node.html#afe4790bba38942b795d24b6ccb3e9c5a",
             "http://en.cppreference.com/w/cpp/string/basic_string.html",
@@ -578,6 +997,7 @@
             "const std::string &"
         ],
         "return": "rclcpp::Node::SharedPtr",
+        "include": "rclcpp/node.hpp",
         "ref": [
             "http://docs.ros2.org/latest/api/rclcpp/classrclcpp_1_1Node.html#a1df8e4507d17a503630317432449d69d",
             "http://en.cppreference.com/w/cpp/string/basic_string.html",
@@ -591,6 +1011,7 @@
             "void"
         ],
         "return": "const rclcpp::NodeOptions&",
+        "include": "rclcpp/node.hpp",
         "ref": [
             "http://docs.ros2.org/latest/api/rclcpp/classrclcpp_1_1Node.html#a53b6a37589d4371c9e0675acfc0f197a",
             "http://docs.ros2.org/latest/api/rclcpp/classrclcpp_1_1NodeOptions.html"
@@ -601,6 +1022,7 @@
             "void"
         ],
         "return": "RCUTILS_WARN_UNUSED bool",
+        "include": "rclcpp/node.hpp",
         "ref": [
             "http://docs.ros2.org/latest/api/rclcpp/classrclcpp_1_1Node.html#a736f584fe3e52aa5b28451865ddc9ad6",
             "http://docs.ros2.org/dashing/api/rcutils/macros_8h.html#a6be4031432c70fddf878bd574c8bccc4",

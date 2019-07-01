@@ -10,6 +10,194 @@
         ],
         "include": "rclcpp/rclcpp.hpp"
     },
+    "rclcpp::create_publisher": [
+        {
+            "args": [
+                "rclcpp::node_interfaces::NodeTopicsInterface *",
+                "const std::string &",
+                "const rmw_qos_profile_t &",
+                "const PublisherEventCallbacks &",
+                "rclcpp::callback_group::CallbackGroup::SharedPtr",
+                "bool",
+                "std::shared_ptr<AllocatorT>"
+            ],
+            "return": "std::shared_ptr<PublisherT>",
+            "template": [
+                {
+                    "name": "MessageT"
+                },
+                {
+                    "name": "AllocatorT",
+                    "value": "std::allocator<void>"
+                },
+                {
+                    "name": "PublisherT",
+                    "value": "::rclcpp::Publisher<MessageT, AllocatorT>"
+                }
+            ],
+            "ref": [
+                "http://docs.ros2.org/latest/api/rclcpp/namespacerclcpp.html#a4254e5a55f40ff5f594542773b863eba",
+                "http://en.cppreference.com/w/cpp/memory/shared_ptr.html",
+                "http://en.cppreference.com/w/cpp/string/basic_string.html",
+                "http://docs.ros2.org/dashing/api/rmw/structrmw__qos__profile__t.html",
+                "http://docs.ros2.org/latest/api/rclcpp/classrclcpp_1_1node__interfaces_1_1NodeTopicsInterface.html",
+                "http://docs.ros2.org/latest/api/rclcpp/structrclcpp_1_1PublisherEventCallbacks.html"
+            ],
+            "include": "rclcpp/rclcpp.hpp"
+        },
+        {
+            "args": [
+                "NodeT &",
+                "const std::string &",
+                "const rclcpp::QoS &",
+                "const rclcpp::PublisherOptionsWithAllocator<AllocatorT> & (=\u00a0\u00a0\u00a0\u00a0rclcpp::PublisherOptionsWithAllocator<AllocatorT>())"
+            ],
+            "return": "std::shared_ptr<PublisherT>",
+            "template": [
+                {
+                    "name": "MessageT"
+                },
+                {
+                    "name": "AllocatorT",
+                    "value": "std::allocator<void>"
+                },
+                {
+                    "name": "PublisherT",
+                    "value": "::rclcpp::Publisher<MessageT, AllocatorT>"
+                },
+                {
+                    "name": "NodeT"
+                }
+            ],
+            "ref": [
+                "http://docs.ros2.org/latest/api/rclcpp/namespacerclcpp.html#a4254e5a55f40ff5f594542773b863eba",
+                "http://en.cppreference.com/w/cpp/memory/shared_ptr.html",
+                "http://en.cppreference.com/w/cpp/string/basic_string.html",
+                "http://docs.ros2.org/latest/api/rclcpp/classrclcpp_1_1QoS.html",
+                "http://docs.ros2.org/latest/api/rclcpp/structrclcpp_1_1PublisherOptionsWithAllocator.html",
+                "http://docs.ros2.org/latest/api/rclcpp/namespacerclcpp_1_1node__interfaces.html#afcaa8175879397d8451eabc3529c92bb"
+            ],
+            "include": "rclcpp/rclcpp.hpp"
+        }
+    ],
+    "rclcpp::create_service": {
+        "args": [
+            "std::shared_ptr<node_interfaces::NodeBaseInterface>",
+            "std::shared_ptr<node_interfaces::NodeServicesInterface>",
+            "const std::string &",
+            "CallbackT &&",
+            "const rmw_qos_profile_t &",
+            "rclcpp::callback_group::CallbackGroup::SharedPtr"
+        ],
+        "return": "rclcpp::Service<ServiceT>::SharedPtr",
+        "template": [
+            {
+                "name": "ServiceT"
+            },
+            {
+                "name": "CallbackT"
+            }
+        ],
+        "ref": [
+            "http://docs.ros2.org/latest/api/rclcpp/namespacerclcpp.html#ab839b5f4dc39566908e75f53218625c0",
+            "http://en.cppreference.com/w/cpp/memory/shared_ptr.html",
+            "http://en.cppreference.com/w/cpp/string/basic_string.html",
+            "http://docs.ros2.org/dashing/api/rmw/structrmw__qos__profile__t.html",
+            "http://docs.ros2.org/latest/api/rclcpp/classrclcpp_1_1Service.html",
+            "http://docs.ros2.org/latest/api/rclcpp/classrclcpp_1_1node__interfaces_1_1NodeBaseInterface.html",
+            "http://docs.ros2.org/latest/api/rclcpp/classrclcpp_1_1node__interfaces_1_1NodeServicesInterface.html"
+        ],
+        "include": "rclcpp/rclcpp.hpp"
+    },
+    "rclcpp::create_subscription": [
+        {
+            "args": [
+                "rclcpp::node_interfaces::NodeTopicsInterface *",
+                "const std::string &",
+                "CallbackT &&",
+                "const rmw_qos_profile_t &",
+                "const SubscriptionEventCallbacks &",
+                "rclcpp::callback_group::CallbackGroup::SharedPtr",
+                "bool",
+                "bool",
+                "typename rclcpp::message_memory_strategy::MessageMemoryStrategy<CallbackMessageT, AllocatorT>::SharedPtr",
+                "typename std::shared_ptr<AllocatorT>"
+            ],
+            "return": "std::shared_ptr<SubscriptionT>",
+            "template": [
+                {
+                    "name": "MessageT"
+                },
+                {
+                    "name": "CallbackT"
+                },
+                {
+                    "name": "AllocatorT"
+                },
+                {
+                    "name": "CallbackMessageT"
+                },
+                {
+                    "name": "SubscriptionT",
+                    "value": "rclcpp::Subscription<CallbackMessageT, AllocatorT>"
+                }
+            ],
+            "ref": [
+                "http://docs.ros2.org/latest/api/rclcpp/namespacerclcpp.html#ad0367e93ba86168eff7ac08dd3b9c8d3",
+                "http://en.cppreference.com/w/cpp/memory/shared_ptr.html",
+                "http://en.cppreference.com/w/cpp/string/basic_string.html",
+                "http://docs.ros2.org/dashing/api/rmw/structrmw__qos__profile__t.html",
+                "http://docs.ros2.org/latest/api/rclcpp/classrclcpp_1_1node__interfaces_1_1NodeTopicsInterface.html",
+                "http://docs.ros2.org/latest/api/rclcpp/structrclcpp_1_1SubscriptionEventCallbacks.html",
+                "http://docs.ros2.org/latest/api/rclcpp/classrclcpp_1_1message__memory__strategy_1_1MessageMemoryStrategy.html"
+            ],
+            "include": "rclcpp/rclcpp.hpp"
+        },
+        {
+            "args": [
+                "NodeT &&",
+                "const std::string &",
+                "const rclcpp::QoS &",
+                "CallbackT &&",
+                "const rclcpp::SubscriptionOptionsWithAllocator<AllocatorT> & (=\u00a0\u00a0\u00a0\u00a0rclcpp::SubscriptionOptionsWithAllocator<AllocatorT>()\u00a0\u00a0)",
+                "typename rclcpp::message_memory_strategy::MessageMemoryStrategy<CallbackMessageT, AllocatorT>::SharedPtr (=nullptr)"
+            ],
+            "return": "std::shared_ptr<SubscriptionT>",
+            "template": [
+                {
+                    "name": "MessageT"
+                },
+                {
+                    "name": "CallbackT"
+                },
+                {
+                    "name": "AllocatorT",
+                    "value": "std::allocator<void>"
+                },
+                {
+                    "name": "MessageT",
+                    "value": "typename rclcpp::subscription_traits::has_message_type<CallbackT>::type"
+                },
+                {
+                    "name": "SubscriptionT",
+                    "value": "rclcpp::Subscription<CallbackMessageT, AllocatorT>"
+                },
+                {
+                    "name": "NodeT"
+                }
+            ],
+            "ref": [
+                "http://docs.ros2.org/latest/api/rclcpp/namespacerclcpp.html#ad0367e93ba86168eff7ac08dd3b9c8d3",
+                "http://en.cppreference.com/w/cpp/memory/shared_ptr.html",
+                "http://en.cppreference.com/w/cpp/string/basic_string.html",
+                "http://docs.ros2.org/latest/api/rclcpp/classrclcpp_1_1QoS.html",
+                "http://docs.ros2.org/latest/api/rclcpp/structrclcpp_1_1SubscriptionOptionsWithAllocator.html",
+                "http://docs.ros2.org/latest/api/rclcpp/classrclcpp_1_1message__memory__strategy_1_1MessageMemoryStrategy.html",
+                "http://docs.ros2.org/latest/api/rclcpp/namespacerclcpp_1_1node__interfaces.html#afcaa8175879397d8451eabc3529c92bb"
+            ],
+            "include": "rclcpp/rclcpp.hpp"
+        }
+    ],
     "rclcpp::spin_some": [
         {
             "args": [
@@ -50,6 +238,69 @@
             "return": "void",
             "ref": [
                 "http://docs.ros2.org/latest/api/rclcpp/namespacerclcpp.html#a21e13577f5bcc5992de1d7dd08d8652b"
+            ],
+            "include": "rclcpp/rclcpp.hpp"
+        }
+    ],
+    "rclcpp::spin_until_future_complete": [
+        {
+            "args": [
+                "rclcpp::node_interfaces::NodeBaseInterface::SharedPtr",
+                "std::shared_future<FutureT> &",
+                "std::chrono::duration<TimeRepT, TimeT> (=std::chrono::duration<TimeRepT,\u00a0TimeT>(-1))"
+            ],
+            "return": "rclcpp::executor::FutureReturnCode",
+            "template": [
+                {
+                    "name": "FutureT"
+                },
+                {
+                    "name": "TimeRepT",
+                    "value": "int64_t"
+                },
+                {
+                    "name": "TimeT",
+                    "value": "std::milli"
+                }
+            ],
+            "ref": [
+                "http://docs.ros2.org/latest/api/rclcpp/namespacerclcpp.html#aa700b1a030143a2eef597d1aae519600",
+                "http://en.cppreference.com/w/cpp/thread/shared_future.html",
+                "http://en.cppreference.com/w/cpp/chrono/duration.html",
+                "http://docs.ros2.org/latest/api/rclcpp/namespacerclcpp_1_1executor.html#a3114c96743c4a4d68e739a7e43642347"
+            ],
+            "include": "rclcpp/rclcpp.hpp"
+        },
+        {
+            "args": [
+                "std::shared_ptr<NodeT>",
+                "std::shared_future<FutureT> &",
+                "std::chrono::duration<TimeRepT, TimeT> (=std::chrono::duration<TimeRepT,\u00a0TimeT>(-1))"
+            ],
+            "return": "rclcpp::executor::FutureReturnCode",
+            "template": [
+                {
+                    "name": "NodeT",
+                    "value": "rclcpp::Node"
+                },
+                {
+                    "name": "FutureT"
+                },
+                {
+                    "name": "TimeRepT",
+                    "value": "int64_t"
+                },
+                {
+                    "name": "TimeT",
+                    "value": "std::milli"
+                }
+            ],
+            "ref": [
+                "http://docs.ros2.org/latest/api/rclcpp/namespacerclcpp.html#aa700b1a030143a2eef597d1aae519600",
+                "http://en.cppreference.com/w/cpp/memory/shared_ptr.html",
+                "http://en.cppreference.com/w/cpp/thread/shared_future.html",
+                "http://en.cppreference.com/w/cpp/chrono/duration.html",
+                "http://docs.ros2.org/latest/api/rclcpp/namespacerclcpp_1_1executor.html#a3114c96743c4a4d68e739a7e43642347"
             ],
             "include": "rclcpp/rclcpp.hpp"
         }
@@ -156,7 +407,7 @@
         {
             "args": [
                 "const PublisherEventCallbacks &",
-                "std::shared_ptr< Alloc >"
+                "std::shared_ptr<Alloc>"
             ],
             "return": "PublisherFactory",
             "template": [
@@ -179,6 +430,56 @@
             "include": "rclcpp/rclcpp.hpp"
         }
     ],
+    "rclcpp::make_scope_exit": {
+        "args": [
+            "Callable"
+        ],
+        "return": "ScopeExit<Callable>",
+        "template": [
+            {
+                "name": "Callable"
+            }
+        ],
+        "ref": [
+            "http://docs.ros2.org/latest/api/rclcpp/namespacerclcpp.html#afc7846ba2bee783fa9352c7073f30eec",
+            "http://docs.ros2.org/latest/api/rclcpp/structrclcpp_1_1ScopeExit.html"
+        ],
+        "include": "rclcpp/rclcpp.hpp"
+    },
+    "rclcpp::create_subscription_factory": {
+        "args": [
+            "CallbackT &&",
+            "const SubscriptionEventCallbacks &",
+            "typename rclcpp::message_memory_strategy::MessageMemoryStrategy<CallbackMessageT, Alloc>::SharedPtr",
+            "std::shared_ptr<Alloc>"
+        ],
+        "return": "SubscriptionFactory",
+        "template": [
+            {
+                "name": "MessageT"
+            },
+            {
+                "name": "CallbackT"
+            },
+            {
+                "name": "Alloc"
+            },
+            {
+                "name": "CallbackMessageT"
+            },
+            {
+                "name": "SubscriptionT"
+            }
+        ],
+        "ref": [
+            "http://docs.ros2.org/latest/api/rclcpp/namespacerclcpp.html#a9434c4f9bab93e64c64cb728daeadfb7",
+            "http://en.cppreference.com/w/cpp/memory/shared_ptr.html",
+            "http://docs.ros2.org/latest/api/rclcpp/structrclcpp_1_1SubscriptionFactory.html",
+            "http://docs.ros2.org/latest/api/rclcpp/structrclcpp_1_1SubscriptionEventCallbacks.html",
+            "http://docs.ros2.org/latest/api/rclcpp/classrclcpp_1_1message__memory__strategy_1_1MessageMemoryStrategy.html"
+        ],
+        "include": "rclcpp/rclcpp.hpp"
+    },
     "rclcpp::operator+": {
         "args": [
             "const rclcpp::Duration &",
@@ -314,7 +615,7 @@
     },
     "rclcpp::on_shutdown": {
         "args": [
-            "std::function< void()>",
+            "std::function<void()>",
             "rclcpp::Context::SharedPtr (=nullptr)"
         ],
         "return": "void",
@@ -340,6 +641,74 @@
             "http://docs.ros2.org/latest/api/rclcpp/namespacerclcpp.html#a493714a679d1591142800416a286689f",
             "http://docs.ros2.org/latest/api/rclcpp/classrclcpp_1_1Context.html#adf25fc22a74daf5ce85f6bdde3b92aa2",
             "http://docs.ros2.org/latest/api/rclcpp/namespacerclcpp.html#a2db29afebba8f677bc8660a45bb910bb"
+        ],
+        "include": "rclcpp/rclcpp.hpp"
+    },
+    "rclcpp::add_will_overflow": {
+        "args": [
+            "const T",
+            "const T"
+        ],
+        "return": "bool",
+        "template": [
+            {
+                "name": "T"
+            }
+        ],
+        "ref": [
+            "http://docs.ros2.org/latest/api/rclcpp/namespacerclcpp.html#af238f376176cf3da48adc46b94d29a6a",
+            "http://en.cppreference.com/w/cpp/types/numeric_limits/max.html"
+        ],
+        "include": "rclcpp/rclcpp.hpp"
+    },
+    "rclcpp::add_will_underflow": {
+        "args": [
+            "const T",
+            "const T"
+        ],
+        "return": "bool",
+        "template": [
+            {
+                "name": "T"
+            }
+        ],
+        "ref": [
+            "http://docs.ros2.org/latest/api/rclcpp/namespacerclcpp.html#a26f62ce86fabd324005231d8d89a8294",
+            "http://en.cppreference.com/w/cpp/types/numeric_limits/min.html"
+        ],
+        "include": "rclcpp/rclcpp.hpp"
+    },
+    "rclcpp::sub_will_overflow": {
+        "args": [
+            "const T",
+            "const T"
+        ],
+        "return": "bool",
+        "template": [
+            {
+                "name": "T"
+            }
+        ],
+        "ref": [
+            "http://docs.ros2.org/latest/api/rclcpp/namespacerclcpp.html#aa7c63f4d5146a9054f3b2d8b9ac2070f",
+            "http://en.cppreference.com/w/cpp/types/numeric_limits/max.html"
+        ],
+        "include": "rclcpp/rclcpp.hpp"
+    },
+    "rclcpp::sub_will_underflow": {
+        "args": [
+            "const T",
+            "const T"
+        ],
+        "return": "bool",
+        "template": [
+            {
+                "name": "T"
+            }
+        ],
+        "ref": [
+            "http://docs.ros2.org/latest/api/rclcpp/namespacerclcpp.html#af340ddf3a7b82a7a5a4808740a039e69",
+            "http://en.cppreference.com/w/cpp/types/numeric_limits/min.html"
         ],
         "include": "rclcpp/rclcpp.hpp"
     },

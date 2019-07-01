@@ -58,58 +58,21 @@ def putArgsBackTogether(args):
 
 
 def getJsonDict(args, returnType, func_type, template, include, ref):
-  if func_type != "":
-    if include != "":
-      if template:
-        return {
-          "args": args,
-          "return": returnType,
-          "func_type": func_type,
-          "template": template,
-          "include": include,
-          "ref": ref
-        }
-      return {
-        "args": args,
-        "return": returnType,
-        "func_type": func_type,
-        "include": include,
-        "ref": ref
-      }
-    if template:
-      return {
-        "args": args,
-        "return": returnType,
-        "func_type": func_type,
-        "template": template,
-        "ref": ref
-      }
-    return {
-      "args": args,
-      "return": returnType,
-      "func_type": func_type,
-      "ref": ref
-    }
-  if template:
-    if include != "":
-      return {
-        "args": args,
-        "return": returnType,
-        "template": template,
-        "include": include,
-        "ref": ref
-      }
-    return {
-      "args": args,
-      "return": returnType,
-      "template": template,
-      "ref": ref
-    }
-  return {
+  jsonDict = {
     "args": args,
     "return": returnType,
+    "func_type": func_type,
+    "template": template,
+    "include": include,
     "ref": ref
   }
+  if func_type == "":
+    jsonDict.pop("func_type")
+  if include == "":
+    jsonDict.pop("include")
+  if len(template) == 0:
+    jsonDict.pop("template")
+  return jsonDict
 
 def hasClass(tag, classId):
   return "class" in tag.attrs and classId in tag["class"]
@@ -203,7 +166,7 @@ def getPublicFunctionNames(soup):
             #print("Two cells in this row: " + str(cells))
             cellLeft = cells[0]
             cellRight = cells[1]
-            if hasClass(cellLeft, "memItemLeft") and hasClass(cellRight, "memItemRight"):
+            if (hasClass(cellLeft, "memItemLeft") and hasClass(cellRight, "memItemRight")) or (hasClass(cellLeft, "memTemplItemLeft") and hasClass(cellRight, "memTemplItemRight")):
               returnType = removeSpacesBeforeAngleBrackets(cellLeft.getText().strip())
               if (returnType != "virtual"):
                 func_name = cellRight.contents[0].getText().strip()
@@ -212,104 +175,6 @@ def getPublicFunctionNames(soup):
     else:
       print("declTable does not have memberdecls class.")
   return funcNames
-
-def getSignaturesFromDeclTable(declTable, base_url, include, namespace):
-  signatures = {}
-  if declTable:
-    #print(declTable)
-    print("declTable does have memberdecls class")
-    #for child in declTable.children:
-    #  print(child)
-    #print(len(declTable.contents))
-    rows = declTable("tr")
-    #print(len(rows))
-    first = rows[0]
-    if hasClass(first, "heading"):
-      if first.getText().strip().startswith("Public") or first.getText().strip().startswith("Functions"):
-        rest = getClassFunctionsFromRows(rows)
-        print("len of rest: " + str(len(rest)))
-
-        for row in rest:
-          cells = row("td")
-          if len(cells) == 2:
-            #print("Two cells in this row: " + str(cells))
-            cellLeft = cells[0]
-            cellRight = cells[1]
-            #print(cellLeft)
-            #print(cellRight)
-            if hasClass(cellLeft, "memItemLeft") and hasClass(cellRight, "memItemRight"):
-              returnType = removeSpacesBeforeAngleBrackets(cellLeft.getText().strip())
-              if (returnType != "virtual"):
-                func_type = ""
-                if returnType == "":
-                  func_type = "constructor"
-                first = cellRight.contents[0]
-                if "href" in first.attrs:
-                  ref = base_url + first["href"]
-                func_name = cellRight.contents[0].getText().strip()
-                print("function name: " + func_name)
-                otherText = "".join(list(map(lambda x: x if isinstance(x, bs4.NavigableString) else x.getText(), cellRight.contents[1:]))).strip()
-                
-
-                lparenIndex = otherText.find("(")
-                rparenIndex = otherText.rfind(")")
-
-                # Don't want to include the first paren
-                lparenIndex += 1
-
-                # In this case, it was originally -1: nothing found
-                if lparenIndex == 0:
-                  # Don't actually need to do anything though
-                  lparenIndex = 0
-                
-                if rparenIndex < 0:
-                  rparenIndex = len(otherText)
-
-                if lparenIndex <= rparenIndex:
-                  otherText = otherText[lparenIndex:rparenIndex]
-                  otherText = otherText.strip()
-                print("<" + otherText + ">")
-                args = putArgsBackTogether(otherText.split(", "))
-                print(func_name, args)
-                print(args)
-                for i in range(len(args)):
-                  arg = args[i]
-                  spaces = [] #arg.split(" ")
-                  argname = "" #spaces[-1]
-                  
-                  argsplits = arg.split("=")
-                  if len(argsplits) > 1:
-                    spaces = argsplits[0].split(" ")
-                  else:
-                    spaces = arg.split(" ")
-                  typeName = " ".join(spaces[:-1])
-                  argname = spaces[-1]
-                  lastIndexOfAmp = argname.rfind("&")
-                  if lastIndexOfAmp >= 0:
-                    referenceThings = argname[0:(lastIndexOfAmp + 1)]
-                    typeName = typeName + referenceThings
-                  if len(argsplits) > 1:
-                    default_val = argsplits[1]
-                    #default_val = re.sub(r'\"', r'\"', default_val)
-                    typeName = typeName + " (=" + default_val + ")"
-                  args[i] = typeName + getArrayType(arg)
-                if (len(args) == 1) and args[0] == "":
-                  args = ["void"]
-                elif len(args) == 0:
-                  args = ["void"]
-                func_name = namespace + "::" + func_name
-                if func_name not in signatures:
-                  signatures[func_name] = []
-                  
-                sig = getJsonDict(returnType, args, ref, func_type, include)
-                signatures[func_name].append(sig)
-                
-        
-      #print("<" + first.getText().strip() + ">")
-      #print(first)
-    else:
-      print("declTable does not have memberdecls class.")
-  return signatures
   
 def isSoupString(soupElmt):
   return isinstance(soupElmt, bs4.NavigableString)
@@ -359,11 +224,11 @@ def extractSignature(div, func_name, func_permalink, url, base_url, include, nam
     begin = len("template<")
     end = len(txt) - 1
     txt = txt[begin:end]
-    print("")
-    print("template: " + txt)
+    #print("")
+    #print("template: " + txt)
     #print("")
     splits = txt.split(", typename")
-    print(splits)
+    #print(splits)
 
     typename = "typename"
     equals = "="
@@ -383,8 +248,8 @@ def extractSignature(div, func_name, func_permalink, url, base_url, include, nam
           template.append({
             "name": string
           })
-    print(template)
-    print("")
+    #print(template)
+    #print("")
   sigTable = div.find("table", class_="memname")
   params = []
   if sigTable is not None:
@@ -392,29 +257,31 @@ def extractSignature(div, func_name, func_permalink, url, base_url, include, nam
   args = []
 
   externalRefs = getUniqueElmts([a.attrs["href"] for a in div("a", class_="elRef", href=True) if a is not None])
-  print("externalRefs: " + str(externalRefs))
+  #print("externalRefs: " + str(externalRefs))
   rosRefs = getUniqueElmts([base_url + a.attrs["href"] for a in div("a", class_="el", href=True) if a is not None])
 
   returnType = ""
   nameAndRetType = div.find("td", class_="memname")
   if nameAndRetType is not None:
     txt = nameAndRetType.getText().strip()
-    print("<{}>".format(txt))
+    #print("<{}>".format(txt))
     lastSpace = txt.rfind(" ")
     if lastSpace > -1:
       returnType = txt[0:lastSpace]
   func_type = ""
   if returnType == "":
     func_type = "constructor"
-  print("ros refs: " + str(rosRefs))
+  else:
+    returnType = removeSpacesBeforeAngleBrackets(returnType)
+  #print("ros refs: " + str(rosRefs))
   
   if len(params) % 2 == 0 and len(params) > 0:
     oldLen = len(params)
     params = [(params[2 * i], params[2 * i + 1]) for i in range(len(params) // 2)]
     #print("Params length makes sense: " + str(len(params) * 2 == oldLen))
-    print(params)
+    #print(params)
     for tipe, name in params:
-      print(tipe, name)
+      #print(tipe, name)
       arg = tipe.getText().strip()
       code = name.find("code")
       if code is not None and name.getText().find("=") > -1:
@@ -422,20 +289,12 @@ def extractSignature(div, func_name, func_permalink, url, base_url, include, nam
         if codeText.startswith("(") and codeText.endswith(")"):
           codeText = codeText[1:(len(codeText) - 1)]
         arg = arg + " (=" + codeText + ")"
-      args.append(arg)
-  print(args)
+      args.append(removeSpacesBeforeAngleBrackets(arg))
+  #print(args)
   if len(args) == 0:
     args = ["void"]
 
   return getJsonDict(args, returnType, func_type, template, include, getUniqueElmts([url + func_permalink] + externalRefs + rosRefs))
-"""return {
-    "args": args,
-    "return": returnType,
-    "func_type": func_type,
-    "include": include,
-    "template": template,
-    "ref": getUniqueElmts([url + func_permalink] + externalRefs + rosRefs)
-  }"""
 
 def getSignatures(url):
   base_url = url[:(-len(os.path.basename(url)))]
@@ -464,12 +323,12 @@ def getSignatures(url):
     for sib in sibs:
       sibIndex = sibs.index(sib)
       if sibIndex not in skip:
-        print("Contents size: " + str(len(sib.contents)))
+        #print("Contents size: " + str(len(sib.contents)))
         funcName = re.sub(r"\(\)", r"", sib.contents[1].strip()).strip()
         permalink = sib("a", href=True)
         if len(permalink) == 1:
           permalink = permalink[0].attrs["href"]
-        #print("function name: " + funcName)
+        print("function name: " + funcName)
         if funcName in functionNames:
           numIters = 1
           if len(sib.contents) == 3:
@@ -504,8 +363,7 @@ def getSignatures(url):
               it += 1
               
               divSibling = divSibling.find_next_sibling("div", class_="memitem")
-  #print(signatures)
-  return signatures #getSignaturesFromDeclTable(declTable, base_url, include, namespace)
+  return signatures
 
 
 

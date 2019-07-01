@@ -1,15 +1,15 @@
 {
     "rclcpp::Subscription<CallbackMessageT, Alloc>::Subscription": {
         "args": [
-            "std::shared_ptr< rcl_node_t >",
+            "std::shared_ptr<rcl_node_t>",
             "const rosidl_message_type_support_t &",
             "const std::string &",
             "const rcl_subscription_options_t &",
-            "AnySubscriptionCallback< CallbackMessageT, Alloc >",
+            "AnySubscriptionCallback<CallbackMessageT, Alloc>",
             "const SubscriptionEventCallbacks &",
-            "typename message_memory_strategy::MessageMemoryStrategy< CallbackMessageT, Alloc >::SharedPtr (=message_memory_strategy::MessageMemoryStrategy<CallbackMessageT,\u00a0Alloc>::create_default())"
+            "typename message_memory_strategy::MessageMemoryStrategy<CallbackMessageT, Alloc>::SharedPtr (=message_memory_strategy::MessageMemoryStrategy<CallbackMessageT,\u00a0Alloc>::create_default())"
         ],
-        "return": "rclcpp::Subscription< CallbackMessageT, Alloc",
+        "return": "rclcpp::Subscription<CallbackMessageT, Alloc",
         "template": [
             {
                 "name": "CallbackMessageT"
@@ -37,9 +37,9 @@
     },
     "rclcpp::Subscription<CallbackMessageT, Alloc>::set_message_memory_strategy": {
         "args": [
-            "typename message_memory_strategy::MessageMemoryStrategy< CallbackMessageT, Alloc >::SharedPtr"
+            "typename message_memory_strategy::MessageMemoryStrategy<CallbackMessageT, Alloc>::SharedPtr"
         ],
-        "return": "void rclcpp::Subscription< CallbackMessageT, Alloc",
+        "return": "void rclcpp::Subscription<CallbackMessageT, Alloc",
         "template": [
             {
                 "name": "CallbackMessageT"
@@ -61,7 +61,7 @@
         "args": [
             "void"
         ],
-        "return": "std::shared_ptr<void> rclcpp::Subscription< CallbackMessageT, Alloc",
+        "return": "std::shared_ptr<void> rclcpp::Subscription<CallbackMessageT, Alloc",
         "template": [
             {
                 "name": "CallbackMessageT"
@@ -83,7 +83,7 @@
         "args": [
             "void"
         ],
-        "return": "std::shared_ptr<rcl_serialized_message_t> rclcpp::Subscription< CallbackMessageT, Alloc",
+        "return": "std::shared_ptr<rcl_serialized_message_t> rclcpp::Subscription<CallbackMessageT, Alloc",
         "template": [
             {
                 "name": "CallbackMessageT"
@@ -104,10 +104,10 @@
     },
     "rclcpp::Subscription<CallbackMessageT, Alloc>::handle_message": {
         "args": [
-            "std::shared_ptr< void > &",
+            "std::shared_ptr<void> &",
             "const rmw_message_info_t &"
         ],
-        "return": "void rclcpp::Subscription< CallbackMessageT, Alloc",
+        "return": "void rclcpp::Subscription<CallbackMessageT, Alloc",
         "template": [
             {
                 "name": "CallbackMessageT"
@@ -128,9 +128,9 @@
     },
     "rclcpp::Subscription<CallbackMessageT, Alloc>::return_message": {
         "args": [
-            "std::shared_ptr< void > &"
+            "std::shared_ptr<void> &"
         ],
-        "return": "void rclcpp::Subscription< CallbackMessageT, Alloc",
+        "return": "void rclcpp::Subscription<CallbackMessageT, Alloc",
         "template": [
             {
                 "name": "CallbackMessageT"
@@ -150,9 +150,9 @@
     },
     "rclcpp::Subscription<CallbackMessageT, Alloc>::return_serialized_message": {
         "args": [
-            "std::shared_ptr< rcl_serialized_message_t > &"
+            "std::shared_ptr<rcl_serialized_message_t> &"
         ],
-        "return": "void rclcpp::Subscription< CallbackMessageT, Alloc",
+        "return": "void rclcpp::Subscription<CallbackMessageT, Alloc",
         "template": [
             {
                 "name": "CallbackMessageT"
@@ -176,7 +176,7 @@
             "rcl_interfaces::msg::IntraProcessMessage &",
             "const rmw_message_info_t &"
         ],
-        "return": "void rclcpp::Subscription< CallbackMessageT, Alloc",
+        "return": "void rclcpp::Subscription<CallbackMessageT, Alloc",
         "template": [
             {
                 "name": "CallbackMessageT"
@@ -198,7 +198,7 @@
         "args": [
             "void"
         ],
-        "return": "const std::shared_ptr<rcl_subscription_t> rclcpp::Subscription< CallbackMessageT, Alloc",
+        "return": "const std::shared_ptr<rcl_subscription_t> rclcpp::Subscription<CallbackMessageT, Alloc",
         "template": [
             {
                 "name": "CallbackMessageT"

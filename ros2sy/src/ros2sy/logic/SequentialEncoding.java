@@ -48,12 +48,25 @@ public class SequentialEncoding implements Encoding {
 			for (Transition tr : pnet.getTransitions()) {
 				if (tr.getId().equals(hint)) {
 //					System.out.println("Preventing " + hint + " from occurring.");
-					int v = solver.loc_variables.last();
-					solver.loc_variables.pop();
-
 					VecInt constraint = new VecInt();
-					constraint.push(-v);
-					solver.addClause(constraint);
+					for (int t = 0; t < loc; t++) {
+						// create a variable with <place in the petri-net, timestamp, value>
+						Pair<Transition, Integer> pair = new ImmutablePair<Transition, Integer>(tr, t);
+						Variable var = transition2variable.get(pair);
+						constraint.push(var.getId());
+
+						VecInt c = new VecInt();
+						c.push(-var.getId());
+//						c.push(v);
+						solver.addClause(c);
+					}
+					
+//					int v = solver.loc_variables.last();
+//					solver.loc_variables.pop();
+
+//					VecInt constraint = new VecInt();
+//					constraint.push(-v);
+//					solver.addClause(constraint);
 					break;
 				}
 			}

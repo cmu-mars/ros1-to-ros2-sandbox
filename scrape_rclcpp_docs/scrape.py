@@ -446,7 +446,15 @@ def isRelatedTo(funcName, sig, someKey):
     return True
   return sig["return"].find(someKey) > -1
 
+def addKeyToTags(tags, category, name):
+  if category not in tags:
+    tags[category] = []
+  if name not in tags[category]:
+    tags[category].append(name)
 
+def stringContains(theString, containedSubstring):
+  return theString.find(containedSubstring) > -1
+    
 tags = {
   "tag_to_sigs": {},
   "sig_to_tags": {}
@@ -454,28 +462,60 @@ tags = {
 t2s = "tag_to_sigs"
 s2t = "sig_to_tags"
 conTag = "constructor"
+otherConTag = "create_"
 initTag = "initialization"
 subTag = "subscription"
-pubTag = "publisher"
 otherSubTag = "subscri"
-otherConTag = "create_"
-def addKeyToTags(tags, category, name):
-  if category not in tags:
-    tags[category] = []
-  if name not in tags[category]:
-    tags[category].append(name)
+pubTag = "publisher"
+spinTag = "spin"
+shutTag = "shutdown"
+
+predicateTags = {}
+
+predicateTags[conTag] = [
+  lambda fName, mSig: isRelatedTo(fName, mSig, otherConTag),
+  lambda fName, mSig: isConstructorMethod(mSig)
+]
+predicateTags[initTag] = [
+  lambda fName, mSig: stringContains(fName, "init") and not stringContains(fName, "is_initialized")
+]
+predicateTags[subTag] = [
+  lambda fName, mSig: isRelatedTo(fName, mSig, subTag),
+  lambda fName, mSig: isRelatedTo(fName, mSig, otherSubTag),
+]
+predicateTags[pubTag] = [
+  lambda fName, mSig: isRelatedTo(fName, mSig, pubTag)
+]
+predicateTags[spinTag] = [
+  lambda fName, mSig: stringContains(fName, spinTag)
+]
+predicateTags[shutTag] = [
+  lambda fName, mSig: stringContains(fName, shutTag) and not stringContains(fName, "on_" + shutTag)
+]
+
+
 
 for tagName,signatures in sigs.items():
   for funcName, methodSignature in signatures.items():
-    if tagName not in tags[t2s]:
-      tags[t2s][tagName] = []
-    if funcName not in tags[t2s][tagName]:
-      tags[t2s][tagName].append(funcName)
-    if funcName not in tags[s2t]:
-      tags[s2t][funcName] = []
-    if tagName not in tags[s2t][funcName]:
-      tags[s2t][funcName].append(tagName)
-    if isConstructorMethod(methodSignature):
+    addKeyToTags(tags[t2s], tagName, funcName)
+    #if tagName not in tags[t2s]:
+    #  tags[t2s][tagName] = []
+    #if funcName not in tags[t2s][tagName]:
+    #  tags[t2s][tagName].append(funcName)
+    addKeyToTags(tags[s2t], funcName, tagName)
+    #if funcName not in tags[s2t]:
+    #  tags[s2t][funcName] = []
+    #if tagName not in tags[s2t][funcName]:
+    #  tags[s2t][funcName].append(tagName)
+
+    for tag,preds in predicateTags.items():
+      for p in preds:
+        if p(funcName, methodSignature):
+          addKeyToTags(tags[t2s], tag, funcName)
+          addKeyToTags(tags[s2t], funcName, tag)
+          break
+    
+    """if isConstructorMethod(methodSignature):
       tags[s2t][funcName].append("constructor")
       if conTag not in tags[t2s]:
         tags[t2s][conTag] = []
@@ -499,6 +539,6 @@ for tagName,signatures in sigs.items():
       addKeyToTags(tags[s2t], funcName, pubTag)
     if isRelatedTo(funcName, methodSignature, otherConTag):
       addKeyToTags(tags[t2s], conTag, funcName)
-      addKeyToTags(tags[s2t], funcName, conTag)
+      addKeyToTags(tags[s2t], funcName, conTag)"""
 with open("tags.json", "w") as f:
   f.write(json.dumps(tags, indent=4))

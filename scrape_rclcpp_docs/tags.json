@@ -135,10 +135,17 @@
             "rclcpp::sub_will_underflow",
             "rclcpp::get_c_string"
         ],
+        "spin": [
+            "rclcpp::spin_some",
+            "rclcpp::spin",
+            "rclcpp::spin_until_future_complete"
+        ],
         "initialization": [
             "rclcpp::init",
-            "rclcpp::init_and_remove_ros_arguments",
-            "rclcpp::is_initialized"
+            "rclcpp::init_and_remove_ros_arguments"
+        ],
+        "shutdown": [
+            "rclcpp::shutdown"
         ]
     },
     "sig_to_tags": {
@@ -167,13 +174,13 @@
         ],
         "rclcpp::Node::create_publisher": [
             "node",
-            "publisher",
-            "constructor"
+            "constructor",
+            "publisher"
         ],
         "rclcpp::Node::create_subscription": [
             "node",
-            "subscription",
-            "constructor"
+            "constructor",
+            "subscription"
         ],
         "rclcpp::Node::create_wall_timer": [
             "node",
@@ -367,8 +374,8 @@
         ],
         "rclcpp::create_publisher": [
             "rclcpp",
-            "publisher",
-            "constructor"
+            "constructor",
+            "publisher"
         ],
         "rclcpp::create_service": [
             "rclcpp",
@@ -376,17 +383,20 @@
         ],
         "rclcpp::create_subscription": [
             "rclcpp",
-            "subscription",
-            "constructor"
+            "constructor",
+            "subscription"
         ],
         "rclcpp::spin_some": [
-            "rclcpp"
+            "rclcpp",
+            "spin"
         ],
         "rclcpp::spin": [
-            "rclcpp"
+            "rclcpp",
+            "spin"
         ],
         "rclcpp::spin_until_future_complete": [
-            "rclcpp"
+            "rclcpp",
+            "spin"
         ],
         "rclcpp::expand_topic_or_service_name": [
             "rclcpp"
@@ -417,8 +427,8 @@
         ],
         "rclcpp::create_subscription_factory": [
             "rclcpp",
-            "subscription",
-            "constructor"
+            "constructor",
+            "subscription"
         ],
         "rclcpp::operator+": [
             "rclcpp"
@@ -447,11 +457,11 @@
             "rclcpp"
         ],
         "rclcpp::is_initialized": [
-            "rclcpp",
-            "initialization"
+            "rclcpp"
         ],
         "rclcpp::shutdown": [
-            "rclcpp"
+            "rclcpp",
+            "shutdown"
         ],
         "rclcpp::on_shutdown": [
             "rclcpp"

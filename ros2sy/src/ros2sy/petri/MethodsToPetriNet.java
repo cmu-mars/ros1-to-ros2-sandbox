@@ -472,7 +472,7 @@ public class MethodsToPetriNet {
 				Flow f = pn.getFlow(p.getId(), t.getId());
 				int wt = f.getWeight();
 				
-				System.out.println("Increasing weight of flow (" + p.getId() + ", " + t.getId() + ") from " + Integer.toString(wt) + " to " + Integer.toString(wt + 1));
+//				System.out.println("Increasing weight of flow (" + p.getId() + ", " + t.getId() + ") from " + Integer.toString(wt) + " to " + Integer.toString(wt + 1));
 				
 				// Increase the weight
 				f.setWeight(wt + 1);

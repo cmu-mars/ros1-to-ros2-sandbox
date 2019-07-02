@@ -1,8 +1,12 @@
 package ros2sy.sig;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
 
 import ros2sy.exception.ArgParseException;
+import ros2sy.petri.MethodsToPetriNet;
 
 /**
  * Represents a Method from the APIs that you want to represent.
@@ -20,6 +24,7 @@ public class Method {
 	public MethodType methodType;
 	public String instanceNeeded;
 	public String ros1Name = "";
+	public HashSet<String> tags = new HashSet<String>();
 	private static String [] rclcpp_classes = {
 		"Node", "Publisher", "Subscriber", "Rate"
 	};
@@ -106,6 +111,18 @@ public class Method {
 				this.fromClass = new Type("rclcpp::" + Method.rclcpp_classes[lowestIndex]);
 			}
 		}
+	}
+	
+	public void addTag(String newTag) {
+		this.tags.add(newTag);
+	}
+	
+	public HashSet<String> getTags() {
+		return this.tags;
+	}
+	
+	public boolean hasTag(String tagName) {
+		return this.tags.contains(tagName);
 	}
 	
 	public void setRos1Name(String name) {
@@ -214,6 +231,19 @@ public class Method {
 		}
 		
 		return opt;
+	}
+	
+	public static HashMap<String, HashSet<String>> methodSetsToStringSets(HashMap<String, HashSet<Method>> map, MethodsToPetriNet mtpn) {
+		HashMap<String, HashSet<String>> namesByTag = new HashMap<>();
+		
+		for (Map.Entry<String, HashSet<Method>> entry : map.entrySet()) {
+			namesByTag.put(entry.getKey(), new HashSet<String>());
+			for (Method m : entry.getValue()) {
+				namesByTag.get(entry.getKey()).addAll(mtpn.getNicknamesOfMethod(m));
+			}
+		}
+		
+		return namesByTag;
 	}
 	
 	/**

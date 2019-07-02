@@ -1,0 +1,478 @@
+{
+    "tag_to_sigs": {
+        "node": [
+            "rclcpp::Node::Node",
+            "rclcpp::Node::get_name",
+            "rclcpp::Node::get_namespace",
+            "rclcpp::Node::get_fully_qualified_name",
+            "rclcpp::Node::get_logger",
+            "rclcpp::Node::create_callback_group",
+            "rclcpp::Node::get_callback_groups",
+            "rclcpp::Node::create_publisher",
+            "rclcpp::Node::create_subscription",
+            "rclcpp::Node::create_wall_timer",
+            "rclcpp::Node::create_client",
+            "rclcpp::Node::declare_parameter",
+            "rclcpp::Node::declare_parameters",
+            "rclcpp::Node::undeclare_parameter",
+            "rclcpp::Node::has_parameter",
+            "rclcpp::Node::set_parameter",
+            "rclcpp::Node::set_parameters",
+            "rclcpp::Node::set_parameters_atomically",
+            "rclcpp::Node::set_parameter_if_not_set",
+            "rclcpp::Node::set_parameters_if_not_set",
+            "rclcpp::Node::get_parameter",
+            "rclcpp::Node::get_parameter_or",
+            "rclcpp::Node::get_parameters",
+            "rclcpp::Node::get_parameter_or_set",
+            "rclcpp::Node::describe_parameter",
+            "rclcpp::Node::describe_parameters",
+            "rclcpp::Node::get_parameter_types",
+            "rclcpp::Node::list_parameters",
+            "rclcpp::Node::set_on_parameters_set_callback",
+            "rclcpp::Node::register_param_change_callback",
+            "rclcpp::Node::get_node_names",
+            "rclcpp::Node::get_topic_names_and_types",
+            "rclcpp::Node::get_service_names_and_types",
+            "rclcpp::Node::count_publishers",
+            "rclcpp::Node::count_subscribers",
+            "rclcpp::Node::get_graph_event",
+            "rclcpp::Node::wait_for_graph_change",
+            "rclcpp::Node::get_clock",
+            "rclcpp::Node::now",
+            "rclcpp::Node::get_node_base_interface",
+            "rclcpp::Node::get_node_clock_interface",
+            "rclcpp::Node::get_node_graph_interface",
+            "rclcpp::Node::get_node_logging_interface",
+            "rclcpp::Node::get_node_timers_interface",
+            "rclcpp::Node::get_node_topics_interface",
+            "rclcpp::Node::get_node_services_interface",
+            "rclcpp::Node::get_node_waitables_interface",
+            "rclcpp::Node::get_node_parameters_interface",
+            "rclcpp::Node::get_node_time_source_interface",
+            "rclcpp::Node::get_sub_namespace",
+            "rclcpp::Node::get_effective_namespace",
+            "rclcpp::Node::create_sub_node",
+            "rclcpp::Node::get_node_options",
+            "rclcpp::Node::assert_liveliness",
+            "rclcpp::Node::make_shared"
+        ],
+        "constructor": [
+            "rclcpp::Node::Node",
+            "rclcpp::Node::create_callback_group",
+            "rclcpp::Node::create_publisher",
+            "rclcpp::Node::create_subscription",
+            "rclcpp::Node::create_wall_timer",
+            "rclcpp::Node::create_client",
+            "rclcpp::Node::create_sub_node",
+            "rclcpp::Node::make_shared",
+            "rclcpp::Publisher<MessageT, Alloc>::Publisher",
+            "rclcpp::Subscription<CallbackMessageT, Alloc>::Subscription",
+            "rclcpp::Subscription<CallbackMessageT, Alloc>::create_message",
+            "rclcpp::Subscription<CallbackMessageT, Alloc>::create_serialized_message",
+            "rclcpp::create_publisher",
+            "rclcpp::create_service",
+            "rclcpp::create_subscription",
+            "rclcpp::create_subscription_factory"
+        ],
+        "publisher": [
+            "rclcpp::Node::create_publisher",
+            "rclcpp::Node::count_publishers",
+            "rclcpp::Publisher<MessageT, Alloc>::Publisher",
+            "rclcpp::Publisher<MessageT, Alloc>::make_mapped_ring_buffer",
+            "rclcpp::Publisher<MessageT, Alloc>::publish",
+            "rclcpp::Publisher<MessageT, Alloc>::get_allocator",
+            "rclcpp::create_publisher"
+        ],
+        "subscription": [
+            "rclcpp::Node::create_subscription",
+            "rclcpp::Node::count_subscribers",
+            "rclcpp::Subscription<CallbackMessageT, Alloc>::Subscription",
+            "rclcpp::Subscription<CallbackMessageT, Alloc>::set_message_memory_strategy",
+            "rclcpp::Subscription<CallbackMessageT, Alloc>::create_message",
+            "rclcpp::Subscription<CallbackMessageT, Alloc>::create_serialized_message",
+            "rclcpp::Subscription<CallbackMessageT, Alloc>::handle_message",
+            "rclcpp::Subscription<CallbackMessageT, Alloc>::return_message",
+            "rclcpp::Subscription<CallbackMessageT, Alloc>::return_serialized_message",
+            "rclcpp::Subscription<CallbackMessageT, Alloc>::handle_intra_process_message",
+            "rclcpp::Subscription<CallbackMessageT, Alloc>::get_intra_process_subscription_handle",
+            "rclcpp::create_subscription",
+            "rclcpp::create_subscription_factory"
+        ],
+        "rclcpp": [
+            "rclcpp::get_contexts",
+            "rclcpp::create_publisher",
+            "rclcpp::create_service",
+            "rclcpp::create_subscription",
+            "rclcpp::spin_some",
+            "rclcpp::spin",
+            "rclcpp::spin_until_future_complete",
+            "rclcpp::expand_topic_or_service_name",
+            "rclcpp::get_logger",
+            "rclcpp::get_node_logger",
+            "rclcpp::extend_name_with_sub_namespace",
+            "rclcpp::_to_json_dict_entry",
+            "rclcpp::parameter_map_from",
+            "rclcpp::parameter_value_from",
+            "rclcpp::to_string",
+            "rclcpp::make_scope_exit",
+            "rclcpp::create_subscription_factory",
+            "rclcpp::operator+",
+            "rclcpp::init",
+            "rclcpp::install_signal_handlers",
+            "rclcpp::signal_handlers_installed",
+            "rclcpp::uninstall_signal_handlers",
+            "rclcpp::init_and_remove_ros_arguments",
+            "rclcpp::remove_ros_arguments",
+            "rclcpp::ok",
+            "rclcpp::is_initialized",
+            "rclcpp::shutdown",
+            "rclcpp::on_shutdown",
+            "rclcpp::sleep_for",
+            "rclcpp::add_will_overflow",
+            "rclcpp::add_will_underflow",
+            "rclcpp::sub_will_overflow",
+            "rclcpp::sub_will_underflow",
+            "rclcpp::get_c_string"
+        ],
+        "initialization": [
+            "rclcpp::init",
+            "rclcpp::init_and_remove_ros_arguments",
+            "rclcpp::is_initialized"
+        ]
+    },
+    "sig_to_tags": {
+        "rclcpp::Node::Node": [
+            "node",
+            "constructor"
+        ],
+        "rclcpp::Node::get_name": [
+            "node"
+        ],
+        "rclcpp::Node::get_namespace": [
+            "node"
+        ],
+        "rclcpp::Node::get_fully_qualified_name": [
+            "node"
+        ],
+        "rclcpp::Node::get_logger": [
+            "node"
+        ],
+        "rclcpp::Node::create_callback_group": [
+            "node",
+            "constructor"
+        ],
+        "rclcpp::Node::get_callback_groups": [
+            "node"
+        ],
+        "rclcpp::Node::create_publisher": [
+            "node",
+            "publisher",
+            "constructor"
+        ],
+        "rclcpp::Node::create_subscription": [
+            "node",
+            "subscription",
+            "constructor"
+        ],
+        "rclcpp::Node::create_wall_timer": [
+            "node",
+            "constructor"
+        ],
+        "rclcpp::Node::create_client": [
+            "node",
+            "constructor"
+        ],
+        "rclcpp::Node::declare_parameter": [
+            "node"
+        ],
+        "rclcpp::Node::declare_parameters": [
+            "node"
+        ],
+        "rclcpp::Node::undeclare_parameter": [
+            "node"
+        ],
+        "rclcpp::Node::has_parameter": [
+            "node"
+        ],
+        "rclcpp::Node::set_parameter": [
+            "node"
+        ],
+        "rclcpp::Node::set_parameters": [
+            "node"
+        ],
+        "rclcpp::Node::set_parameters_atomically": [
+            "node"
+        ],
+        "rclcpp::Node::set_parameter_if_not_set": [
+            "node"
+        ],
+        "rclcpp::Node::set_parameters_if_not_set": [
+            "node"
+        ],
+        "rclcpp::Node::get_parameter": [
+            "node"
+        ],
+        "rclcpp::Node::get_parameter_or": [
+            "node"
+        ],
+        "rclcpp::Node::get_parameters": [
+            "node"
+        ],
+        "rclcpp::Node::get_parameter_or_set": [
+            "node"
+        ],
+        "rclcpp::Node::describe_parameter": [
+            "node"
+        ],
+        "rclcpp::Node::describe_parameters": [
+            "node"
+        ],
+        "rclcpp::Node::get_parameter_types": [
+            "node"
+        ],
+        "rclcpp::Node::list_parameters": [
+            "node"
+        ],
+        "rclcpp::Node::set_on_parameters_set_callback": [
+            "node"
+        ],
+        "rclcpp::Node::register_param_change_callback": [
+            "node"
+        ],
+        "rclcpp::Node::get_node_names": [
+            "node"
+        ],
+        "rclcpp::Node::get_topic_names_and_types": [
+            "node"
+        ],
+        "rclcpp::Node::get_service_names_and_types": [
+            "node"
+        ],
+        "rclcpp::Node::count_publishers": [
+            "node",
+            "publisher"
+        ],
+        "rclcpp::Node::count_subscribers": [
+            "node",
+            "subscription"
+        ],
+        "rclcpp::Node::get_graph_event": [
+            "node"
+        ],
+        "rclcpp::Node::wait_for_graph_change": [
+            "node"
+        ],
+        "rclcpp::Node::get_clock": [
+            "node"
+        ],
+        "rclcpp::Node::now": [
+            "node"
+        ],
+        "rclcpp::Node::get_node_base_interface": [
+            "node"
+        ],
+        "rclcpp::Node::get_node_clock_interface": [
+            "node"
+        ],
+        "rclcpp::Node::get_node_graph_interface": [
+            "node"
+        ],
+        "rclcpp::Node::get_node_logging_interface": [
+            "node"
+        ],
+        "rclcpp::Node::get_node_timers_interface": [
+            "node"
+        ],
+        "rclcpp::Node::get_node_topics_interface": [
+            "node"
+        ],
+        "rclcpp::Node::get_node_services_interface": [
+            "node"
+        ],
+        "rclcpp::Node::get_node_waitables_interface": [
+            "node"
+        ],
+        "rclcpp::Node::get_node_parameters_interface": [
+            "node"
+        ],
+        "rclcpp::Node::get_node_time_source_interface": [
+            "node"
+        ],
+        "rclcpp::Node::get_sub_namespace": [
+            "node"
+        ],
+        "rclcpp::Node::get_effective_namespace": [
+            "node"
+        ],
+        "rclcpp::Node::create_sub_node": [
+            "node",
+            "constructor"
+        ],
+        "rclcpp::Node::get_node_options": [
+            "node"
+        ],
+        "rclcpp::Node::assert_liveliness": [
+            "node"
+        ],
+        "rclcpp::Node::make_shared": [
+            "node",
+            "constructor"
+        ],
+        "rclcpp::Publisher<MessageT, Alloc>::Publisher": [
+            "publisher",
+            "constructor"
+        ],
+        "rclcpp::Publisher<MessageT, Alloc>::make_mapped_ring_buffer": [
+            "publisher"
+        ],
+        "rclcpp::Publisher<MessageT, Alloc>::publish": [
+            "publisher"
+        ],
+        "rclcpp::Publisher<MessageT, Alloc>::get_allocator": [
+            "publisher"
+        ],
+        "rclcpp::Subscription<CallbackMessageT, Alloc>::Subscription": [
+            "subscription",
+            "constructor"
+        ],
+        "rclcpp::Subscription<CallbackMessageT, Alloc>::set_message_memory_strategy": [
+            "subscription"
+        ],
+        "rclcpp::Subscription<CallbackMessageT, Alloc>::create_message": [
+            "subscription",
+            "constructor"
+        ],
+        "rclcpp::Subscription<CallbackMessageT, Alloc>::create_serialized_message": [
+            "subscription",
+            "constructor"
+        ],
+        "rclcpp::Subscription<CallbackMessageT, Alloc>::handle_message": [
+            "subscription"
+        ],
+        "rclcpp::Subscription<CallbackMessageT, Alloc>::return_message": [
+            "subscription"
+        ],
+        "rclcpp::Subscription<CallbackMessageT, Alloc>::return_serialized_message": [
+            "subscription"
+        ],
+        "rclcpp::Subscription<CallbackMessageT, Alloc>::handle_intra_process_message": [
+            "subscription"
+        ],
+        "rclcpp::Subscription<CallbackMessageT, Alloc>::get_intra_process_subscription_handle": [
+            "subscription"
+        ],
+        "rclcpp::get_contexts": [
+            "rclcpp"
+        ],
+        "rclcpp::create_publisher": [
+            "rclcpp",
+            "publisher",
+            "constructor"
+        ],
+        "rclcpp::create_service": [
+            "rclcpp",
+            "constructor"
+        ],
+        "rclcpp::create_subscription": [
+            "rclcpp",
+            "subscription",
+            "constructor"
+        ],
+        "rclcpp::spin_some": [
+            "rclcpp"
+        ],
+        "rclcpp::spin": [
+            "rclcpp"
+        ],
+        "rclcpp::spin_until_future_complete": [
+            "rclcpp"
+        ],
+        "rclcpp::expand_topic_or_service_name": [
+            "rclcpp"
+        ],
+        "rclcpp::get_logger": [
+            "rclcpp"
+        ],
+        "rclcpp::get_node_logger": [
+            "rclcpp"
+        ],
+        "rclcpp::extend_name_with_sub_namespace": [
+            "rclcpp"
+        ],
+        "rclcpp::_to_json_dict_entry": [
+            "rclcpp"
+        ],
+        "rclcpp::parameter_map_from": [
+            "rclcpp"
+        ],
+        "rclcpp::parameter_value_from": [
+            "rclcpp"
+        ],
+        "rclcpp::to_string": [
+            "rclcpp"
+        ],
+        "rclcpp::make_scope_exit": [
+            "rclcpp"
+        ],
+        "rclcpp::create_subscription_factory": [
+            "rclcpp",
+            "subscription",
+            "constructor"
+        ],
+        "rclcpp::operator+": [
+            "rclcpp"
+        ],
+        "rclcpp::init": [
+            "rclcpp",
+            "initialization"
+        ],
+        "rclcpp::install_signal_handlers": [
+            "rclcpp"
+        ],
+        "rclcpp::signal_handlers_installed": [
+            "rclcpp"
+        ],
+        "rclcpp::uninstall_signal_handlers": [
+            "rclcpp"
+        ],
+        "rclcpp::init_and_remove_ros_arguments": [
+            "rclcpp",
+            "initialization"
+        ],
+        "rclcpp::remove_ros_arguments": [
+            "rclcpp"
+        ],
+        "rclcpp::ok": [
+            "rclcpp"
+        ],
+        "rclcpp::is_initialized": [
+            "rclcpp",
+            "initialization"
+        ],
+        "rclcpp::shutdown": [
+            "rclcpp"
+        ],
+        "rclcpp::on_shutdown": [
+            "rclcpp"
+        ],
+        "rclcpp::sleep_for": [
+            "rclcpp"
+        ],
+        "rclcpp::add_will_overflow": [
+            "rclcpp"
+        ],
+        "rclcpp::add_will_underflow": [
+            "rclcpp"
+        ],
+        "rclcpp::sub_will_overflow": [
+            "rclcpp"
+        ],
+        "rclcpp::sub_will_underflow": [
+            "rclcpp"
+        ],
+        "rclcpp::get_c_string": [
+            "rclcpp"
+        ]
+    }
+}

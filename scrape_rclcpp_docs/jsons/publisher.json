@@ -90,7 +90,7 @@
             ],
             "include": "rclcpp/publisher.hpp",
             "ref": [
-                "http://docs.ros2.org/latest/api/rclcpp/classrclcpp_1_1Publisher.html#ac1ebb44f82f908c469864f8c3ba82ced",
+                "http://docs.ros2.org/latest/api/rclcpp/classrclcpp_1_1Publisher.html#a5d7f018dfbefa16d20e724b4e9f902ae",
                 "http://en.cppreference.com/w/cpp/memory/shared_ptr.html",
                 "http://docs.ros2.org/latest/api/rclcpp/classrclcpp_1_1Publisher.html"
             ]
@@ -111,7 +111,7 @@
             ],
             "include": "rclcpp/publisher.hpp",
             "ref": [
-                "http://docs.ros2.org/latest/api/rclcpp/classrclcpp_1_1Publisher.html#ac1ebb44f82f908c469864f8c3ba82ced",
+                "http://docs.ros2.org/latest/api/rclcpp/classrclcpp_1_1Publisher.html#a0b4acb5e7d57b9e0cce84564c86caab3",
                 "http://docs.ros2.org/latest/api/rclcpp/classrclcpp_1_1Publisher.html"
             ]
         },
@@ -131,7 +131,7 @@
             ],
             "include": "rclcpp/publisher.hpp",
             "ref": [
-                "http://docs.ros2.org/latest/api/rclcpp/classrclcpp_1_1Publisher.html#ac1ebb44f82f908c469864f8c3ba82ced",
+                "http://docs.ros2.org/latest/api/rclcpp/classrclcpp_1_1Publisher.html#afe24c65235f80bb331994595453d6798",
                 "http://docs.ros2.org/latest/api/rclcpp/classrclcpp_1_1Publisher.html"
             ]
         },
@@ -151,7 +151,7 @@
             ],
             "include": "rclcpp/publisher.hpp",
             "ref": [
-                "http://docs.ros2.org/latest/api/rclcpp/classrclcpp_1_1Publisher.html#ac1ebb44f82f908c469864f8c3ba82ced",
+                "http://docs.ros2.org/latest/api/rclcpp/classrclcpp_1_1Publisher.html#ae3c01c294aa92d63ef2aaaed90280ef5",
                 "http://docs.ros2.org/dashing/api/rcl/types_8h.html#aacac4adc45d07815b73188eafd77d705",
                 "http://docs.ros2.org/latest/api/rclcpp/classrclcpp_1_1Publisher.html"
             ]
@@ -172,7 +172,7 @@
             ],
             "include": "rclcpp/publisher.hpp",
             "ref": [
-                "http://docs.ros2.org/latest/api/rclcpp/classrclcpp_1_1Publisher.html#ac1ebb44f82f908c469864f8c3ba82ced",
+                "http://docs.ros2.org/latest/api/rclcpp/classrclcpp_1_1Publisher.html#aa6255c4fdce4c645e8c5061cb6c19b29",
                 "http://docs.ros2.org/dashing/api/rcl/types_8h.html#aacac4adc45d07815b73188eafd77d705",
                 "http://docs.ros2.org/latest/api/rclcpp/classrclcpp_1_1Publisher.html"
             ]
@@ -193,7 +193,7 @@
             ],
             "include": "rclcpp/publisher.hpp",
             "ref": [
-                "http://docs.ros2.org/latest/api/rclcpp/classrclcpp_1_1Publisher.html#ac1ebb44f82f908c469864f8c3ba82ced",
+                "http://docs.ros2.org/latest/api/rclcpp/classrclcpp_1_1Publisher.html#a897ef4622de42252260a1975cb368c7f",
                 "http://en.cppreference.com/w/cpp/memory/shared_ptr.html",
                 "http://docs.ros2.org/dashing/api/rcl/types_8h.html#aacac4adc45d07815b73188eafd77d705",
                 "http://docs.ros2.org/latest/api/rclcpp/classrclcpp_1_1Publisher.html"

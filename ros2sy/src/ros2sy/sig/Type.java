@@ -52,7 +52,7 @@ public class Type {
 		
 		this.isReference = this.referenceLevel > 0;
 		if (this.isReference) {
-			this.typeName = this.typeName.substring(0, ints.get(0));
+			this.typeName = this.typeName.substring(0, ints.get(0)).trim();
 		}
 		
 		ints.clear();

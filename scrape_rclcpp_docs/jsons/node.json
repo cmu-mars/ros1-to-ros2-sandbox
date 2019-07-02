@@ -24,7 +24,7 @@
             "func_type": "constructor",
             "include": "rclcpp/node.hpp",
             "ref": [
-                "http://docs.ros2.org/latest/api/rclcpp/classrclcpp_1_1Node.html#abaa409bd2dc2cc2437fd9e47378cc5af",
+                "http://docs.ros2.org/latest/api/rclcpp/classrclcpp_1_1Node.html#a83f5f45604217b3dc583dac7ab3b66a8",
                 "http://en.cppreference.com/w/cpp/string/basic_string.html",
                 "http://docs.ros2.org/latest/api/rclcpp/classrclcpp_1_1NodeOptions.html"
             ]
@@ -38,7 +38,7 @@
             "func_type": "constructor",
             "include": "rclcpp/node.hpp",
             "ref": [
-                "http://docs.ros2.org/latest/api/rclcpp/classrclcpp_1_1Node.html#abaa409bd2dc2cc2437fd9e47378cc5af",
+                "http://docs.ros2.org/latest/api/rclcpp/classrclcpp_1_1Node.html#a52e594aa6a2790c0190739d862f68270",
                 "http://en.cppreference.com/w/cpp/string/basic_string.html",
                 "http://docs.ros2.org/latest/api/rclcpp/classrclcpp_1_1Node.html",
                 "http://docs.ros2.org/latest/api/rclcpp/classrclcpp_1_1Node.html#a1df8e4507d17a503630317432449d69d"
@@ -161,7 +161,7 @@
             ],
             "include": "rclcpp/node.hpp",
             "ref": [
-                "http://docs.ros2.org/latest/api/rclcpp/classrclcpp_1_1Node.html#ad1dfc9d04d67ab93353e04a7df72bc9a",
+                "http://docs.ros2.org/latest/api/rclcpp/classrclcpp_1_1Node.html#a7836a1c17c6cce867a115858e29e51d1",
                 "http://en.cppreference.com/w/cpp/memory/shared_ptr.html",
                 "http://en.cppreference.com/w/cpp/string/basic_string.html",
                 "http://docs.ros2.org/latest/api/rclcpp/classrclcpp_1_1Publisher.html"
@@ -187,7 +187,7 @@
             ],
             "include": "rclcpp/node.hpp",
             "ref": [
-                "http://docs.ros2.org/latest/api/rclcpp/classrclcpp_1_1Node.html#ad1dfc9d04d67ab93353e04a7df72bc9a",
+                "http://docs.ros2.org/latest/api/rclcpp/classrclcpp_1_1Node.html#a55d43f21854ea3840fd3d18a2e8dce1b",
                 "http://en.cppreference.com/w/cpp/memory/shared_ptr.html",
                 "http://en.cppreference.com/w/cpp/string/basic_string.html",
                 "http://docs.ros2.org/dashing/api/rmw/structrmw__qos__profile__t.html",
@@ -258,7 +258,7 @@
             ],
             "include": "rclcpp/node.hpp",
             "ref": [
-                "http://docs.ros2.org/latest/api/rclcpp/classrclcpp_1_1Node.html#a6dbcf674cc0fe7ec611a44f08b6720fe",
+                "http://docs.ros2.org/latest/api/rclcpp/classrclcpp_1_1Node.html#a2978c294db9f39677020d76d5bb14d53",
                 "http://en.cppreference.com/w/cpp/memory/shared_ptr.html",
                 "http://en.cppreference.com/w/cpp/string/basic_string.html",
                 "http://docs.ros2.org/dashing/api/rmw/structrmw__qos__profile__t.html",
@@ -294,7 +294,7 @@
             ],
             "include": "rclcpp/node.hpp",
             "ref": [
-                "http://docs.ros2.org/latest/api/rclcpp/classrclcpp_1_1Node.html#a6dbcf674cc0fe7ec611a44f08b6720fe",
+                "http://docs.ros2.org/latest/api/rclcpp/classrclcpp_1_1Node.html#a283fb006c46470cf43a4ae5ef4a16ccd",
                 "http://en.cppreference.com/w/cpp/memory/shared_ptr.html",
                 "http://en.cppreference.com/w/cpp/string/basic_string.html",
                 "http://docs.ros2.org/latest/api/rclcpp/classrclcpp_1_1message__memory__strategy_1_1MessageMemoryStrategy.html",
@@ -383,8 +383,9 @@
             ],
             "include": "rclcpp/node.hpp",
             "ref": [
-                "http://docs.ros2.org/latest/api/rclcpp/classrclcpp_1_1Node.html#a64df64d004b6263c3c04f42179fc8f52",
+                "http://docs.ros2.org/latest/api/rclcpp/classrclcpp_1_1Node.html#a222633623e5c933b7953e5718ec3649a",
                 "http://en.cppreference.com/w/cpp/string/basic_string.html",
+                "http://docs.ros2.org/latest/api/rclcpp/classrclcpp_1_1Node.html#a64df64d004b6263c3c04f42179fc8f52",
                 "http://docs.ros2.org/latest/api/rclcpp/classrclcpp_1_1ParameterTypeException.html",
                 "http://docs.ros2.org/latest/api/rclcpp/classrclcpp_1_1ParameterValue.html"
             ]
@@ -427,11 +428,12 @@
             ],
             "include": "rclcpp/node.hpp",
             "ref": [
-                "http://docs.ros2.org/latest/api/rclcpp/classrclcpp_1_1Node.html#a70012f2efbed147a2710343856acace5",
+                "http://docs.ros2.org/latest/api/rclcpp/classrclcpp_1_1Node.html#a26508ac4c6ca671ed25802a6a1ca6d23",
                 "http://en.cppreference.com/w/cpp/container/vector.html",
                 "http://en.cppreference.com/w/cpp/string/basic_string.html",
                 "http://en.cppreference.com/w/cpp/container/map.html",
-                "http://en.cppreference.com/w/cpp/utility/pair.html"
+                "http://en.cppreference.com/w/cpp/utility/pair.html",
+                "http://docs.ros2.org/latest/api/rclcpp/classrclcpp_1_1Node.html#a70012f2efbed147a2710343856acace5"
             ]
         }
     ],
@@ -563,7 +565,7 @@
             "return": "bool",
             "include": "rclcpp/node.hpp",
             "ref": [
-                "http://docs.ros2.org/latest/api/rclcpp/classrclcpp_1_1Node.html#a0bf1077fba623d72fe1b49805f6c0a5a",
+                "http://docs.ros2.org/latest/api/rclcpp/classrclcpp_1_1Node.html#a1fe80d17fb6789dec1ecf74c4d135aad",
                 "http://en.cppreference.com/w/cpp/string/basic_string.html",
                 "http://docs.ros2.org/latest/api/rclcpp/classrclcpp_1_1Parameter.html",
                 "http://docs.ros2.org/latest/api/rclcpp/classrclcpp_1_1exceptions_1_1ParameterNotDeclaredException.html"
@@ -582,7 +584,7 @@
             ],
             "include": "rclcpp/node.hpp",
             "ref": [
-                "http://docs.ros2.org/latest/api/rclcpp/classrclcpp_1_1Node.html#a0bf1077fba623d72fe1b49805f6c0a5a",
+                "http://docs.ros2.org/latest/api/rclcpp/classrclcpp_1_1Node.html#a3158e5520c58531ae4d85a2e98cdf210",
                 "http://en.cppreference.com/w/cpp/string/basic_string.html",
                 "http://docs.ros2.org/latest/api/rclcpp/classrclcpp_1_1ParameterTypeException.html"
             ]
@@ -636,7 +638,7 @@
             ],
             "include": "rclcpp/node.hpp",
             "ref": [
-                "http://docs.ros2.org/latest/api/rclcpp/classrclcpp_1_1Node.html#a25890d01a2cd47ce99af887f556c529b",
+                "http://docs.ros2.org/latest/api/rclcpp/classrclcpp_1_1Node.html#ae5ab12777100f65bd09163814dbbf486",
                 "http://en.cppreference.com/w/cpp/string/basic_string.html",
                 "http://en.cppreference.com/w/cpp/container/map.html",
                 "http://docs.ros2.org/latest/api/rclcpp/classrclcpp_1_1Node.html#a37aa95886a706c174db77c2b160f6d7d",
@@ -1027,6 +1029,19 @@
             "http://docs.ros2.org/latest/api/rclcpp/classrclcpp_1_1Node.html#a736f584fe3e52aa5b28451865ddc9ad6",
             "http://docs.ros2.org/dashing/api/rcutils/macros_8h.html#a6be4031432c70fddf878bd574c8bccc4",
             "http://docs.ros2.org/latest/api/rclcpp/classrclcpp_1_1Node.html"
+        ]
+    },
+    "rclcpp::Node::make_shared": {
+        "args": [
+            "const std::string&",
+            "const NodeOptions& (=NodeOptions())"
+        ],
+        "return": "std::shared_ptr<rclcpp::Node>",
+        "func_type": "constructor",
+        "ref": [
+            "https://en.cppreference.com/w/cpp/memory/shared_ptr/make_shared",
+            "http://docs.ros2.org/latest/api/rclcpp/classrclcpp_1_1Node.html",
+            "https://en.cppreference.com/w/cpp/memory/enable_shared_from_this"
         ]
     }
 }

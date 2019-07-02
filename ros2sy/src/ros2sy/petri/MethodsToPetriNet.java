@@ -329,8 +329,12 @@ public class MethodsToPetriNet {
 	 * @param pn	 	a PetriNet object to encode as a graph using DOT
 	 */
 	public static void createDotFile(PetriNet pn) {
+		MethodsToPetriNet.createDotFile(pn, "dot/petri.dot");
+	}
+	
+	public static void createDotFile(PetriNet pn, String fileName) {
 		try {			
-			FileWriter w = new FileWriter("dot/petri.dot");
+			FileWriter w = new FileWriter(fileName);
 			
 			HashMap<String, String> graphOptions = new HashMap<String, String>();
 			graphOptions.put("rankdir", "LR");
@@ -467,6 +471,8 @@ public class MethodsToPetriNet {
 			try {
 				Flow f = pn.getFlow(p.getId(), t.getId());
 				int wt = f.getWeight();
+				
+				System.out.println("Increasing weight of flow (" + p.getId() + ", " + t.getId() + ") from " + Integer.toString(wt) + " to " + Integer.toString(wt + 1));
 				
 				// Increase the weight
 				f.setWeight(wt + 1);

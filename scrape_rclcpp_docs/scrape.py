@@ -296,6 +296,25 @@ def extractSignature(div, func_name, func_permalink, url, base_url, include, nam
 
   return getJsonDict(args, returnType, func_type, template, include, getUniqueElmts([url + func_permalink] + externalRefs + rosRefs))
 
+def getPermalink(header2):
+  # this should be an instance of a <h2> tag
+  if header2.name == "h2":
+    if hasClass(header2, "memtitle"):
+      if len(header2("a", href=True)) >= 1:
+        return header2.find("a", href=True).attrs["href"]
+  return "<ERROR: SHOULD NOT BE TRYING TO GET A PERMALINK FROM THIS OBJECT>"
+
+def getNumIters(header2):
+  return 1 if len(header2.contents) != 3 else int(re.sub(r"\[[0-9]+/([0-9]+)\]", r"\1", header2.contents[2].string))
+
+def getFunctionName(header2):
+  return re.sub(r"\(\)", r"", header2.contents[1].strip()).strip()
+
+def isNotDeconstructor(header2):
+  return not header2.contents[1].strip().startswith("~")
+
+#def getSignaturesForFunction(functionHeader, 
+  
 def getSignatures(url):
   base_url = url[:(-len(os.path.basename(url)))]
   signatures = {}
@@ -308,6 +327,14 @@ def getSignatures(url):
   headers = getWantedHeaders(headers, wantedHeaders)
   print(headers)
 
+  def extract(div, functionName, permanentLink, isConstructor):
+    extracted = extractSignature(div, functionName, permanentLink, url, base_url, include, namespace)
+    if isConstructor:
+      extracted["func_type"] = "constructor"
+    return extracted
+
+  constructorBlockTitles = ["Constructor & Destructor Documentation"]
+
   functionNames = getPublicFunctionNames(soup)
   print(functionNames)
   
@@ -316,7 +343,7 @@ def getSignatures(url):
   for sibs in headerSibs:
     index = headerSibs.index(sibs)
     isConstructor = False
-    if headers[index].string in ["Constructor & Destructor Documentation"]:
+    if headers[index].string in constructorBlockTitles:
       isConstructor = True
     #print("Number of sibs for header {}: {}".format(headers[index], len(sibs)))
     skip = []
@@ -324,42 +351,29 @@ def getSignatures(url):
       sibIndex = sibs.index(sib)
       if sibIndex not in skip:
         #print("Contents size: " + str(len(sib.contents)))
-        funcName = re.sub(r"\(\)", r"", sib.contents[1].strip()).strip()
-        permalink = sib("a", href=True)
-        if len(permalink) == 1:
-          permalink = permalink[0].attrs["href"]
+        funcName = getFunctionName(sib)
+        permalink = getPermalink(sib) #sib.find("a", href=True).attrs["href"]
+        
         print("function name: " + funcName)
         if funcName in functionNames:
-          numIters = 1
-          if len(sib.contents) == 3:
-            numIters = int(re.sub(r"\[[0-9]+/([0-9]+)\]", r"\1", sib.contents[2].string))
-            #print("num iterations: " + str(numIters))
+          funcKey = namespace + "::" + funcName
+          numIters = getNumIters(sib)
+          divSibling = sib.find_next_sibling("div", class_="memitem")
           if numIters == 1:
-            #print("")
-            #print("")
-            signatures[namespace + "::" + funcName] = extractSignature(sib.find_next_sibling("div", class_="memitem"), funcName, permalink, url, base_url, include, namespace)
+            signatures[funcKey] = extract(divSibling, funcName, permalink, isConstructor)
             if isConstructor:
-              signatures[namespace + "::" + funcName]["func_type"] = "constructor"
+              signatures[funcKey]["func_type"] = "constructor"
           else:
-            i = 0
             it = 0
-            funcKey = namespace + "::" + funcName
-            #print("")
-            #print("")
             #print("Iterating over key <{}>".format(funcKey))
             signatures[funcKey] = []
-            divSibling = sib.find_next_sibling("div", class_="memitem")
-            while i < numIters and divSibling:
+            while len(signatures[funcKey]) < numIters and divSibling is not None:
               #print("sibling of {}: {}".format(sib, divSibling))
               title = divSibling.find_previous_sibling("h2", class_="memtitle")
               skip.append(sibIndex + it)
               #print("Skipping {}".format(title))
-              #print("")
-              if not title.contents[1].strip().startswith("~"):
-                signatures[funcKey].append(extractSignature(divSibling, funcName, permalink, url, base_url, include, namespace))
-                if isConstructor:
-                  signatures[funcKey][i]["func_type"] = "constructor"
-                i += 1
+              if isNotDeconstructor(title):
+                signatures[funcKey].append(extract(divSibling, funcName, getPermalink(title), isConstructor))
               it += 1
               
               divSibling = divSibling.find_next_sibling("div", class_="memitem")
@@ -375,9 +389,11 @@ urlDict = {
 }
 
 mydir = "jsons"
-  
+
 if (not os.path.isdir(mydir)):
   os.mkdir(mydir)
+
+sigs = {}
 
 for name,url in urlDict.items():
   signatures = getSignatures(url)
@@ -397,8 +413,92 @@ for name,url in urlDict.items():
       else:
         if "include" in funcsig:
           funcsig["include"] = "rclcpp/" + funcsig["include"]
+
+  if name == "node":
+    with open("node_extras.json", "r") as f:
+      extra = json.load(f)
+      for key in extra:
+        if key not in signatures:
+          signatures[key] = extra[key]
+  sigs[name] = signatures
   print(signatures)
-  
   with open(os.path.join(mydir, name + ".json"), "w") as f:
     f.write(json.dumps(signatures, indent=4))
 
+def isConstructorMethod(sig):
+  ftKey = "func_type"
+  conKey = "constructor"
+  if isinstance(sig, list):
+    for s in sig:
+      if ftKey not in s or s[ftKey] != "constructor":
+        return False
+    return True
+  else:
+    return ftKey in sig and sig[ftKey] == "constructor"
+
+def isRelatedTo(funcName, sig, someKey):
+  if funcName.lower().find(someKey) > -1:
+    return True
+  if isinstance(sig, list):
+    for s in sig:
+      if s["return"].find(someKey) == -1:
+        return False
+    return True
+  return sig["return"].find(someKey) > -1
+
+
+tags = {
+  "tag_to_sigs": {},
+  "sig_to_tags": {}
+}
+t2s = "tag_to_sigs"
+s2t = "sig_to_tags"
+conTag = "constructor"
+initTag = "initialization"
+subTag = "subscription"
+pubTag = "publisher"
+otherSubTag = "subscri"
+otherConTag = "create_"
+def addKeyToTags(tags, category, name):
+  if category not in tags:
+    tags[category] = []
+  if name not in tags[category]:
+    tags[category].append(name)
+
+for tagName,signatures in sigs.items():
+  for funcName, methodSignature in signatures.items():
+    if tagName not in tags[t2s]:
+      tags[t2s][tagName] = []
+    if funcName not in tags[t2s][tagName]:
+      tags[t2s][tagName].append(funcName)
+    if funcName not in tags[s2t]:
+      tags[s2t][funcName] = []
+    if tagName not in tags[s2t][funcName]:
+      tags[s2t][funcName].append(tagName)
+    if isConstructorMethod(methodSignature):
+      tags[s2t][funcName].append("constructor")
+      if conTag not in tags[t2s]:
+        tags[t2s][conTag] = []
+      if funcName not in tags[t2s][conTag]:
+        tags[t2s][conTag].append(funcName)
+    if funcName.find("init") > -1:
+      if initTag not in tags[s2t][funcName]:
+        tags[s2t][funcName].append(initTag)
+      if initTag not in tags[t2s]:
+        tags[t2s][initTag] = []
+      if funcName not in tags[t2s][initTag]:
+        tags[t2s][initTag].append(funcName)
+    if isRelatedTo(funcName, methodSignature, subTag):
+      addKeyToTags(tags[t2s], subTag, funcName)
+      addKeyToTags(tags[s2t], funcName, subTag)
+    if isRelatedTo(funcName, methodSignature,otherSubTag):
+      addKeyToTags(tags[t2s], subTag, funcName)
+      addKeyToTags(tags[s2t], funcName, subTag)
+    if isRelatedTo(funcName, methodSignature, pubTag):
+      addKeyToTags(tags[t2s], pubTag, funcName)
+      addKeyToTags(tags[s2t], funcName, pubTag)
+    if isRelatedTo(funcName, methodSignature, otherConTag):
+      addKeyToTags(tags[t2s], conTag, funcName)
+      addKeyToTags(tags[s2t], funcName, conTag)
+with open("tags.json", "w") as f:
+  f.write(json.dumps(tags, indent=4))

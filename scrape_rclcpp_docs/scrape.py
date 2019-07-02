@@ -446,6 +446,7 @@ def isRelatedTo(funcName, sig, someKey):
     return True
   return sig["return"].find(someKey) > -1
 
+
 def addKeyToTags(tags, category, name):
   if category not in tags:
     tags[category] = []
@@ -454,7 +455,7 @@ def addKeyToTags(tags, category, name):
 
 def stringContains(theString, containedSubstring):
   return theString.find(containedSubstring) > -1
-    
+
 tags = {
   "tag_to_sigs": {},
   "sig_to_tags": {}
@@ -540,5 +541,7 @@ for tagName,signatures in sigs.items():
     if isRelatedTo(funcName, methodSignature, otherConTag):
       addKeyToTags(tags[t2s], conTag, funcName)
       addKeyToTags(tags[s2t], funcName, conTag)"""
+
+
 with open("tags.json", "w") as f:
   f.write(json.dumps(tags, indent=4))

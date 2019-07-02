@@ -3,13 +3,18 @@ package ros2sy.synthesis;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 
+import ros2sy.json.ParseJson;
 import ros2sy.logic.Encoding;
 import ros2sy.logic.EncodingUtil;
 import ros2sy.logic.SequentialEncoding;
 import uniol.apt.adt.pn.PetriNet;
 import ros2sy.logic.Variable;
+import ros2sy.petri.MethodsToPetriNet;
+import ros2sy.sig.Method;
 import ros2sy.synthesis.*;
 
 public class Synthesis {
@@ -76,5 +81,45 @@ public class Synthesis {
 		}
 
 		return sorted_result;
+	}
+	
+	public static void main(String[] args) throws Exception {
+		String [] searchSpaces = {"node", "publisher", "rclcpp", "subscription"};
+		
+		ArrayList<Method> methods = new ArrayList<Method>();
+		for (int i = 0; i < searchSpaces.length; i++) {
+			String fileName = "scrape_rclcpp_docs/jsons/" + searchSpaces[i] + ".json";
+			methods.addAll(ParseJson.parseOutMethods(fileName));
+			System.out.println("Methods length: " + Integer.toString(methods.size()));
+		}
+		
+		ArrayList<String> dontClone = new ArrayList<>();
+		dontClone.add("void");
+		
+		MethodsToPetriNet mtpn = new MethodsToPetriNet(methods, dontClone);
+		
+		MethodsToPetriNet.createDotFile(mtpn.getNet(), "dot/full_search.dot");
+		
+		HashMap<String, HashSet<Method>> tagToMethods = ParseJson.tagMethods(methods, "scrape_rclcpp_docs/tags.json");
+		
+		HashMap<String, HashSet<String>> tagToNamesSet = Method.methodSetsToStringSets(tagToMethods, mtpn);
+		
+		ArrayList<ArrayList<String>> blocks = new ArrayList<ArrayList<String>>();
+		
+		// We want initialization first
+		blocks.add(new ArrayList<String>(tagToNamesSet.get("initialization")));
+		
+		HashSet<String> nodeConstructors = new HashSet<String>(tagToNamesSet.get("node"));
+		
+		nodeConstructors.retainAll(tagToNamesSet.get("constructor"));
+		
+		blocks.add(new ArrayList<String>(nodeConstructors));
+		
+		HashSet<String> subConstructors = new HashSet<String>(tagToNamesSet.get("subscription"));
+		subConstructors.retainAll(tagToNamesSet.get("constructor"));
+		
+		blocks.add(new ArrayList<String>(subConstructors));
+		
+		
 	}
 }

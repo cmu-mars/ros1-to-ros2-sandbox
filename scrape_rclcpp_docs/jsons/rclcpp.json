@@ -70,7 +70,7 @@
                 }
             ],
             "ref": [
-                "http://docs.ros2.org/latest/api/rclcpp/namespacerclcpp.html#a4254e5a55f40ff5f594542773b863eba",
+                "http://docs.ros2.org/latest/api/rclcpp/namespacerclcpp.html#a67010cd2562ccb9702e91904a7fb3e03",
                 "http://en.cppreference.com/w/cpp/memory/shared_ptr.html",
                 "http://en.cppreference.com/w/cpp/string/basic_string.html",
                 "http://docs.ros2.org/latest/api/rclcpp/classrclcpp_1_1QoS.html",
@@ -187,7 +187,7 @@
                 }
             ],
             "ref": [
-                "http://docs.ros2.org/latest/api/rclcpp/namespacerclcpp.html#ad0367e93ba86168eff7ac08dd3b9c8d3",
+                "http://docs.ros2.org/latest/api/rclcpp/namespacerclcpp.html#a7156ced71e00977d075014121ca5f466",
                 "http://en.cppreference.com/w/cpp/memory/shared_ptr.html",
                 "http://en.cppreference.com/w/cpp/string/basic_string.html",
                 "http://docs.ros2.org/latest/api/rclcpp/classrclcpp_1_1QoS.html",
@@ -215,7 +215,7 @@
             ],
             "return": "void",
             "ref": [
-                "http://docs.ros2.org/latest/api/rclcpp/namespacerclcpp.html#ad48c7a9cc4fa34989a0849d708d8f7de"
+                "http://docs.ros2.org/latest/api/rclcpp/namespacerclcpp.html#a5e16488d62cc48e5520101f9f4f4102a"
             ],
             "include": "rclcpp/rclcpp.hpp"
         }
@@ -237,7 +237,7 @@
             ],
             "return": "void",
             "ref": [
-                "http://docs.ros2.org/latest/api/rclcpp/namespacerclcpp.html#a21e13577f5bcc5992de1d7dd08d8652b"
+                "http://docs.ros2.org/latest/api/rclcpp/namespacerclcpp.html#a4bb335bc95a6fa8546a6bfcfd087eb57"
             ],
             "include": "rclcpp/rclcpp.hpp"
         }
@@ -296,7 +296,7 @@
                 }
             ],
             "ref": [
-                "http://docs.ros2.org/latest/api/rclcpp/namespacerclcpp.html#aa700b1a030143a2eef597d1aae519600",
+                "http://docs.ros2.org/latest/api/rclcpp/namespacerclcpp.html#a0a276114108efb8b03dfb18b29f1c8ed",
                 "http://en.cppreference.com/w/cpp/memory/shared_ptr.html",
                 "http://en.cppreference.com/w/cpp/thread/shared_future.html",
                 "http://en.cppreference.com/w/cpp/chrono/duration.html",
@@ -422,7 +422,7 @@
                 }
             ],
             "ref": [
-                "http://docs.ros2.org/latest/api/rclcpp/namespacerclcpp.html#acc7cfb4c8905865fb02f3c8018657057",
+                "http://docs.ros2.org/latest/api/rclcpp/namespacerclcpp.html#ad375260ecdf7f69693e4244263ee2f41",
                 "http://en.cppreference.com/w/cpp/memory/shared_ptr.html",
                 "http://docs.ros2.org/latest/api/rclcpp/structrclcpp_1_1PublisherFactory.html",
                 "http://docs.ros2.org/latest/api/rclcpp/structrclcpp_1_1PublisherEventCallbacks.html"
@@ -729,7 +729,7 @@
             ],
             "return": "const char*",
             "ref": [
-                "http://docs.ros2.org/latest/api/rclcpp/namespacerclcpp.html#a1fdf023cdc167cb3d4d353353cd4cced",
+                "http://docs.ros2.org/latest/api/rclcpp/namespacerclcpp.html#a7743e6192ef035115abdeeb90227c45c",
                 "http://en.cppreference.com/w/cpp/string/basic_string.html"
             ],
             "include": "rclcpp/rclcpp.hpp"

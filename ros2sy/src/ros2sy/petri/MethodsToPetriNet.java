@@ -270,14 +270,7 @@ public class MethodsToPetriNet {
 			
 			Transition t = MethodsToPetriNet.makeMethodTransition(m, pn, nameCounts);
 			
-			mt.addMethodNickname(m, t.getId());
-			
-			if (m.isClassMethod) {
-				String instanceType = m.fromClass.toString();
-				
-				Place inst = MethodsToPetriNet.getPetriPlace(pn, instanceType);
-				pn.createFlow(inst, t);
-			}
+			mt.addMethodNickname(m, t.getId());			
 			
 			String returnType = m.returnType.toString();
 			Place ret = MethodsToPetriNet.getPetriPlace(pn, returnType);
@@ -289,6 +282,12 @@ public class MethodsToPetriNet {
 			}
 			
 			if (!m.hasOptionalArgs()) {
+				if (m.isClassMethod) {
+					String instanceType = m.fromClass.toString();
+					
+					Place inst = MethodsToPetriNet.getPetriPlace(pn, instanceType);
+					pn.createFlow(inst, t);
+				}
 				MethodsToPetriNet.addTransitionFlowToPetri(pn, m.args, t, ret);
 			} else {
 				ArrayList<Arg> mandatory = m.getMandatoryArgs();

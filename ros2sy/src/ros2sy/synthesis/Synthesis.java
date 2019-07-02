@@ -132,7 +132,7 @@ public class Synthesis {
 		ArrayList<ArrayList<String>> inputs = new ArrayList<>();
 		inputs.add(input);
 		inputs.add(new ArrayList<String>());
-		inputs.get(1).add("std::string");
+		inputs.get(1).add("const std::string&");
 		inputs.get(1).add("const std::string&");
 		inputs.get(1).add("const rclcpp::QoS&");
 		inputs.get(1).add("CallbackT&&");

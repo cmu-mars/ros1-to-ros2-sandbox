@@ -93,7 +93,7 @@ public class SequentialEncoding implements Encoding {
 			for (String hint : info) {
 				for (Transition tr : pnet.getTransitions()) {
 					if (tr.getId().equals(hint)) {
-						System.out.println("Found a transition that matches " + hint);
+//						System.out.println("Found a transition that matches " + hint);
 						int v = solver.loc_variables.last();
 						solver.loc_variables.pop();
 

@@ -282,7 +282,7 @@ def extractSignature(div, func_name, func_permalink, url, base_url, include, nam
     #print(params)
     for tipe, name in params:
       #print(tipe, name)
-      arg = tipe.getText().strip()
+      arg = tipe.getText().strip() + getArrayType(name.getText())
       code = name.find("code")
       if code is not None and name.getText().find("=") > -1:
         codeText = code.getText().strip()

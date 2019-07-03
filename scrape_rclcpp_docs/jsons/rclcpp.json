@@ -496,7 +496,7 @@
     "rclcpp::init": {
         "args": [
             "int",
-            "char const *const",
+            "char const *const []",
             "const InitOptions & (=InitOptions())"
         ],
         "return": "void",
@@ -547,7 +547,7 @@
     "rclcpp::init_and_remove_ros_arguments": {
         "args": [
             "int",
-            "char const *const",
+            "char const *const []",
             "const InitOptions & (=InitOptions())"
         ],
         "return": "std::vector<std::string>",
@@ -564,7 +564,7 @@
     "rclcpp::remove_ros_arguments": {
         "args": [
             "int",
-            "char const *const"
+            "char const *const []"
         ],
         "return": "std::vector<std::string>",
         "ref": [

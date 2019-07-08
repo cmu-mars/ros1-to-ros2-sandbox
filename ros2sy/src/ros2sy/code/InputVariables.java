@@ -16,6 +16,10 @@ public class InputVariables {
 	
 	private ArrayList<ArrayList<Pair<String, Type>>> resultsAvailable = new ArrayList<ArrayList<Pair<String, Type>>>();
 	
+	public InputVariables() {
+		this.inputs = new HashMap<String, Type>();
+	}
+	
 	public InputVariables(HashMap<String, Type> inputs) {
 		this.inputs = inputs;
 		
@@ -27,6 +31,9 @@ public class InputVariables {
 			}
 			if (!typeCounts.containsKey(t)) {
 				typeCounts.put(t, 0);
+//				namesByType.put(tipe, new ArrayList<String>());
+			}
+			if (!namesByType.containsKey(tipe)) {
 				namesByType.put(tipe, new ArrayList<String>());
 			}
 			int old = typeCounts.get(t);
@@ -35,12 +42,46 @@ public class InputVariables {
 		}
 	}
 	
+	
+	
+	public void addInput(String name, String typeName) {
+		Type t = new Type(typeName);
+		if (hasTypeForPlain(t.getPlainType())) {
+			String plain = t.getPlainType();
+			t = typeForString(plain);
+		}
+		this.addInput(name,  t);
+	}
+	
+	public void addInput(String name, Type t) {
+		this.inputs.put(name, t);
+		
+		this.updateTypeCounts(t);
+	}
+	
+	public HashMap<String, Type> getInputs() {
+		return this.inputs;
+	}
+	
 	public boolean contains(String typeName) {
 		return hasTypeCountsForString(typeName) && hasTypeForPlain(typeName) && hasNamesForString(typeName);
 	}
 	
 	public boolean hasTypeCountsForString(String typeName) {
 		return this.typeCounts.containsKey(typeName);
+	}
+	
+	private void updateTypeCounts(Type t) {
+		this.updateTypeCounts(t.getPlainType());
+	}
+	
+	private void updateTypeCounts(String typeString) {
+		if (this.typeCounts.containsKey(typeString)) {
+			int old = typeCounts.get(typeString);
+			typeCounts.put(typeString, old + 1);
+		} else {
+			typeCounts.put(typeString, 1);
+		}
 	}
 	
 	public int numTypesForString(String str) {
@@ -71,7 +112,7 @@ public class InputVariables {
 	}
 	
 	public void addNewResult(String name, Type t, int line) {
-		if (resultsAvailable.size() < line) {
+		if (resultsAvailable.size() <= line) {
 			int size = resultsAvailable.size();
 			for (int i = size; i < line + 1; i++) {
 				resultsAvailable.add(new ArrayList<Pair<String, Type>>());

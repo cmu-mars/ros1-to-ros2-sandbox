@@ -1,0 +1,14 @@
+{
+    "answers": [
+        [
+            "rclcpp::init"
+        ],
+        [
+            "rclcpp::Node::make_shared",
+            "rclcpp::Node::create_subscription"
+        ],
+        [
+            "rclcpp::spin2"
+        ]
+    ]
+}

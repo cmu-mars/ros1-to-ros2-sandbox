@@ -23,6 +23,9 @@ public class Type {
 	public boolean isConstValue = false;
 	public ArrayList<Boolean> isConstPointer;
 	
+	public boolean isArrayType = false;
+	public int arrayLevel = 0;
+	
 	public String valueTypeName;
 	
 	/**
@@ -41,6 +44,22 @@ public class Type {
 				
 				ints.add(i);
 				refString = refString + "&";
+			}
+		}
+		
+		if (name.indexOf("[]") > -1) {
+			this.isArrayType = true;
+			
+			boolean lastCharWasLSqBracket = false;
+			for (int i = 0; i < name.length(); i++) {
+				if (name.charAt(i) == '[') {
+					lastCharWasLSqBracket = true;
+				} else if (lastCharWasLSqBracket) {
+					if (name.charAt(i) == ']') {
+						this.arrayLevel++;
+					}
+					lastCharWasLSqBracket = false;
+				}
 			}
 		}
 		
@@ -108,6 +127,10 @@ public class Type {
 			this.isSharedPointer = true;
 		}
 		
+		if (this.isArrayType) {
+			this.valueTypeName = this.valueTypeName.replaceAll("\\[\\]", "");
+		}
+		
 		this.typeName.trim();
 		
 //		System.out.println("<" + this.valueTypeName + ">");
@@ -121,6 +144,13 @@ public class Type {
 		for (int i = 0; i < this.pointerLevel; i++) {
 			plain = plain + "*";
 		}
+		
+		if (this.isArrayType) {
+			plain = plain + " ";
+			for (int i = 0; i < this.arrayLevel; i++) {
+				plain = plain + "[]";
+			}
+		}
 		return plain;
 	}
 	
@@ -132,8 +162,8 @@ public class Type {
 	 * @return
 	 */
 	public boolean asParamsEqual(Type other) {
-		return this.valueTypeName.equals(other.valueTypeName) && (this.isSharedPointer == other.isSharedPointer) && (this.isPointer == other.isPointer) && (this.pointerLevel == other.pointerLevel);
-	}
+		return this.valueTypeName.equals(other.valueTypeName) && (this.isSharedPointer == other.isSharedPointer) && (this.isPointer == other.isPointer) && (this.pointerLevel == other.pointerLevel) && (this.isArrayType == other.isArrayType) && (this.arrayLevel == other.arrayLevel);
+		}
 	
 	/**
 	 * Returns the type of the string.

@@ -6,8 +6,10 @@ import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 
 import ros2sy.code.CppCode;
+import ros2sy.code.InputVariables;
 import ros2sy.json.ParseJson;
 import ros2sy.logic.Encoding;
 import ros2sy.logic.EncodingUtil;
@@ -126,40 +128,41 @@ public class Synthesis {
 		ArrayList<String> neverUse = new ArrayList<String>(tagToNamesSet.get("shutdown"));
 		
 		ArrayList<String> input = new ArrayList<String>();
-		input.add("char const *const");
 		input.add("int");
+		input.add("char const *const []");
 		
-		ArrayList<ArrayList<String>> inputs = new ArrayList<>();
-		inputs.add(input);
-		inputs.add(new ArrayList<String>());
-		inputs.get(1).add("const std::string&");
-		inputs.get(1).add("const std::string&");
-		inputs.get(1).add("const rclcpp::QoS&");
-		inputs.get(1).add("CallbackT&&");
-		inputs.add(new ArrayList<String>(inputs.get(1)));
-		inputs.get(2).add("std::shared_ptr<rclcpp::Node>");
-		inputs.get(2).add("std::shared_ptr<SubscriptionT>");
+		InputVariables ivs = new InputVariables();
 		
-		ArrayList<ArrayList<String>> correctAnswers = new ArrayList<>();
-		correctAnswers.add(new ArrayList<String>());
-		correctAnswers.get(0).add("rclcpp::init");
-		correctAnswers.add(new ArrayList<String>());
-		correctAnswers.get(1).add("rclcpp::Node::make_shared");
-		correctAnswers.get(1).add("rclcpp::Node::create_subscription");
-		correctAnswers.add(new ArrayList<String>());
-		correctAnswers.get(2).add("rclcpp::spin2");
+		HashMap<String, String> varsToTypes = ParseJson.getInputVariableToType("inputs/listener_input.json");
 		
+		for (Map.Entry<String, String> e : varsToTypes.entrySet()) {
+			ivs.addInput(e.getKey(), e.getValue());
+		}
+		
+//		ivs.addInput("argc", "int");
+//		ivs.addInput("argv", "char *");
+//		ivs.addInput("node_name", "std::string");
+//		ivs.addInput("topic_name", "std::string");
+		
+		
+		ArrayList<ArrayList<String>> inputs = ParseJson.getInputTypesFromFile("inputs/listener_input.json");
+		
+		ArrayList<ArrayList<String>> correctAnswers = ParseJson.getCorrectAnswersFromFile("inputs/correct-answers.json");
+//		correctAnswers.add(new ArrayList<String>());
+//		correctAnswers.get(0).add("rclcpp::init");
+//		correctAnswers.add(new ArrayList<String>());
+//		correctAnswers.get(1).add("rclcpp::Node::make_shared");
+//		correctAnswers.get(1).add("rclcpp::Node::create_subscription");
+//		correctAnswers.add(new ArrayList<String>());
+//		correctAnswers.get(2).add("rclcpp::spin2");
+//		
 		int [][] blockInds = {
-				{
-					0
-				},
-				{
-					1, 2
-				},
-				{
-					3
-				}
+				{	0	},
+				{	1, 2 	},
+				{	3	}
 		};
+		
+		ArrayList<String> correctSequence = new ArrayList<String>();
 		
 		ArrayList<CppCode> snippets = new ArrayList<CppCode>();
 		
@@ -195,13 +198,14 @@ public class Synthesis {
 			System.out.print(blocksSubstring);
 			System.out.print(": ");
 			System.out.println(strss.size());
+			if (strss.size() > 0) {
+				snippets.add(new CppCode(mtpn, strss.get(0)));		
+				correctSequence.addAll(strss.get(0));
+			}
 			
 			int maxShown = 10;
 			
 			System.out.println("The top " + Integer.toString(maxShown) + ":");
-			if (strss.size() > 0) {
-				snippets.add(new CppCode(mtpn, strss.get(0)));				
-			}
 			for (ArrayList<String> strs : strss.subList(0, Math.min(strss.size(), maxShown))) {
 				System.out.println(strs);
 			}
@@ -219,5 +223,23 @@ public class Synthesis {
 				}
 			}
 		}
+		
+		CppCode cpp = new CppCode(mtpn, correctSequence);
+		
+		ArrayList<String> holesFilled = cpp.generateCodeWithInputs(ivs.getInputs());
+		
+		for (String holeFilled : holesFilled) {
+			System.out.println(holeFilled);
+		}
+		
+//		for (CppCode code : snippets) {
+//			System.out.println(ivs.getInputs());
+//			
+//			ArrayList<String> holesFilled = code.generateCodeWithInputs(ivs.getInputs());
+//			
+//			for (String holeFilled : holesFilled) {
+//				System.out.println(holeFilled);
+//			}
+//		}
 	}
 }

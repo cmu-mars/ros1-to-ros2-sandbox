@@ -1,0 +1,26 @@
+{
+    "input_types": [
+        [
+            "int",
+            "char const *const []"
+        ],
+        [
+            "const std::string&",
+            "const std::string&",
+            "const rclcpp::QoS&",
+            "CallbackT&&"
+        ],
+        [
+            "std::shared_ptr<rclcpp::Node>",
+            "std::shared_ptr<SubscriptionT>"
+        ]
+    ],
+    "input_var_to_type": {
+        "argc": "int",
+        "argv": "char **",
+        "node_name": "std::string",
+        "topic_name": "std::string",
+        "rmw_qos_profile_system_default": "rclcpp::QoS",
+        "chatterCallback": "CallbackT"
+    }
+}

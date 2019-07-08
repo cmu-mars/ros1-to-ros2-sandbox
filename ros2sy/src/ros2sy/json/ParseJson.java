@@ -36,6 +36,86 @@ public class ParseJson {
 		
 	}
 	
+	public static HashMap<String, String> getInputVariableToType(String fileName) {
+		HashMap<String, String> varsToType = new HashMap<String, String>();
+		
+		String key = "input_var_to_type";
+		
+		try {
+			JsonObject jo = ParseJson.getJsonObjectFromFile(fileName);
+			
+			if (jo.has(key)) {
+				JsonElement inputVarToTypeMapMaybe = jo.get(key);
+				
+				if (inputVarToTypeMapMaybe.isJsonObject()) {
+					JsonObject map = inputVarToTypeMapMaybe.getAsJsonObject();
+					for (String k : map.keySet()) {
+						if (map.get(k).isJsonPrimitive()) {
+							varsToType.put(k,  map.get(k).getAsString());
+						}
+					}
+				}
+			}
+		} catch (Exception e) {
+			System.out.println("Caught an exception in getInputVariableToType");
+			System.out.println(e);
+		}
+		
+		return varsToType;
+	}
+
+	public static ArrayList<ArrayList<String>> getInputTypesFromFile(String fileName) {
+		String key = "input_types";
+
+		return ParseJson.getNestedArrayFromFile(fileName, key);
+	}
+	
+	public static ArrayList<ArrayList<String>> getCorrectAnswersFromFile(String fileName) {
+		String key = "answers";
+		
+		return ParseJson.getNestedArrayFromFile(fileName, key);
+	}
+	
+	public static ArrayList<ArrayList<String>> getNestedArrayFromFile(String fileName, String key) {
+		ArrayList<ArrayList<String>> inputs = new ArrayList<>();
+		try {
+			JsonObject jo = ParseJson.getJsonObjectFromFile(fileName);
+			
+			if (jo.has(key)) {
+				JsonElement inputArrayMaybe = jo.get(key);
+				if (inputArrayMaybe.isJsonArray()) {
+					int index = 0;
+					for (JsonElement je : inputArrayMaybe.getAsJsonArray()) {
+						inputs.add(new ArrayList<String>());
+						if (je.isJsonArray()) {
+							for (JsonElement arrayElmt : je.getAsJsonArray()) {
+								if (arrayElmt.isJsonPrimitive()) {
+									inputs.get(index).add(arrayElmt.getAsString());
+								}
+							}
+						}
+						index++;
+					}
+				}
+			}
+		} catch (Exception e) {
+			System.out.println("Caught exception in getInputsFromFile");
+			System.out.println(e);
+		}
+		
+		return inputs;
+	}
+	
+	private static JsonObject getJsonObjectFromFile(String fileName) throws Exception {
+		FileReader fr = new FileReader(fileName);
+		JsonParser jp = new JsonParser();
+		JsonElement je = jp.parse(fr);
+		if (!je.isJsonObject()) {
+			System.out.println("WARNING: this json element is not an object!");
+		}
+		return je.getAsJsonObject();
+	}
+	
 	public static HashMap<String, HashSet<Method>> tagMethods(ArrayList<Method> methods, String tagFile) {
 		HashMap<String, HashSet<Method>> tagToMethods = new HashMap<>();
 		

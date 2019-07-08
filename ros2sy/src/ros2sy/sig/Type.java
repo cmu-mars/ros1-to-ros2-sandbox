@@ -129,9 +129,10 @@ public class Type {
 		
 		if (this.isArrayType) {
 			this.valueTypeName = this.valueTypeName.replaceAll("\\[\\]", "");
+			this.valueTypeName = this.valueTypeName.trim();
 		}
 		
-		this.typeName.trim();
+		this.typeName = this.typeName.trim();
 		
 //		System.out.println("<" + this.valueTypeName + ">");
 	}
@@ -162,8 +163,14 @@ public class Type {
 	 * @return
 	 */
 	public boolean asParamsEqual(Type other) {
-		return this.valueTypeName.equals(other.valueTypeName) && (this.isSharedPointer == other.isSharedPointer) && (this.isPointer == other.isPointer) && (this.pointerLevel == other.pointerLevel) && (this.isArrayType == other.isArrayType) && (this.arrayLevel == other.arrayLevel);
-		}
+		return this.valueTypeName.equals(other.valueTypeName) && (this.isSharedPointer == other.isSharedPointer) && this.isArrayPointerEquivalent(other);
+				
+		// && (this.isPointer == other.isPointer) && (this.pointerLevel == other.pointerLevel) && (this.isArrayType == other.isArrayType) && (this.arrayLevel == other.arrayLevel);
+	}
+	
+	public boolean isArrayPointerEquivalent(Type other) {
+		return (this.isPointer == other.isPointer && this.isArrayType == other.isArrayType && this.pointerLevel == other.pointerLevel && this.arrayLevel == other.arrayLevel) || (this.pointerLevel + this.arrayLevel) == (other.pointerLevel + other.arrayLevel);
+	}
 	
 	/**
 	 * Returns the type of the string.

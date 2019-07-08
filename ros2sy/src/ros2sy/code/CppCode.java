@@ -169,7 +169,7 @@ public class CppCode {
 			String holeTag = "#" + Integer.toString(i);
 			
 			if (!in.hasTypeCountsForString(plain)) {
-				System.out.println("Cannot find key <" + plain + "> as one of the inputs!");
+				System.out.println(holeTag + ": Cannot find key <" + plain + "> as one of the inputs!");
 				int lineNumber = this.getLineNumberByHoleNumber(i);
 				ArrayList<String> possibleNames = in.resultsOfTypeAvailable(lineNumber, t);
 				System.out.print("The line number computed: ");
@@ -183,10 +183,27 @@ public class CppCode {
 					}
 				} else {
 					System.out.println("No possible names found for type " + plain);
+					for (String inputName : inputs.keySet()) {
+						Type inputType = inputs.get(inputName);
+						
+//						System.out.println(t.valueTypeName + "," + inputType.valueTypeName);
+//						System.out.println(t.arrayLevel);
+//						System.out.println(inputType.arrayLevel);
+//						System.out.println(t.pointerLevel);
+//						System.out.println(inputType.pointerLevel);
+						if (t.asParamsEqual(inputType)) {
+//							System.out.println("The type " + t.toString() + " is equivalent to the type " + inputType.toString());
+							holeyCode = holeyCode.replaceFirst(holeTag, inputName);
+							break;
+						} else {
+//							System.out.println("The type " + t.toString() + " is NOT equivalent to the type " + inputType.toString());
+						}
+					}
+					
 				}
 			} else {
 				Integer numPossibleHoleFillers = in.numTypesForString(plain);
-				System.out.println(holeTag + ": " + numPossibleHoleFillers.toString() + " possibilities");
+				System.out.println(holeTag + ": " + numPossibleHoleFillers.toString() + " possibilities for type " + plain);
 				if (numPossibleHoleFillers > 0) {
 					possibles *= numPossibleHoleFillers;
 				}

@@ -164,7 +164,7 @@ public class Synthesis {
 		
 		ArrayList<String> correctSequence = new ArrayList<String>();
 		
-		ArrayList<CppCode> snippets = new ArrayList<CppCode>();
+//		ArrayList<CppCode> snippets = new ArrayList<CppCode>();
 		
 		for (int i = 0; i < blockInds.length; i++) {
 			List<List<String>> k = new ArrayList<>();
@@ -199,7 +199,7 @@ public class Synthesis {
 			System.out.print(": ");
 			System.out.println(strss.size());
 			if (strss.size() > 0) {
-				snippets.add(new CppCode(mtpn, strss.get(0)));		
+//				snippets.add(new CppCode(mtpn, strss.get(0)));		
 				correctSequence.addAll(strss.get(0));
 			}
 			
@@ -224,6 +224,7 @@ public class Synthesis {
 			}
 		}
 		
+		System.out.println(ivs.getInputs());
 		CppCode cpp = new CppCode(mtpn, correctSequence);
 		
 		ArrayList<String> holesFilled = cpp.generateCodeWithInputs(ivs.getInputs());
@@ -233,7 +234,6 @@ public class Synthesis {
 		}
 		
 //		for (CppCode code : snippets) {
-//			System.out.println(ivs.getInputs());
 //			
 //			ArrayList<String> holesFilled = code.generateCodeWithInputs(ivs.getInputs());
 //			

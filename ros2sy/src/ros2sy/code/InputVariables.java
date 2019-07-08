@@ -49,6 +49,8 @@ public class InputVariables {
 		if (hasTypeForPlain(t.getPlainType())) {
 			String plain = t.getPlainType();
 			t = typeForString(plain);
+		} else {
+			plainTypeToType.put(t.getPlainType(), t);
 		}
 		this.addInput(name,  t);
 	}

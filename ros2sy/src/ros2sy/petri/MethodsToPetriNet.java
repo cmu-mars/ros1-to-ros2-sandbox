@@ -275,7 +275,7 @@ public class MethodsToPetriNet {
 			String returnType = m.returnType.toString();
 			Place ret = MethodsToPetriNet.getPetriPlace(pn, returnType);
 			if (m.returnType.isSharedPointer) {
-				String transName = m.returnType.valueTypeName + "::Shared_to_unshared";
+				String transName = m.returnType.toString() + "::Shared_to_unshared";
 				mt.addMethodNickname(mt.de_ptr, transName);
 				
 				MethodsToPetriNet.addTransition(pn, returnType, transName, m.returnType.valueTypeName);

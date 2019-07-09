@@ -108,6 +108,15 @@ public class MethodsToPetriNet {
 		}
 	}
 	
+	
+	/**
+	 * Useful for determining whether a given Method object is actually just
+	 * a placeholder for pointer field access notation.
+	 * 
+	 * @param m		a method object
+	 * @return			a boolean that holds whether m is equal to the placeholder
+	 * 						method for pointer field accesses
+	 */
 	public boolean isPointerFieldAccess(Method m) {
 		return m.equals(de_ptr);
 	}
@@ -144,10 +153,28 @@ public class MethodsToPetriNet {
 		return this.methodAliases.get(nickname);
 	}
 	
+	
+	/**
+	 * Retrieves all known aliases of a method. Methods may have several aliases
+	 * due to factors like optional arguments.
+	 * 
+	 * Overloaded methods are simply regarded as separate objects, but since
+	 * the method object itself is used as a key, this is fine.
+	 * 
+	 * @param m a Method whose nicknames we want
+	 * @return		a list of the known aliases for the given method
+	 */
 	public ArrayList<String> getNicknamesOfMethod(Method m) {
 		return this.aliasesForMethods.get(m);
 	}
 	
+	/**
+	 * Add an alias for a given method, so that we know what method the given
+	 * string, which may be different, belongs to.
+	 * 
+	 * @param m					a Method who has a new nickname
+	 * @param nickname		a String that is an alias for this method
+	 */
 	public void addMethodNickname(Method m, String nickname) {
 		if (!this.methodAliases.containsKey(nickname)) {
 			this.methodAliases.put(nickname, m);
@@ -180,10 +207,20 @@ public class MethodsToPetriNet {
 		f.setWeight(2);
 	}
 	
+	/**
+	 * Getter for this object's petri net.
+	 * 
+	 * @return the petri net that this MethodsToPetriNet object has built
+	 */
 	public PetriNet getNet() {
 		return this.net;
 	}
 
+	
+	/**
+	 * Puts in all of the transitions between parameter equivalent places in the
+	 * petri net.
+	 */
 	private void addParamEquivalences() {
 		Set<Place> places = this.net.getPlaces();
 		Place[] placeArray = new Place [places.size()];

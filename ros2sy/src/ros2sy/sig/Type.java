@@ -137,6 +137,16 @@ public class Type {
 //		System.out.println("<" + this.valueTypeName + ">");
 	}
 	
+	/**
+	 * Gets the basic form of a type, i.e. the minimum required to be accepted
+	 * as a parameter to a hole with this object's type.
+	 * 
+	 * For example, if we had Type tipe = new Type("const char*"), then the
+	 * "plain" form of that type would be "char *". It essentially gets rid of
+	 * "const" (as well as "&"), and formats the type's name in a standard way.
+	 * 
+	 * @return		a String representing the "minimalist" form of a type.
+	 */
 	public String getPlainType() {
 		String plain = this.valueTypeName;
 		if (this.isPointer) {
@@ -164,10 +174,18 @@ public class Type {
 	 */
 	public boolean asParamsEqual(Type other) {
 		return this.valueTypeName.equals(other.valueTypeName) && (this.isSharedPointer == other.isSharedPointer) && this.isArrayPointerEquivalent(other);
-				
-		// && (this.isPointer == other.isPointer) && (this.pointerLevel == other.pointerLevel) && (this.isArrayType == other.isArrayType) && (this.arrayLevel == other.arrayLevel);
 	}
 	
+	
+	/**
+	 * Figures out whether this type and another type are essentially the same
+	 * pointer/array level, since C++ arrays are essentially just a bit of fancy
+	 * pointer math.
+	 * 
+	 * @param other		another Type object to compare this instance to
+	 * @return					whether these two types are essentially the same, pointer
+	 * 								and array wise.
+	 */
 	public boolean isArrayPointerEquivalent(Type other) {
 		return (this.isPointer == other.isPointer && this.isArrayType == other.isArrayType && this.pointerLevel == other.pointerLevel && this.arrayLevel == other.arrayLevel) || (this.pointerLevel + this.arrayLevel) == (other.pointerLevel + other.arrayLevel);
 	}

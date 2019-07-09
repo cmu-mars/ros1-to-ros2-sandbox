@@ -100,7 +100,13 @@ public class CppCode {
 	/**
 	 * Produces the C++ code with holes that this CppCode object represents.
 	 * 
-	 * @return a string, containing the code
+	 * @param in		an InputVariables object representing the inputs that we have
+	 * 						been given. This is used for keeping track of results from
+	 * 						calling APIs
+	 * @return 		a string, containing the code with #0, #1, etc. for the holes
+	 * @throws CodeGenerationException
+	 * 						thrown when the number of holes expected does not match the
+	 * 						number of holes found for this code
 	 */
 	public String createCodeWithHoles(InputVariables in) throws CodeGenerationException {
 		String code = "";
@@ -150,6 +156,15 @@ public class CppCode {
 		return code;
 	}
 	
+	/**
+	 * Creates C++ code and uses the given map of inputs as a way to fill args of
+	 * functions for the code.
+	 * 
+	 * @param inputs			a map from strings (names of variables) to their types
+	 * @return						a list of the possible code that can be generated with
+	 * 									these inputs
+	 * @throws CodeGenerationException
+	 */
 	public ArrayList<String> generateCodeWithInputs(HashMap<String, Type> inputs) throws CodeGenerationException {
 		// Enumerates how many of each type we have, as well as contains convenience
 		// methods for different ways of querying the inputs.
@@ -230,6 +245,8 @@ public class CppCode {
 		return possibleFills;
 	}
 	
+	
+	
 	public ArrayList<String> getResultTypeNames() {
 		ArrayList<String> resultTypes = new ArrayList<String>();
 		
@@ -273,7 +290,7 @@ public class CppCode {
 		
 		return lineNumber;
 	}
-		
+	
 	private ArrayList<String> fillRemainingHoles(String holeyCode, InputVariables in, ArrayList<Integer> remainingHoleIndices) {
 		ArrayList<String> possibleFills = new ArrayList<String>();
 		System.out.println(remainingHoleIndices.size());

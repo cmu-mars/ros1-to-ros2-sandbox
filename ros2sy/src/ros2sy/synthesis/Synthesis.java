@@ -139,23 +139,10 @@ public class Synthesis {
 			ivs.addInput(e.getKey(), e.getValue());
 		}
 		
-//		ivs.addInput("argc", "int");
-//		ivs.addInput("argv", "char *");
-//		ivs.addInput("node_name", "std::string");
-//		ivs.addInput("topic_name", "std::string");
-		
-		
 		ArrayList<ArrayList<String>> inputs = ParseJson.getInputTypesFromFile("inputs/listener_input.json");
 		
 		ArrayList<ArrayList<String>> correctAnswers = ParseJson.getCorrectAnswersFromFile("inputs/correct-answers.json");
-//		correctAnswers.add(new ArrayList<String>());
-//		correctAnswers.get(0).add("rclcpp::init");
-//		correctAnswers.add(new ArrayList<String>());
-//		correctAnswers.get(1).add("rclcpp::Node::make_shared");
-//		correctAnswers.get(1).add("rclcpp::Node::create_subscription");
-//		correctAnswers.add(new ArrayList<String>());
-//		correctAnswers.get(2).add("rclcpp::spin2");
-//		
+
 		int [][] blockInds = {
 				{	0	},
 				{	1, 2 	},
@@ -189,7 +176,7 @@ public class Synthesis {
 //			k.add(blocks.get(i));
 			System.out.println(dontUse);
 			
-			ArrayList<ArrayList<String>> strss = Synthesis.synthesizeAll(mtpn.getNet(), inputs.get(i), 4, k, dontUse);
+			ArrayList<ArrayList<String>> strss = Synthesis.synthesizeAll(mtpn.getNet(), inputs.get(i), 3, k, dontUse);
 			System.out.print("Number of possibilities generated for block ");
 			
 			
@@ -199,7 +186,6 @@ public class Synthesis {
 			System.out.print(": ");
 			System.out.println(strss.size());
 			if (strss.size() > 0) {
-//				snippets.add(new CppCode(mtpn, strss.get(0)));		
 				correctSequence.addAll(strss.get(0));
 			}
 			
@@ -232,14 +218,5 @@ public class Synthesis {
 		for (String holeFilled : holesFilled) {
 			System.out.println(holeFilled);
 		}
-		
-//		for (CppCode code : snippets) {
-//			
-//			ArrayList<String> holesFilled = code.generateCodeWithInputs(ivs.getInputs());
-//			
-//			for (String holeFilled : holesFilled) {
-//				System.out.println(holeFilled);
-//			}
-//		}
 	}
 }

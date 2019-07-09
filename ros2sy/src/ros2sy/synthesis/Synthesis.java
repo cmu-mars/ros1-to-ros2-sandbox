@@ -104,33 +104,18 @@ public class Synthesis {
 		
 		MethodsToPetriNet.createDotFile(mtpn.getNet(), "dot/full_search.dot");
 		
-		HashMap<String, HashSet<Method>> tagToMethods = ParseJson.tagMethods(methods, "scrape_rclcpp_docs/tags.json");
 		
-		HashMap<String, HashSet<String>> tagToNamesSet = Method.methodSetsToStringSets(tagToMethods, mtpn);
+		SearchSpace search = new SearchSpace(methods, "scrape_rclcpp_docs/tags.json", mtpn);
 		
-		ArrayList<ArrayList<String>> blocks = new ArrayList<ArrayList<String>>();
 		
-		// We want initialization first
-		blocks.add(new ArrayList<String>(tagToNamesSet.get("initialization")));
+		search.addBlock("initialization");
+		search.addBlock("node", "constructor");
+		search.addToLastBlock("subscription", "constructor");
+		search.addBlock("spin");
 		
-		HashSet<String> nodeConstructors = new HashSet<String>(tagToNamesSet.get("node"));
 		
-		nodeConstructors.retainAll(tagToNamesSet.get("constructor"));
+		ArrayList<String> neverUse = search.getNameIntersect("shutdown");
 		
-		blocks.add(new ArrayList<String>(nodeConstructors));
-		
-		HashSet<String> subConstructors = new HashSet<String>(tagToNamesSet.get("subscription"));
-		subConstructors.retainAll(tagToNamesSet.get("constructor"));
-		
-		blocks.add(new ArrayList<String>(subConstructors));
-		
-		blocks.add(new ArrayList<String>(tagToNamesSet.get("spin")));
-		
-		ArrayList<String> neverUse = new ArrayList<String>(tagToNamesSet.get("shutdown"));
-		
-		ArrayList<String> input = new ArrayList<String>();
-		input.add("int");
-		input.add("char const *const []");
 		
 		InputVariables ivs = new InputVariables();
 		
@@ -144,37 +129,16 @@ public class Synthesis {
 		
 		ArrayList<ArrayList<String>> correctAnswers = ParseJson.getCorrectAnswersFromFile("inputs/correct-answers.json");
 
-		int [][] blockInds = {
-				{	0	},
-				{	1, 2 	},
-				{	3	}
-		};
 		
 		ArrayList<String> correctSequence = new ArrayList<String>();
 		
-//		ArrayList<CppCode> snippets = new ArrayList<CppCode>();
-		
-		for (int i = 0; i < blockInds.length; i++) {
-			List<List<String>> k = new ArrayList<>();
-			
-			for (int j = 0; j < blockInds[i].length; j++) {
-				k.add(blocks.get(blockInds[i][j]));
-			}
-			
-			ArrayList<String> dontUse = new ArrayList<>();
-			for (int j = 0; j < blockInds.length; j++) {
-				if (i != j) {
-					for (int l = 0; l < blockInds[j].length; l++) {
-						dontUse.addAll(blocks.get(blockInds[j][l]));
-					}
-				}
-			}
-			
-			dontUse.addAll(neverUse);
+		for (int i = 0; i < search.numBlocks(); i++) {
+			List<List<String>> k = search.getBlock(i);
+
+			ArrayList<String> dontUse = search.othersExcept(i, neverUse);
 						
 			System.out.print("Block: ");
 			System.out.println(k);
-//			k.add(blocks.get(i));
 			System.out.println(dontUse);
 			
 			ArrayList<ArrayList<String>> strss = Synthesis.synthesizeAll(mtpn.getNet(), inputs.get(i), 3, k, dontUse);
@@ -214,17 +178,5 @@ public class Synthesis {
 		SketchFiller filler = new SketchFiller(mtpn, correctSequence);
 		
 		filler.fillSketches("ex1/sketches/listener.sketch", ivs);
-		
-		
-//		System.out.println(ivs.getInputs());
-//		
-//		
-//		CppCode cpp = new CppCode(mtpn, correctSequence);
-//		
-//		ArrayList<String> holesFilled = cpp.generateCodeWithInputs(ivs.getInputs());
-//		
-//		for (String holeFilled : holesFilled) {
-//			System.out.println(holeFilled);
-//		}
 	}
 }

@@ -371,6 +371,18 @@ public class ParseJson {
 		return methods;
 	}
 	
+	public static ArrayList<Method> getAllMethods(String ...searchSpaceNames) {
+		ArrayList<Method> methods = new ArrayList<Method>();
+		
+		for (int i = 0; i < searchSpaceNames.length; i++) {
+			String fileName = "scrape_rclcpp_docs/jsons/" + searchSpaceNames[i] + ".json";
+			methods.addAll(ParseJson.parseOutMethods(fileName));
+			System.out.println("Methods length: " + Integer.toString(methods.size()));
+		}
+		
+		return methods;
+	}
+	
 	/**
 	 * Take the example search space json file that I created, and
 	 * then parse out the json, extracts the methods described as

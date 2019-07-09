@@ -36,6 +36,14 @@ public class ParseJson {
 		
 	}
 	
+	/**
+	 * Finds the input variables map, given the name of a JSON file to parse the
+	 * map from.
+	 * 
+	 * @param fileName		the name of the JSON file to parse
+	 * @return						a HashMap of strings to strings, where the keys are the
+	 * 									names of variables and the values are the type
+	 */
 	public static HashMap<String, String> getInputVariableToType(String fileName) {
 		HashMap<String, String> varsToType = new HashMap<String, String>();
 		
@@ -64,12 +72,27 @@ public class ParseJson {
 		return varsToType;
 	}
 
+	/**
+	 * Reads in the supposed input types for each block from a JSON file. The
+	 * object contained in the file must have a key "input_types" which has a
+	 * value that is a nested array, a list of lists of strings.
+	 * 
+	 * @param fileName		the name of the JSON file to parse
+	 * @return						the list of list of strings, where the strings are the
+	 * 									names of types
+	 */
 	public static ArrayList<ArrayList<String>> getInputTypesFromFile(String fileName) {
 		String key = "input_types";
 
 		return ParseJson.getNestedArrayFromFile(fileName, key);
 	}
 	
+	/**
+	 * Retrieves the supposed correct answers from a JSON file
+	 * 
+	 * @param fileName		the name of the JSON file to parse
+	 * @return						a list of lists of strings that contain the desired APIs
+	 */
 	public static ArrayList<ArrayList<String>> getCorrectAnswersFromFile(String fileName) {
 		String key = "answers";
 		
@@ -80,6 +103,14 @@ public class ParseJson {
 		return ParseJson.getDictionary("ros1-to-ros2-pack-spec.json", "");
 	}
 	
+	
+	/**
+	 * Gets a dictionary of strings to strings from a JSON file, and assumes
+	 * that the whole JSON object in the file is the dictionary desired.
+	 * 
+	 * @param fileName		the name of the .json file to parse
+	 * @return						a HashMap containing a dictionary
+	 */
 	public static HashMap<String, String> getDictionary(String fileName) {
 		HashMap<String, String> includes = new HashMap<>();
 		
@@ -97,6 +128,17 @@ public class ParseJson {
 		return includes;
 	}
 	
+	/**
+	 * Gets a dictionary of strings to strings from a JSON file. It accesses the
+	 * dictionary from the JSON object contained in the JSON file using the 
+	 * optional key. If however the optional key is blank, it will simply just
+	 * look at the entire JSON object in the file as the dictionary.
+	 * 
+	 * @param fileName			the name of the JSON file to parse
+	 * @param optionalKey	a key, whose matching value in the JSON file is the
+	 * 										desired dictionary
+	 * @return							a HashMap representing the dictionary from the file
+	 */
 	public static HashMap<String, String> getDictionary(String fileName, String optionalKey) {
 		HashMap<String, String> includes = new HashMap<>();
 		
@@ -122,6 +164,15 @@ public class ParseJson {
 		return includes;
 	}
 	
+	/**
+	 * Parses out a doubly nested array from a JSON file
+	 * 
+	 * @param fileName		the name of the JSON file that contains this doubly
+	 * 									nested array
+	 * @param key				the key whose value is a doubly nested array
+	 * @return						an list of lists of strings that represents the doubly
+	 * 									nested array
+	 */
 	public static ArrayList<ArrayList<String>> getNestedArrayFromFile(String fileName, String key) {
 		ArrayList<ArrayList<String>> inputs = new ArrayList<>();
 		try {
@@ -152,6 +203,14 @@ public class ParseJson {
 		return inputs;
 	}
 	
+	
+	/**
+	 * Returns the JSON object that represents a file
+	 * 
+	 * @param fileName			the name of the file to parse
+	 * @return							a JSON object that represents that file
+	 * @throws Exception
+	 */
 	private static JsonObject getJsonObjectFromFile(String fileName) throws Exception {
 		FileReader fr = new FileReader(fileName);
 		JsonParser jp = new JsonParser();
@@ -162,6 +221,16 @@ public class ParseJson {
 		return je.getAsJsonObject();
 	}
 	
+	/**
+	 * Creates sets of methods for all tags in the tag file.
+	 * 
+	 * @param methods	a list of method objects that we wish to organize under
+	 * 								particular tags
+	 * @param tagFile	a JSON file that provides a dictionary for getting the
+	 * 								tags for every method signature as well as the dictionary
+	 * 								for getting the names of methods who have any given tag.
+	 * @return					a HashMap with tags as keys and sets of methods as values
+	 */
 	public static HashMap<String, HashSet<Method>> tagMethods(ArrayList<Method> methods, String tagFile) {
 		HashMap<String, HashSet<Method>> tagToMethods = new HashMap<>();
 		
@@ -371,6 +440,15 @@ public class ParseJson {
 		return methods;
 	}
 	
+	
+	/**
+	 * Gets all of the methods and returns all of them in a single ArrayList
+	 * 
+	 * @param searchSpaceNames		a list of the "tags" that correspond to json
+	 * 													files in the scrape_rclcpp_docs/jsons directory
+	 * @return										a combined list of all of methods for each of
+	 * 													those tags
+	 */
 	public static ArrayList<Method> getAllMethods(String ...searchSpaceNames) {
 		ArrayList<Method> methods = new ArrayList<Method>();
 		
@@ -389,6 +467,8 @@ public class ParseJson {
 	 * Method objects, and create a PetriNet from this.
 	 * 
 	 * The PetriNet is then output as a DOT file.
+	 * 
+	 * This is not usual main method.
 	 * 
 	 * @param args				arguments from the command line
 	 * @throws Exception	
@@ -523,72 +603,6 @@ public class ParseJson {
 		for (ArrayList<CppCode> snips : snippets) {
 			System.out.print(snips);
 		}
-		
-//		ArrayList<String> apiStrings = new ArrayList<String>();
-//		apiStrings.add("rclcpp::init");
-//		apiStrings.add("rclcpp::Node::make_shared");
-//		apiStrings.add("rclcpp::Node::Shared_to_unshared");
-//		apiStrings.add("rclcpp::Node::create_subscription");
-//		apiStrings.add("rclcpp::spin");
-////		apiStrings.add("rclcpp::shutdown");
-//		
-//		CppCode cpp = new CppCode(mtpn, apiStrings);
-//		
-//		
-//		
-//		
-//		
-//		
-////		System.out.println(cpp.createCodeWithHoles());
-//		
-//		HashMap<String, Type> inputTypes = new HashMap<String, Type>();
-//		
-//		Type std_string = new Type("std::string");
-//		
-//		inputTypes.put("argc", new Type("int"));
-//		inputTypes.put("argv", new Type("char *"));
-//		inputTypes.put("node_name", std_string);
-//		inputTypes.put("topic_name", std_string);
-//		inputTypes.put("rmw_qos_profile_system_default", new Type("rclcpp::QoS"));
-//		inputTypes.put("chatterCallback", new Type("CallbackT"));
-//		
-//		ArrayList<String> holeFillers = cpp.generateCodeWithInputs(inputTypes);
-//		
-//		// Get the sketch
-//		String sketchContents = new String(Files.readAllBytes(Paths.get("ex1/sketches/listener.sketch")));
-//		ArrayList<String> filledOutSketches = new ArrayList<String>();
-//		for (String fill : holeFillers) {
-//			String [] splits = fill.split("\n");
-//			String replaceTag = "\\?\\?";
-//			String sketch = sketchContents;
-//			int i = 0;
-//			while (sketch.indexOf("??") > -1 && i < splits.length) {
-//				System.out.println("Replacing an instance of ?? in the replace string.");
-//				sketch = sketch.replaceFirst(replaceTag, splits[i]);
-//				i++;
-//			}
-//			filledOutSketches.add(sketch);
-//		}
-//		
-//		int times = 0;
-//		for (String sketch : filledOutSketches) {
-//			System.out.println("the full sketch: ");
-//			System.out.println(sketch);
-//			
-//			try {
-//				FileWriter fw = new FileWriter("ex1/sketches/listener" + Integer.toString(times) + ".cpp");
-//				
-//				fw.write(sketch);
-//				fw.flush();
-//				fw.close();
-//			} catch (Exception e) {
-//				System.out.println(e);
-//			}
-//			times++;
-//		}
-						
-//		System.out.println(cpp.generateCodeWithInputs(inputTypes));
-		
 		
 		MethodsToPetriNet.createDotFile(pn);
 		

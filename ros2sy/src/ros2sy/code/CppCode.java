@@ -2,6 +2,8 @@ package ros2sy.code;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Set;
 
 import ros2sy.exception.CodeGenerationException;
 import ros2sy.petri.MethodsToPetriNet;
@@ -245,6 +247,21 @@ public class CppCode {
 		return possibleFills;
 	}
 	
+	public ArrayList<Method> getApis() {
+		return this.apis;
+	}
+	
+	public Set<String> getIncludes() {
+		HashSet<String> includes = new HashSet<>();
+		
+		for (Method m : this.apis) {
+			if (m.getInclude().length() > 0 && !includes.contains(m.getInclude())) {
+				includes.add(m.getInclude());
+			}
+		}
+		
+		return includes;
+	}
 	
 	
 	public ArrayList<String> getResultTypeNames() {
@@ -359,4 +376,6 @@ public class CppCode {
 		// Add one because it's actually zero-indexed
 		return Integer.valueOf(nameSub).intValue() + 1;
 	}
+	
+	
 }

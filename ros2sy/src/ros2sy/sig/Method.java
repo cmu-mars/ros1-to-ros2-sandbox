@@ -25,6 +25,8 @@ public class Method {
 	public String instanceNeeded;
 	public String ros1Name = "";
 	public HashSet<String> tags = new HashSet<String>();
+	public String include = "";
+	
 	private static String [] rclcpp_classes = {
 		"Node", "Publisher", "Subscriber", "Rate"
 	};
@@ -111,6 +113,14 @@ public class Method {
 				this.fromClass = new Type("rclcpp::" + Method.rclcpp_classes[lowestIndex]);
 			}
 		}
+	}
+	
+	public void setInclude(String includeString) {
+		this.include = includeString;
+	}
+	
+	public String getInclude() {
+		return this.include;
 	}
 	
 	public void addTag(String newTag) {

@@ -76,6 +76,52 @@ public class ParseJson {
 		return ParseJson.getNestedArrayFromFile(fileName, key);
 	}
 	
+	public static HashMap<String, String> includesToReplace() {
+		return ParseJson.getDictionary("ros1-to-ros2-pack-spec.json", "");
+	}
+	
+	public static HashMap<String, String> getDictionary(String fileName) {
+		HashMap<String, String> includes = new HashMap<>();
+		
+		try {
+			JsonObject jo = ParseJson.getJsonObjectFromFile(fileName);
+
+			for (String key : jo.keySet()) {
+				includes.put(key, jo.get(key).getAsString());
+			}
+		} catch (Exception e) {
+			System.out.println("Caught an exception while getting a dictionary.");
+			System.out.println(e);
+		}
+		
+		return includes;
+	}
+	
+	public static HashMap<String, String> getDictionary(String fileName, String optionalKey) {
+		HashMap<String, String> includes = new HashMap<>();
+		
+		try {
+			JsonObject jo = ParseJson.getJsonObjectFromFile(fileName);
+			if (!optionalKey.contentEquals("")) {
+				if (jo.has(optionalKey)) {
+					JsonObject dict = jo.get(optionalKey).getAsJsonObject();
+					for (String key : dict.keySet()) {
+						includes.put(key, dict.get(key).getAsString());
+					}
+				}
+			} else {
+				for (String key : jo.keySet()) {
+					includes.put(key, jo.get(key).getAsString());
+				}
+			}
+		} catch (Exception e) {
+			System.out.println("Caught an exception while getting a dictionary.");
+			System.out.println(e);
+		}
+		
+		return includes;
+	}
+	
 	public static ArrayList<ArrayList<String>> getNestedArrayFromFile(String fileName, String key) {
 		ArrayList<ArrayList<String>> inputs = new ArrayList<>();
 		try {
@@ -241,11 +287,13 @@ public class ParseJson {
   				methods.addAll(unwrappedMethods);
 			} else if (jo.has("args")) {
 				ArrayList<String> args = ParseJson.getArgsList(jo);
+				int index = methods.size();
 				
 				if (jo.has("func_type")) {
 					String funcType = jo.get("func_type").getAsString();
 					if (jo.has("return")) {
 						methods.add(new Method(key, args, jo.get("return").getAsString(), funcType));
+						
 					} else {
 						methods.add(new Method(key, args, "", funcType));						
 					}
@@ -254,6 +302,11 @@ public class ParseJson {
 						String returnType = jo.get("return").getAsString();
 						methods.add(new Method(key, args, returnType));
 					}
+				}
+				
+				if ((jo.has("func_type") || jo.has("return")) && jo.has("include")) {
+//					System.out.println("Setting include to " + jo.get("include").getAsString());
+					methods.get(index).setInclude(jo.get("include").getAsString());
 				}
 			} else {
 				Set<String> keys = jo.keySet();

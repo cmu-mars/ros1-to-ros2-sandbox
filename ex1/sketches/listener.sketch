@@ -14,11 +14,11 @@ void chatterCallback(const std_msgs::String::ConstPtr& msg){
   // Needs to find something that will take at least 2 strings?
   // I'm not sure if ROS_INFO has a direct counterpart in ROS2....
   // If I can, this will basically get mapped to RCL_INFO(string_template, input_string);
-  ?5? //ROS_INFO("I heard: [%s]", msg->data.c_str());
+   //ROS_INFO("I heard: [%s]", msg->data.c_str());
   times++;
   if (times == 10) {
     // This hole will get mapped directly rclcpp::shutdown();
-    ?6?         // ros::shutdown();
+             // ros::shutdown();
     exit(0);
   }
 }
@@ -39,14 +39,14 @@ int main(int argc, char **argv){
     */
   std::string node_name = "listener_node";
   // We will need to map rclcpp::init directly I think
-  ?1? // ros::init(argc, argv, "listener_node");
+  ?#? // ros::init(argc, argv, "listener_node");
   /**   
     * NodeHandle is the main access point to communications with the ROS system.   
     * The first NodeHandle constructed will fully initialize this node, and the last   
     * NodeHandle destructed will close down the node.   
     */
   // Then it will want to try to use the "listener_node" string? ? ?
-  ?2? // ros::NodeHandle n;
+  ?#? // ros::NodeHandle n;
   /**   
     * The subscribe() call is how you tell ROS that you want to receive messages   
     * on a given topic.  This invokes a call to the ROS   
@@ -66,13 +66,13 @@ int main(int argc, char **argv){
   // This one...it might not necessarily have to use? You would really have to know that beforehand though.
   int queue_size = 1000;
   // Question: How do we tell it that it needs to use chatterCallback? ? ? ? ? ?
-  ?3? // ros::Subscriber sub = n.subscribe("chatter", 1000, chatterCallback);
+  ?#? // ros::Subscriber sub = n.subscribe("chatter", 1000, chatterCallback);
   /**   
     * ros::spin() will enter a loop, pumping callbacks.  With this version, all   
     * callbacks will be called from within this thread (the main one).  ros::spin()   
     * will exit when Ctrl-C is pressed, or the node is shutdown by the master.   
     */
-  ?4? // ros::spin();
+  ?#? // ros::spin();
   return 0;
 }
 

@@ -10,6 +10,7 @@ import java.util.Map;
 
 import ros2sy.code.CppCode;
 import ros2sy.code.InputVariables;
+import ros2sy.code.SketchFiller;
 import ros2sy.json.ParseJson;
 import ros2sy.logic.Encoding;
 import ros2sy.logic.EncodingUtil;
@@ -210,13 +211,20 @@ public class Synthesis {
 			}
 		}
 		
-		System.out.println(ivs.getInputs());
-		CppCode cpp = new CppCode(mtpn, correctSequence);
+		SketchFiller filler = new SketchFiller(mtpn, correctSequence);
 		
-		ArrayList<String> holesFilled = cpp.generateCodeWithInputs(ivs.getInputs());
+		filler.fillSketches("ex1/sketches/listener.sketch", ivs);
 		
-		for (String holeFilled : holesFilled) {
-			System.out.println(holeFilled);
-		}
+		
+//		System.out.println(ivs.getInputs());
+//		
+//		
+//		CppCode cpp = new CppCode(mtpn, correctSequence);
+//		
+//		ArrayList<String> holesFilled = cpp.generateCodeWithInputs(ivs.getInputs());
+//		
+//		for (String holeFilled : holesFilled) {
+//			System.out.println(holeFilled);
+//		}
 	}
 }

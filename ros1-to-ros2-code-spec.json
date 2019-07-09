@@ -1,5 +1,4 @@
-{void chatterCallback(const std_msgs::msg::String::SharedPtr msg){                                                                      |  ?? // ros::NodeHandle n;                                                                                                             
-
+{
     "function_calls": {
         "ros::ok()": "rclcpp::ok()",
         "ros::shutdown()": "rclcpp::shutdown()",

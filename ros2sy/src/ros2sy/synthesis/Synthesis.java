@@ -86,7 +86,7 @@ public class Synthesis {
 		return sorted_result;
 	}
 	
-	public static void checkAll(int i, ArrayList<ArrayList<String>> strss, ArrayList<ArrayList<String>> correctAnswers) {
+	public static void checkAllSolutions(int i, ArrayList<ArrayList<String>> strss, ArrayList<ArrayList<String>> correctAnswers) {
 		for (ArrayList<String> strs : strss) {
 			boolean hasEverything = true;
 			for (String s : correctAnswers.get(i)) {
@@ -162,7 +162,7 @@ public class Synthesis {
 				System.out.println(strs);
 			}
 			
-			Synthesis.checkAll(i, strss, correctAnswers);
+			Synthesis.checkAllSolutions(i, strss, correctAnswers);
 		}
 		
 		SketchFiller filler = new SketchFiller(mtpn, correctSequence);

@@ -462,7 +462,7 @@ public class ParseJson {
 	}
 	
 	/**
-	 * Take the example search space json file that I created, and
+	 * Take the example listener search space json file that I created, and
 	 * then parse out the json, extracts the methods described as
 	 * Method objects, and create a PetriNet from this.
 	 * 
@@ -509,10 +509,6 @@ public class ParseJson {
 		blocks.get(1).add("ros::NodeHandle::subscribe");
 		blocks.add(new ArrayList<String>());
 		blocks.get(2).add("ros::spin");
-//		blocks.add(blockByRos1Name.get("ros::init"));
-//		blocks.add(new ArrayList<String>(blockByRos1Name.get("ros::NodeHandle")));
-//		blocks.get(1).addAll(blockByRos1Name.get("ros::NodeHandle::subscribe"));
-//		blocks.add(blockByRos1Name.get("ros::spin"));
 		
 		// Dummy input array for testing the synthesis aspect
 		ArrayList<String> input = new ArrayList<String>();
@@ -532,25 +528,6 @@ public class ParseJson {
 		inputs.add(new ArrayList<String>(inputs.get(1)));
 		inputs.get(2).add("std::shared_ptr<rclcpp::Node>");
 		inputs.get(2).add("std::shared_ptr<SubscriptionT>");
-		
-//		ArrayList<ArrayList<String>> dontUse = new ArrayList<ArrayList<String>>();
-//		dontUse.add(new ArrayList<String>());
-//		dontUse.get(0).addAll(blocks.get(1));
-//		dontUse.get(0).addAll(blocks.get(2));
-//		dontUse.add(new ArrayList<String>());
-//		dontUse.get(1).addAll(blocks.get(0));
-//		dontUse.get(1).addAll(blocks.get(2));
-//		dontUse.add(new ArrayList<String>());
-//		dontUse.get(2).addAll(blocks.get(0));
-//		dontUse.get(2).addAll(blocks.get(1));
-//		
-//		for (ArrayList<String> dont : dontUse) {
-//			dont.addAll(neverUse);
-//		}
-		
-//		input.add("std::string");
-//		input.add("std::string");
-//		input.add("const rclcpp::QoS&");
 		
 		ArrayList<ArrayList<CppCode>> snippets = new ArrayList<ArrayList<CppCode>>();
 		int index = 0;
@@ -605,6 +582,5 @@ public class ParseJson {
 		}
 		
 		MethodsToPetriNet.createDotFile(pn);
-		
 	}
 }

@@ -5,11 +5,15 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import ros2sy.json.ParseJson;
 import ros2sy.petri.MethodsToPetriNet;
 import ros2sy.sig.Method;
 
 public class SearchSpace {
+	private static final Logger LOGGER = LogManager.getLogger(SearchSpace.class.getName());
 	HashMap<String, HashSet<String>> tagToNames;
 	
 	HashMap<String, HashSet<Method>> tagToMethods;

@@ -1,6 +1,10 @@
 package ros2sy.json;
 
 import java.util.*;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
@@ -31,6 +35,7 @@ import uniol.apt.adt.pn.*;
  *
  */
 public class ParseJson {
+	private static final Logger LOGGER = LogManager.getLogger(ParseJson.class.getName());
 	
 	public ParseJson(String fileName) {
 		
@@ -65,8 +70,7 @@ public class ParseJson {
 				}
 			}
 		} catch (Exception e) {
-			System.out.println("Caught an exception in getInputVariableToType");
-			System.out.println(e);
+			LOGGER.trace("Caught an exception in getInputVariableToType {}: {}", e.toString(), e);
 		}
 		
 		return varsToType;
@@ -121,8 +125,7 @@ public class ParseJson {
 				includes.put(key, jo.get(key).getAsString());
 			}
 		} catch (Exception e) {
-			System.out.println("Caught an exception while getting a dictionary.");
-			System.out.println(e);
+			LOGGER.warn("Caught an exception while getting a dictionary: {}: {}", e.toString(), e);
 		}
 		
 		return includes;
@@ -157,8 +160,7 @@ public class ParseJson {
 				}
 			}
 		} catch (Exception e) {
-			System.out.println("Caught an exception while getting a dictionary.");
-			System.out.println(e);
+			LOGGER.warn("Caught an exception while getting a dictionary: {}: {}", e.toString(), e);
 		}
 		
 		return includes;
@@ -196,8 +198,7 @@ public class ParseJson {
 				}
 			}
 		} catch (Exception e) {
-			System.out.println("Caught exception in getInputsFromFile");
-			System.out.println(e);
+			LOGGER.warn("Caught an exception: {}: {}", e.toString(), e);
 		}
 		
 		return inputs;
@@ -216,7 +217,8 @@ public class ParseJson {
 		JsonParser jp = new JsonParser();
 		JsonElement je = jp.parse(fr);
 		if (!je.isJsonObject()) {
-			System.out.println("WARNING: this json element is not an object!");
+			LOGGER.warn("WARNING: this json element is not an object!");
+//			System.out.println("WARNING: this json element is not an object!");
 		}
 		return je.getAsJsonObject();
 	}
@@ -232,6 +234,7 @@ public class ParseJson {
 	 * @return					a HashMap with tags as keys and sets of methods as values
 	 */
 	public static HashMap<String, HashSet<Method>> tagMethods(ArrayList<Method> methods, String tagFile) {
+		LOGGER.traceEntry();
 		HashMap<String, HashSet<Method>> tagToMethods = new HashMap<>();
 		
 		try {
@@ -254,7 +257,8 @@ public class ParseJson {
 											String str = arrayElmt.getAsString();
 											
 											m.addTag(str);
-											System.out.println(m.name + ": " + str);
+											LOGGER.trace("{}: {}", m.name, str);
+//											System.out.println(m.name + ": " + str);
 										}
 									}
 								}
@@ -274,7 +278,7 @@ public class ParseJson {
 								}
 							}
 							if (methodsNames.size() > 0) {
-								System.out.println("size of methodsNames: " + Integer.toString(methodsNames.size()));
+								LOGGER.trace("size of methodsNames: {}", Integer.toString(methodsNames.size()));
 								for (Method m : methods) {
 									if (methodsNames.contains(m.name)) {
 										tagToMethods.get(key).add(m);
@@ -286,11 +290,10 @@ public class ParseJson {
 				}
 				
 			} catch (JsonParseException e) {
-				System.out.println("Caught json parse exception");
-				System.out.println(e);
+				LOGGER.warn("Caught json parse exception: {} -- {}", e.toString(), e);
 			}
 		} catch (Exception e) {
-			System.out.println(e);
+			LOGGER.warn("Caught some exception: {} -- {}", e.toString(), e);
 		}
 		
 		return tagToMethods;
@@ -329,8 +332,8 @@ public class ParseJson {
 	 */
 	private static ArrayList<Method> unwrap(String key, JsonElement elmt) {
 		ArrayList<Method> methods = new ArrayList<Method>();
-//		System.out.println("key: " + key);
-//		System.out.println(elmt.isJsonObject());
+		LOGGER.trace("key, is this a json object?: {}, {}", key, elmt.isJsonObject());
+//		LOGGER.debug("is this a json object?: {}", elmt.isJsonObject());
 		
 		if (elmt.isJsonObject()) {
 			JsonObject jo = elmt.getAsJsonObject();
@@ -455,7 +458,7 @@ public class ParseJson {
 		for (int i = 0; i < searchSpaceNames.length; i++) {
 			String fileName = "scrape_rclcpp_docs/jsons/" + searchSpaceNames[i] + ".json";
 			methods.addAll(ParseJson.parseOutMethods(fileName));
-			System.out.println("Methods length: " + Integer.toString(methods.size()));
+			LOGGER.info("Methods length: {}", methods.size());
 		}
 		
 		return methods;

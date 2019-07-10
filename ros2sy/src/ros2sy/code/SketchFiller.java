@@ -6,12 +6,16 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import ros2sy.exception.CodeGenerationException;
 import ros2sy.json.ParseJson;
 import ros2sy.petri.MethodsToPetriNet;
 import ros2sy.sig.Method;
 
 public class SketchFiller {
+	private static final Logger LOGGER = LogManager.getLogger(SketchFiller.class.getName());
 	CppCode filler;
 	MethodsToPetriNet mpn;
 	
@@ -68,7 +72,7 @@ public class SketchFiller {
 				String sketch = sketchContents;
 				int i = 0;
 				while (sketch.indexOf("?#?") > -1 && i < splits.length) {
-					System.out.println("Replacing an instance of ?#? in the replace string.");
+					LOGGER.trace("Replacing an instance of ?#? in the replace string with <{}>.", splits[i]);
 					sketch = sketch.replaceFirst(replaceTag, splits[i]);
 					i++;
 				}
@@ -82,8 +86,7 @@ public class SketchFiller {
 
 			int times = 0;
 			for (String sketch : filledOutSketches) {
-				System.out.println("the full sketch: ");
-				System.out.println(sketch);
+				LOGGER.trace("the full sketch:", sketch);
 
 				try {
 					FileWriter fw = new FileWriter(sketchBaseName + Integer.toString(times) + ".cpp");
@@ -92,13 +95,12 @@ public class SketchFiller {
 					fw.flush();
 					fw.close();
 				} catch (Exception e) {
-					System.out.println(e);
+					LOGGER.info(e);
 				}
 				times++;
 			}
 		} catch (Exception e) {
-			System.out.println("Caught an exception: ");
-			System.out.println(e);
+			LOGGER.warn("Caught an exception: ", e);
 		}
 	}
 	

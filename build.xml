@@ -1,6 +1,7 @@
 <project name="ros2sy" basedir="." default="main">
 	<property name="lib.dir" value="ros2sy/lib"></property>
 	<property name="src.dir" value="ros2sy/src"/>
+	<property name="rsrc.dir" value="${src.dir}/resources"/>
 	<property name="build.dir" value="build"/>
 	<property name="classes.dir" value="${build.dir}/classes"/>
 	<property name="jar.dir" value="${build.dir}/jar"/>
@@ -16,7 +17,7 @@
 
     <target name="compile">
         <mkdir dir="${classes.dir}"/>
-        <javac includeantruntime="false" srcdir="${src.dir}" destdir="${classes.dir}" classpathref="classpath"/>
+        <javac includeantruntime="false" srcdir="${src.dir}" destdir="${classes.dir}" classpathref="classpath" debug="true"/>
     </target>
 
     <target name="jar" depends="compile">
@@ -36,7 +37,11 @@
         		<pathelement location="${lib.dir}/apt.jar"/>
         		<pathelement location="${lib.dir}/commons-lang3-3.4.jar"/>
         		<pathelement location="${lib.dir}/gson-2.8.5.jar"/>
+        		<pathelement location="${lib.dir}/log4j-core-2.12.0.jar"/>
+        		<pathelement location="${lib.dir}/log4j-api-2.12.0.jar"/>
         	</classpath>
+        	<sysproperty key="log4j.configurationFile" value="${rsrc.dir}/log4j2.xml"/>
+        	<!-- <sysproperty key="log4j.debug" value=""/>-->
         </java>
     </target>
     

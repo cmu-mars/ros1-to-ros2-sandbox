@@ -8,6 +8,9 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import ros2sy.code.CppCode;
 import ros2sy.code.InputVariables;
 import ros2sy.code.SketchFiller;
@@ -21,7 +24,9 @@ import ros2sy.petri.MethodsToPetriNet;
 import ros2sy.sig.Method;
 import ros2sy.synthesis.*;
 
-public class Synthesis {	
+public class Synthesis {
+	private static final Logger LOGGER = LogManager.getLogger(Synthesis.class.getName());
+	
 	public static ArrayList<ArrayList<String>> synthesizeAll(PetriNet net, List<String> inputs, int max_loc) {
 		List<List<String>> k = new ArrayList<>();
 		ArrayList<String> k1 = new ArrayList<>();
@@ -53,13 +58,13 @@ public class Synthesis {
 			// reachability analysis
 			List<Variable> result = Encoding.solver.findPath(loc);
 			while (!result.isEmpty()) {
-//				 System.out.println("============================");
+				LOGGER.trace("============================");
 				ArrayList<String> api_result = new ArrayList<>();
 				for (Variable s : result) {
 					api_result.add(s.getName());
-//					 System.out.println(s.getName());
+				  	LOGGER.trace(s.getName());
 				}
-//				System.out.println("Cost = " + Encoding.solver.getCost());
+			  LOGGER.trace("Cost = {}", Encoding.solver.getCost());
 				Result r = new Result(api_result, Encoding.solver.getCost());
 				unsorted_result.add(r);
 				result = Encoding.solver.findPath(loc);
@@ -77,9 +82,12 @@ public class Synthesis {
 		}
 
 		for (List<String> l : sorted_result) {
-//			System.out.println("============================");
+			LOGGER.trace("============================");
 			for (String s : l) {
-//				System.out.println(s);
+				LOGGER.trace(s);
+				if (prevent.contains(s)) {
+					LOGGER.error("Result contains unwanted transition: {}", s);
+				}
 			}
 		}
 
@@ -94,14 +102,15 @@ public class Synthesis {
 			}
 			if (hasEverything) {
 				int indexOfStrs = strss.indexOf(strs);
-				System.out.println("Found the correct answer at " + Integer.toString(indexOfStrs) + "/" + Integer.toString(strss.size()) + ":");
-				System.out.println(strs);
+				LOGGER.info("Found the correct answer at {}/{}: {}", Integer.toString(indexOfStrs), Integer.toString(strss.size()), strs);
 				break;
 			}
 		}
 	}
 	
 	public static void main(String[] args) throws Exception {
+		System.setProperty("log4j.configurationFile", "ros2sy/src/resources/log4j2.xml");
+
 		ArrayList<Method> methods = ParseJson.getAllMethods("node", "publisher", "rclcpp", "subscription");
 		
 		ArrayList<String> dontClone = new ArrayList<>();
@@ -138,18 +147,15 @@ public class Synthesis {
 
 			ArrayList<String> dontUse = search.othersExcept(i, neverUse);
 						
-			System.out.print("Block: ");
-			System.out.println(k);
-//			System.out.println(dontUse);
+			LOGGER.debug("Block: {}", k);
+//			LOGGER.trace(dontUse);
 			
 			ArrayList<ArrayList<String>> strss = Synthesis.synthesizeAll(mtpn.getNet(), inputs.get(i), 3, k, dontUse);
-			System.out.print("Number of possibilities generated for block ");
 			
 			
 			String blocksSubstring = k.toString().substring(0, Math.min(k.toString().length(), 54));
 			blocksSubstring = blocksSubstring + ((blocksSubstring.length() < k.toString().length()) ? "...]" : "") + ": ";
-			System.out.print(blocksSubstring);
-			System.out.println(strss.size());
+			LOGGER.debug("Number of possibilities generated for block {}{}", blocksSubstring, strss.size());
 			
 			if (strss.size() > 0) {
 				correctSequence.addAll(strss.get(0));
@@ -157,9 +163,9 @@ public class Synthesis {
 			
 			int maxShown = Math.min(strss.size(), 10);
 			
-			System.out.println("The top " + Integer.toString(maxShown) + ":");
+			LOGGER.debug("The top {}:", maxShown);
 			for (ArrayList<String> strs : strss.subList(0, maxShown)) {
-				System.out.println(strs);
+				LOGGER.debug(strs);
 			}
 			
 			Synthesis.checkAllSolutions(i, strss, correctAnswers);

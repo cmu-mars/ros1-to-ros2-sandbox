@@ -5,6 +5,9 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Set;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import ros2sy.exception.CodeGenerationException;
 import ros2sy.petri.MethodsToPetriNet;
 import ros2sy.sig.*;
@@ -20,6 +23,7 @@ import ros2sy.sig.*;
  *
  */
 public class CppCode {
+	private static final Logger LOGGER = LogManager.getLogger(CppCode.class.getName());
 	/**
 	 * A list of the API calls that this sequence of C++ code represents
 	 */
@@ -63,7 +67,7 @@ public class CppCode {
 						
 						this.numHolesPerApi.add(instReq + numReq + numOpts);
 						
-//						System.out.println("<" + Integer.toString(numOpts) + ", " + m.toString() + ">");
+					LOGGER.info("<" + Integer.toString(numOpts) + ", " + m.toString() + ">");
 						
 						if (m.isClassMethod) {
 							this.holeTypes.add(m.fromClass);
@@ -91,11 +95,11 @@ public class CppCode {
 		}
 		
 		
-//		System.out.println("Number of holes to fill:");
-//		System.out.println(this.numHolesToFill);
+		LOGGER.info("Number of holes to fill:");
+		LOGGER.info(this.numHolesToFill);
 		
 		for (String key : typeCounts.keySet()) {
-			System.out.println(key + ": " + typeCounts.get(key).toString());
+			LOGGER.info(key + ": " + typeCounts.get(key).toString());
 		}
 	}
 	
@@ -111,6 +115,8 @@ public class CppCode {
 	 * 						number of holes found for this code
 	 */
 	public String createCodeWithHoles(InputVariables in) throws CodeGenerationException {
+		LOGGER.traceEntry("createCodeWithHoles({})", in);
+		
 		String code = "";
 		int holes = 0;
 		boolean isPointerFieldAccess = false;
@@ -151,10 +157,12 @@ public class CppCode {
 			}
 			
 			if (holes > this.numHolesToFill) {
+				LOGGER.warn("The number of holes in this code was exceeded, but expected exactly {} holes.", this.numHolesToFill);
+				LOGGER.traceExit();
 				throw new CodeGenerationException("More holes were found for this code than were originally anticipated; expected " + Integer.toString(this.numHolesToFill) + " holes, but found at least " + Integer.toString(holes) + ":\n" + code + "\nand expected this many holes per API:\n" + this.holesPerApiString());
 			}
 		}
-		
+		LOGGER.traceExit(code);
 		return code;
 	}
 	
@@ -168,12 +176,13 @@ public class CppCode {
 	 * @throws CodeGenerationException
 	 */
 	public ArrayList<String> generateCodeWithInputs(HashMap<String, Type> inputs) throws CodeGenerationException {
+		LOGGER.traceEntry("generateCodeWithInputs({})", inputs);
 		// Enumerates how many of each type we have, as well as contains convenience
 		// methods for different ways of querying the inputs.
 		InputVariables in = new InputVariables(inputs);
 		String holeyCode = this.createCodeWithHoles(in);
-		System.out.println("Hole-y code:");
-		System.out.println(holeyCode);
+		LOGGER.info("Hole-y code:\n{}", holeyCode);
+//		LOGGER.info(holeyCode);
 		
 		// I want to have some notion of what's available at certain points in
 		// the code? Since we store all of the results of each API call
@@ -186,41 +195,41 @@ public class CppCode {
 			String holeTag = "#" + Integer.toString(i);
 			
 			if (!in.hasTypeCountsForString(plain)) {
-				System.out.println(holeTag + ": Cannot find key <" + plain + "> as one of the inputs!");
+				LOGGER.info("{}: Cannot find key <{}> as one of the inputs!", holeTag, plain);
 				int lineNumber = this.getLineNumberByHoleNumber(i);
+				LOGGER.info("The line number computed: {}", lineNumber);
+
 				ArrayList<String> possibleNames = in.resultsOfTypeAvailable(lineNumber, t);
-				System.out.print("The line number computed: ");
-				System.out.println(lineNumber);
 				if (possibleNames.size() > 0) {
 					possibles *= possibleNames.size();
 					if (possibleNames.size() == 1) {
-						System.out.println("We have exactly one possible name!");
+						LOGGER.trace("We have exactly one possible name!");
 						
 						holeyCode = holeyCode.replaceFirst(holeTag, possibleNames.get(0));
 					}
 				} else {
-					System.out.println("No possible names found for type " + plain);
+					LOGGER.info("No possible names found for type {}", plain);
 					for (String inputName : inputs.keySet()) {
 						Type inputType = inputs.get(inputName);
 						
-//						System.out.println(t.valueTypeName + "," + inputType.valueTypeName);
-//						System.out.println(t.arrayLevel);
-//						System.out.println(inputType.arrayLevel);
-//						System.out.println(t.pointerLevel);
-//						System.out.println(inputType.pointerLevel);
+						LOGGER.info("{},{}", t.valueTypeName, inputType.valueTypeName);
+						LOGGER.info(t.arrayLevel);
+						LOGGER.info(inputType.arrayLevel);
+						LOGGER.info(t.pointerLevel);
+						LOGGER.info(inputType.pointerLevel);
 						if (t.asParamsEqual(inputType)) {
-//							System.out.println("The type " + t.toString() + " is equivalent to the type " + inputType.toString());
+							LOGGER.info("The type " + t.toString() + " is equivalent to the type " + inputType.toString());
 							holeyCode = holeyCode.replaceFirst(holeTag, inputName);
 							break;
 						} else {
-//							System.out.println("The type " + t.toString() + " is NOT equivalent to the type " + inputType.toString());
+							LOGGER.info("The type {} is NOT equivalent to the type {}", t.toString(), inputType.toString());
 						}
 					}
 					
 				}
 			} else {
 				Integer numPossibleHoleFillers = in.numTypesForString(plain);
-				System.out.println(holeTag + ": " + numPossibleHoleFillers.toString() + " possibilities for type " + plain);
+				LOGGER.info("{}: {} possibilities for type {}", holeTag, numPossibleHoleFillers.toString(), plain);
 				if (numPossibleHoleFillers > 0) {
 					possibles *= numPossibleHoleFillers;
 				}
@@ -231,27 +240,31 @@ public class CppCode {
 				}
 			}
 		}
-		System.out.println("There are " + Integer.toString(possibles) + " possiblities in total.");
+		LOGGER.info("There are {} possibilities in total.", Integer.toString(possibles));
 		
 		// Don't do this if there are a ton of possibilities -- worst case exponential
 		// in time, and maybe space too.
 		ArrayList<String> possibleFills = fillRemainingHoles(holeyCode, in, holesLeft);
-		System.out.println("We have " + Integer.toString(possibleFills.size()) + " possible ways of filling: ");
+		LOGGER.info("We have {} possibile ways of filling", Integer.toString(possibleFills.size()));
 		for (String fill : possibleFills) {
-			System.out.println("A possible way of filling the holes:\n\n" + fill + "\n");
+			LOGGER.info("A possible way of filling the holes:\n{}", fill);
 		}
 		
 		
 		// Should hopefully be filled by now
 //		return holeyCode;
+		LOGGER.traceExit(possibleFills);
 		return possibleFills;
 	}
 	
 	public ArrayList<Method> getApis() {
+		LOGGER.traceEntry();
+		LOGGER.traceExit(this.apis);
 		return this.apis;
 	}
 	
 	public Set<String> getIncludes() {
+		LOGGER.traceEntry();
 		HashSet<String> includes = new HashSet<>();
 		
 		for (Method m : this.apis) {
@@ -260,17 +273,20 @@ public class CppCode {
 			}
 		}
 		
+		LOGGER.traceExit(includes);
 		return includes;
 	}
 	
 	
 	public ArrayList<String> getResultTypeNames() {
+		LOGGER.traceEntry();
 		ArrayList<String> resultTypes = new ArrayList<String>();
 		
 		for (String key : this.results.keySet()) {
 			resultTypes.add(this.results.get(key).toString());
 		}
 		
+		LOGGER.traceExit(resultTypes);
 		return resultTypes;
 	}
 	
@@ -310,21 +326,21 @@ public class CppCode {
 	
 	private ArrayList<String> fillRemainingHoles(String holeyCode, InputVariables in, ArrayList<Integer> remainingHoleIndices) {
 		ArrayList<String> possibleFills = new ArrayList<String>();
-		System.out.println(remainingHoleIndices.size());
+		LOGGER.info(remainingHoleIndices.size());
 		if (remainingHoleIndices.size() == 0) {
 			possibleFills.add(holeyCode);
 			return possibleFills;
 		}
 		
 		int first = remainingHoleIndices.get(0);
-		System.out.println(first);
+		LOGGER.info(first);
 		
 		String holeTag = "#" + Integer.toString(first);
 		ArrayList<Integer> rest = new ArrayList<Integer>(remainingHoleIndices.subList(1, remainingHoleIndices.size()));
 		
 		String holeTypeName = this.holeTypes.get(first).getPlainType();
-		System.out.println(holeTypeName);
-		System.out.println(in.hasNamesForString(holeTypeName));
+		LOGGER.info(holeTypeName);
+		LOGGER.info(in.hasNamesForString(holeTypeName));
 		if (in.hasNamesForString(holeTypeName)) {
 			for (String varName : in.getNamesForString(holeTypeName)) {
 				possibleFills.addAll(fillRemainingHoles(holeyCode.replaceFirst(holeTag, varName), in, rest));

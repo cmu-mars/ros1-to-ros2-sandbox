@@ -6,6 +6,8 @@ import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.apache.commons.lang3.tuple.ImmutableTriple;
 import org.apache.commons.lang3.tuple.Pair;
 import org.apache.commons.lang3.tuple.Triple;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.sat4j.core.VecInt;
 
 import ros2sy.logic.SATSolver.ConstraintType;
@@ -16,6 +18,7 @@ import uniol.apt.adt.pn.Place;
 import uniol.apt.adt.pn.Transition;
 
 public class SequentialEncoding implements Encoding {
+	private static final Logger LOGGER = LogManager.getLogger(SequentialEncoding.class.getName());
 
 	int loc = 1;
 	PetriNet pnet = null;
@@ -41,13 +44,13 @@ public class SequentialEncoding implements Encoding {
 	
 	public void doesNotOccur(List<String> knowledge) {
 		
-//		System.out.print("Knowledge: ");
-//		System.out.println(knowledge);
+		LOGGER.info("Knowledge: {}", knowledge);
+//		LOGGER.info(knowledge);
 		
 		for (String hint : knowledge) {
 			for (Transition tr : pnet.getTransitions()) {
 				if (tr.getId().equals(hint)) {
-//					System.out.println("Preventing " + hint + " from occurring.");
+					LOGGER.trace("Preventing {} from occcuring", hint);
 					VecInt constraint = new VecInt();
 					for (int t = 0; t < loc; t++) {
 						// create a variable with <place in the petri-net, timestamp, value>
@@ -57,15 +60,10 @@ public class SequentialEncoding implements Encoding {
 
 						VecInt c = new VecInt();
 						c.push(-var.getId());
-//						c.push(v);
 						solver.addClause(c);
 					}
 					
-//					int v = solver.loc_variables.last();
-//					solver.loc_variables.pop();
 
-//					VecInt constraint = new VecInt();
-//					constraint.push(-v);
 //					solver.addClause(constraint);
 					break;
 				}
@@ -82,7 +80,7 @@ public class SequentialEncoding implements Encoding {
 		}
 
 		if (solver.loc_variables.size() < nb_new_vars) {
-			System.out.println("ERROR: not enough variables in the formula to include refactoring information!");
+			LOGGER.info("ERROR: not enough variables in the formula to include refactoring information!");
 			return;
 		}
 
@@ -93,7 +91,7 @@ public class SequentialEncoding implements Encoding {
 			for (String hint : info) {
 				for (Transition tr : pnet.getTransitions()) {
 					if (tr.getId().equals(hint)) {
-//						System.out.println("Found a transition that matches " + hint);
+						LOGGER.debug("Found a transition that matches {}", hint);
 						int v = solver.loc_variables.last();
 						solver.loc_variables.pop();
 
@@ -108,8 +106,11 @@ public class SequentialEncoding implements Encoding {
 							constraint.push(var.getId());
 
 							VecInt c = new VecInt();
+							
+							// Don't do this 
 							c.push(-var.getId());
 							c.push(v);
+							// And condition
 							solver.addClause(c);
 						}
 						solver.addClause(constraint);
@@ -122,8 +123,8 @@ public class SequentialEncoding implements Encoding {
 			if (at_least_one.size() > 0)
 				solver.addClause(at_least_one);
 			else
-				System.out.println(
-						"WARNING: refactoring information using transition names that do not exist in the petrinet.");
+				LOGGER.warn(
+						"WARNING: refactoring information uses a transition name that does not exist in the petrinet: {}", info);
 		}
 	}
 
@@ -139,7 +140,7 @@ public class SequentialEncoding implements Encoding {
 				coeffs.push(w);
 				objective.push(var.getId());
 				names.add(var.getName() + "|w:" + w);
-				// System.out.println("var= " + var.getName() + " weight= " + w);
+				 LOGGER.trace("var= " + var.getName() + " weight= " + w);
 			}
 		}
 

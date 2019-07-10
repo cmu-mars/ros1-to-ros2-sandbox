@@ -5,10 +5,13 @@ import java.util.HashMap;
 
 import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.apache.commons.lang3.tuple.Pair;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import ros2sy.sig.*;
 
 public class InputVariables {
+	private static final Logger LOGGER = LogManager.getLogger(InputVariables.class.getName());
 	private HashMap<String, Integer> typeCounts = new HashMap<String, Integer>();
 	private HashMap<String, Type> plainTypeToType = new HashMap<String, Type>();
 	private HashMap<Type, ArrayList<String>> namesByType = new HashMap<Type, ArrayList<String>>();
@@ -144,7 +147,7 @@ public class InputVariables {
 						} else if (paramType.isSharedPointer && (paramType.valueTypeName.equals(t.valueTypeName))) {
 							names.add(pair.getLeft());
 						} else {
-							System.out.println("The type " + paramType.toString() + " and " + t.toString() + " are not equivalent as parameters.");
+							LOGGER.info("The type " + paramType.toString() + " and " + t.toString() + " are not equivalent as parameters.");
 						}
 					}
 				}

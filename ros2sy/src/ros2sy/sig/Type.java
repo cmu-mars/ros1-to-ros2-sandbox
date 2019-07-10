@@ -64,7 +64,7 @@ public class Type {
 		}
 		
 //		for (int i = 0; i < ints.size(); i++) {
-//			System.out.println(name.substring(ints.get(i), name.length()));
+//			LOGGER.info(name.substring(ints.get(i), name.length()));
 //		}
 		
 		this.referenceLevel = ints.size();
@@ -79,8 +79,8 @@ public class Type {
 		this.isConstPointer = new ArrayList<Boolean>();
 		
 		for (int i = 0; i < name.length(); i++) {
-//			System.out.println(name.charAt(i));
-//			System.out.println(name.charAt(i) == '*');
+//			LOGGER.info(name.charAt(i));
+//			LOGGER.info(name.charAt(i) == '*');
 			if (name.charAt(i) == '*')	 {
 				if (ints.size() > 0) {
 					int lastInt = ints.get(ints.size() - 1);
@@ -104,18 +104,18 @@ public class Type {
 			this.isConstPointer.add(lastStr.matches("^\\s*const\\s*.*"));
 		}
 		
-//		System.out.println(name);
-//		System.out.println(this.isConstValue);
-//		System.out.println(this.pointerLevel);
+//		LOGGER.info(name);
+//		LOGGER.info(this.isConstValue);
+//		LOGGER.info(this.pointerLevel);
 //		for (Boolean b : this.isConstPointer) {
-//			System.out.println(b.booleanValue());
+//			LOGGER.info(b.booleanValue());
 //		}
 		
 		this.valueTypeName = this.typeName.replaceAll("\\s*(const|\\*)\\s*", "");
 		this.valueTypeName = this.valueTypeName.trim();
 		
 		if (valueTypeName.matches("^std::shared_ptr<.+>$")) {
-//			System.out.println("This valueTypeName matches a shared pointer: <" + valueTypeName + ">, <" + this.typeName + ">");
+//			LOGGER.info("This valueTypeName matches a shared pointer: <" + valueTypeName + ">, <" + this.typeName + ">");
 			
 			int first = "std::shared_ptr<".length();
 			
@@ -134,7 +134,7 @@ public class Type {
 		
 		this.typeName = this.typeName.trim();
 		
-//		System.out.println("<" + this.valueTypeName + ">");
+//		LOGGER.info("<" + this.valueTypeName + ">");
 	}
 	
 	/**

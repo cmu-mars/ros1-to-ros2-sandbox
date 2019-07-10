@@ -14,5 +14,9 @@
 	<classpathentry kind="lib" path="ros2sy/lib/apt.jar"/>
 	<classpathentry kind="lib" path="ros2sy/lib/commons-lang3-3.4.jar"/>
 	<classpathentry kind="lib" path="ros2sy/lib/gson-2.8.5.jar"/>
+	<classpathentry kind="lib" path="/Users/audrey/Personal/School/College/summer2019/ros1-to-ros2-sandbox/ros2sy/lib/log4j-api-2.12.0.jar"/>
+	<classpathentry kind="lib" path="/Users/audrey/Personal/School/College/summer2019/ros1-to-ros2-sandbox/ros2sy/lib/log4j-core-2.12.0.jar"/>
+	<classpathentry kind="lib" path="/Users/audrey/Personal/School/College/summer2019/ros1-to-ros2-sandbox/ros2sy/lib/log4j-api-2.12.0-javadoc.jar"/>
+	<classpathentry kind="lib" path="/Users/audrey/Personal/School/College/summer2019/ros1-to-ros2-sandbox/ros2sy/lib/log4j-core-2.12.0-javadoc.jar"/>
 	<classpathentry kind="output" path="build"/>
 </classpath>

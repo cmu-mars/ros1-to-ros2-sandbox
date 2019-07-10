@@ -5,6 +5,8 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.sat4j.core.VecInt;
 //import org.sat4j.minisat.SolverFactory;
 //import org.sat4j.specs.ISolver;
@@ -14,6 +16,7 @@ import org.sat4j.specs.ContradictionException;
 import org.sat4j.specs.TimeoutException;
 
 public class SATSolver {
+	private static final Logger LOGGER = LogManager.getLogger(SATSolver.class.getName());
 
 	private IPBSolver solver = null;
 	private boolean unsat = false;
@@ -168,7 +171,7 @@ public class SATSolver {
 		for (int i = 0; i < objective.size(); i++) {
 			if (model[objective.get(i) - 1] > 0) {
 				cost += coeffs.get(i);
-//				System.out.println("api = " + names.get(i));
+//				LOGGER.info("api = " + names.get(i));
 			}
 		}
 		return cost;

@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration>
+	<Properties>
+		<Property name="filename">latest.log</Property>
+		<Property name="logDir">logs</Property>
+  	</Properties>
+  	<Appenders>
+    	<Console name="STDOUT" target="SYSTEM_OUT">
+      		<PatternLayout pattern="%d{HH:mm:ss.SSS} %-5p [%t] (%F:%L) - %m%n">
+      			<RegexReplacement regex="\\.java" replacement="" />
+      		</PatternLayout>
+    	</Console>
+    	<RollingFile name="file1" fileName="${logDir}/${filename}"
+    				 filePattern="${logDir}/%d{yyyy-MM-dd HH.mm.ss}.log">
+    		<PatternLayout pattern="%d{HH:mm:ss.SSS} %-5p [%t] %-30C{2} (%F:%L) - %m%n"/>
+    		<Policies>
+    			<OnStartupTriggeringPolicy />
+    			<!-- <TimeBasedTriggeringPolicy interval="5"/>-->
+    		</Policies>
+    	</RollingFile>
+  	</Appenders>
+  	<Loggers>
+    	<Logger name="ros2sy" level="all" includeLocation="true">
+    		<AppenderRef ref="STDOUT" level="debug"/>
+    		<AppenderRef ref="file1"/>
+    	</Logger>
+    	<Root level="all">
+    	</Root>
+  	</Loggers>
+</Configuration>

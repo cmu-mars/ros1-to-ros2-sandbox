@@ -22,5 +22,5 @@
 .externalToolBuilders
 .factorypath
 dot
-
+*.log
 ex1/sketches/*.cpp

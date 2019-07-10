@@ -8,6 +8,9 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Set;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import uniol.apt.adt.exception.FlowExistsException;
 import uniol.apt.adt.exception.NoSuchEdgeException;
 import uniol.apt.adt.pn.*;
@@ -22,6 +25,7 @@ import uniol.apt.adt.pn.*;
  *
  */
 public class MethodsToPetriNet {
+	private static final Logger LOGGER = LogManager.getLogger(MethodsToPetriNet.class.getName());
 	public static String un_pointer_name = "*DE_PTR*";
 	
 	/**
@@ -186,11 +190,11 @@ public class MethodsToPetriNet {
 		if (!this.hasParticularNicknameOfMethod(m, nickname)) {
 			// Just trying to verify that it does this...
 			this.aliasesForMethods.get(m).add(nickname);
-//			System.out.println("Before:");
-//			System.out.println(this.aliasesForMethods.get(m));
+//			LOGGER.info("Before:");
+//			LOGGER.info(this.aliasesForMethods.get(m));
 //			nicknames.add(nickname);
-//			System.out.println("After:");
-//			System.out.println(this.aliasesForMethods.get(m));
+//			LOGGER.info("After:");
+//			LOGGER.info(this.aliasesForMethods.get(m));
 		}
 	}
 	
@@ -333,8 +337,8 @@ public class MethodsToPetriNet {
 					try {
 						mandatory.add(new Arg(instType));
 					} catch (ArgParseException e) {
-						System.out.println("ArgParseException occurred in MethodsToPetriNet.convert");
-						System.out.println(e);
+						LOGGER.info("ArgParseException occurred in MethodsToPetriNet.convert");
+						LOGGER.info(e);
 					}
 				}
 				
@@ -420,8 +424,8 @@ public class MethodsToPetriNet {
 			w.flush();
 			w.close();
 		} catch (Exception e) {
-			System.out.println("Exception caught while attempting to write dot file in MethodsToPetriNet.");
-			System.out.println(e);
+			LOGGER.warn("Exception caught while attempting to write dot file in MethodsToPetriNet: {}}", e);
+//			LOGGER.info(e);
 		}
 	}
 
@@ -501,20 +505,20 @@ public class MethodsToPetriNet {
 			// Creates a flow with default weight 1
 			pn.createFlow(p, t);
 		} catch (FlowExistsException e) {
-			System.out.println("Caught exception in MethodsToPetriNet.addFlowToPetri:");
-			System.out.println(e);
+			LOGGER.warn("Caught exception in MethodsToPetriNet.addFlowToPetri:", e);
+//			LOGGER.info(e);
 			
 			try {
 				Flow f = pn.getFlow(p.getId(), t.getId());
 				int wt = f.getWeight();
 				
-//				System.out.println("Increasing weight of flow (" + p.getId() + ", " + t.getId() + ") from " + Integer.toString(wt) + " to " + Integer.toString(wt + 1));
+//				LOGGER.info("Increasing weight of flow (" + p.getId() + ", " + t.getId() + ") from " + Integer.toString(wt) + " to " + Integer.toString(wt + 1));
 				
 				// Increase the weight
 				f.setWeight(wt + 1);
 			} catch (NoSuchEdgeException e1) {
-				System.out.println("Caught exception in MethodsToPetriNet.addFlowToPetri:");
-				System.out.println(e1);
+				LOGGER.warn("Caught exception in MethodsToPetriNet.addFlowToPetri:", e1);
+//				LOGGER.info(e1);
 			}
 		}
 	}

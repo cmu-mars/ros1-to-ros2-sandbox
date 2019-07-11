@@ -1,11 +1,21 @@
 {
-    "std::chrono::seconds": {
+    "std::chrono::seconds::seconds": {
         "args": [
             "int"
         ],
         "func_type": "constructor",
         "object_constructor": "true",
-        "return": "",
+        "return": "std::chrono::seconds",
+        "include": "<chrono>",
+        "ref": []
+    },
+    "std::chrono::nanoseconds::nanoseconds": {
+        "args": [
+            "std::chrono::seconds"
+        ],
+        "func_type": "constructor",
+        "object_constructor": "true",
+        "return": "std::chrono::nanoseconds",
         "include": "<chrono>",
         "ref": []
     }

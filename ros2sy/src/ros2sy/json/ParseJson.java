@@ -365,7 +365,16 @@ public class ParseJson {
 				
 				if ((jo.has("func_type") || jo.has("return")) && jo.has("include")) {
 //					System.out.println("Setting include to " + jo.get("include").getAsString());
-					methods.get(index).setInclude(jo.get("include").getAsString());
+					JsonElement include = jo.get("include");
+					if (include.isJsonPrimitive()) {
+						methods.get(index).addInclude(include.getAsString());
+					} else if (include.isJsonArray()) {
+						for (JsonElement arryElmt : include.getAsJsonArray()) {		
+							if (arryElmt.isJsonPrimitive()) {								
+								methods.get(index).addInclude(arryElmt.getAsString());
+							}
+						}
+					}
 				}
 			} else {
 				Set<String> keys = jo.keySet();

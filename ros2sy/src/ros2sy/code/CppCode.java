@@ -268,8 +268,12 @@ public class CppCode {
 		HashSet<String> includes = new HashSet<>();
 		
 		for (Method m : this.apis) {
-			if (m.getInclude().length() > 0 && !includes.contains(m.getInclude())) {
-				includes.add(m.getInclude());
+			if (m.getInclude().size() > 0) {
+				for (String includeString : m.getInclude()) {
+					if (!includes.contains(includeString)) {						
+						includes.add(includeString);
+					}
+				}
 			}
 		}
 		

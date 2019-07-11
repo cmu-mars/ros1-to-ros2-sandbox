@@ -6,7 +6,6 @@
         ],
         [
             "const std::string&",
-            "std_msgs::String",
             "const std::string&",
             "int"
         ],
@@ -24,13 +23,14 @@
             "std::shared_ptr<PublisherT>"
         ],
         [
+            "rclcpp::GenericRate<Clock>"
         ]
     ],
     "input_var_to_type": {
         "argc": "int",
         "argv": "char **",
         "node_name": "std::string",
-        "advertise_template_type_input": "std_msgs::String",
+        "advertise_template_type_input": "std_msgs::msgs::String",
         "topic_name": "std::string",
         "queue_size": "int",
         "pause_duration": "int",

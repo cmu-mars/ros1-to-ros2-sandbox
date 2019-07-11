@@ -147,7 +147,7 @@ public class Synthesis {
 		
 		// Block 1
 		search.addBlock("node", "constructor");
-//		search.addToLastBlock("subscription", "constructor");		
+//		search.addToLastBlock("subscription", "constructor");	
 		search.addToLastBlock("publisher", "constructor");
 		
 		// Block 2
@@ -225,6 +225,7 @@ public class Synthesis {
 		LOGGER.info("Filling holes in generated code");
 		SketchFiller filler = new SketchFiller(mtpn, correctSequence);
 		
-		filler.fillSketches("ex1/sketches/listener.sketch", ivs);
+//		filler.fillSketches("ex1/sketches/listener.sketch", ivs);
+		filler.fillSketches("ex1/sketches/talker.sketch", ivs);
 	}
 }

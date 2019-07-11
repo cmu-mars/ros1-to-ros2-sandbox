@@ -1,0 +1,24 @@
+{
+    "input_types": [
+        [
+            "int",
+            "char const *const []"
+        ],
+        [
+            "const std::string&",
+            "const std::string&",
+            "int"
+        ],
+        [
+            "std::shared_ptr<rclcpp::Node>",
+            "std::shared_ptr<SubscriptionT>"
+        ]
+    ],
+    "input_var_to_type": {
+        "argc": "int",
+        "argv": "char **",
+        "node_name": "std::string",
+        "topic_name": "std::string",
+        "queue_size": "int",
+    }
+}

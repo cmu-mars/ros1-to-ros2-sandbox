@@ -403,7 +403,6 @@ public class SequentialEncoding implements Encoding {
 
 	@Override
 	public void setState(Set<Pair<Place, Integer>> state, int timestep) {
-
 		Set<Place> visited = new HashSet<Place>();
 		for (Pair<Place, Integer> p : state) {
 			Triple<Place, Integer, Integer> place = new ImmutableTriple<Place, Integer, Integer>(p.getLeft(), timestep,

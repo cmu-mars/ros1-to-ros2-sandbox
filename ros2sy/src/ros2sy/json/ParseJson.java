@@ -238,62 +238,49 @@ public class ParseJson {
 		HashMap<String, HashSet<Method>> tagToMethods = new HashMap<>();
 		
 		try {
-			FileReader fr = new FileReader(tagFile);
-			JsonParser jp = new JsonParser();
-			try {
-				JsonElement je = jp.parse(fr);
-				
-				if (je.isJsonObject()) {
-					JsonObject jo = je.getAsJsonObject();
-					if (jo.has("sig_to_tags")) {
-						JsonObject sig_to_tags = jo.get("sig_to_tags").getAsJsonObject();
-						for (Method m : methods) {
-							if (sig_to_tags.has(m.name)) {
-								JsonElement methodTags = sig_to_tags.get(m.name);
-								if (methodTags.isJsonArray()) {
-									JsonArray tagsArray = methodTags.getAsJsonArray();
-									for (JsonElement arrayElmt : tagsArray) {
-										if (arrayElmt.isJsonPrimitive()) {
-											String str = arrayElmt.getAsString();
-											
-											m.addTag(str);
-											LOGGER.trace("{}: {}", m.name, str);
-//											System.out.println(m.name + ": " + str);
-										}
-									}
-								}
-							}
-						}
-					}
-					
-					if (jo.has("tag_to_sigs")) {
-						JsonObject tag_to_sigs = jo.get("tag_to_sigs").getAsJsonObject();
-						for (String key : tag_to_sigs.keySet()) {
-							JsonArray namesArray = tag_to_sigs.get(key).getAsJsonArray();
-							tagToMethods.put(key, new HashSet<Method>());
-							HashSet<String> methodsNames = new HashSet<String>();
-							for (JsonElement elmt : namesArray) {
-								if (elmt.isJsonPrimitive()) {
-									methodsNames.add(elmt.getAsString());
-								}
-							}
-							if (methodsNames.size() > 0) {
-								LOGGER.trace("size of methodsNames: {}", Integer.toString(methodsNames.size()));
-								for (Method m : methods) {
-									if (methodsNames.contains(m.name)) {
-										tagToMethods.get(key).add(m);
-									}
-								}
+			JsonObject jo = getJsonObjectFromFile(tagFile);
+
+			if (jo.has("sig_to_tags")) {
+				JsonObject sig_to_tags = jo.get("sig_to_tags").getAsJsonObject();
+				for (Method m : methods) {
+					if (sig_to_tags.has(m.name) && sig_to_tags.get(m.name).isJsonArray()) {
+						JsonElement methodTags = sig_to_tags.get(m.name);
+						JsonArray tagsArray = methodTags.getAsJsonArray();
+						for (JsonElement arrayElmt : tagsArray) {	
+							if (arrayElmt.isJsonPrimitive()) {
+								String str = arrayElmt.getAsString();
+
+								m.addTag(str);
+								LOGGER.trace("{}: {}", m.name, str);
 							}
 						}
 					}
 				}
-				
-			} catch (JsonParseException e) {
-				LOGGER.warn("Caught json parse exception: {} -- {}", e.toString(), e);
+			}
+
+			if (jo.has("tag_to_sigs")) {
+				JsonObject tag_to_sigs = jo.get("tag_to_sigs").getAsJsonObject();
+				for (String key : tag_to_sigs.keySet()) {
+					JsonArray namesArray = tag_to_sigs.get(key).getAsJsonArray();
+					tagToMethods.put(key, new HashSet<Method>());
+					HashSet<String> methodsNames = new HashSet<String>();
+					for (JsonElement elmt : namesArray) {
+						if (elmt.isJsonPrimitive()) {
+							methodsNames.add(elmt.getAsString());
+						}
+					}
+					if (methodsNames.size() > 0) {
+						LOGGER.trace("size of methodsNames: {}", Integer.toString(methodsNames.size()));
+						for (Method m : methods) {
+							if (methodsNames.contains(m.name)) {
+								tagToMethods.get(key).add(m);
+							}
+						}
+					}
+				}
 			}
 		} catch (Exception e) {
-			LOGGER.warn("Caught some exception: {} -- {}", e.toString(), e);
+			LOGGER.warn("Caught exception: {} -- {}", e.toString(), e);
 		}
 		
 		return tagToMethods;

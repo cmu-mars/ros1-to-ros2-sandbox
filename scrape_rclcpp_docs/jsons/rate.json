@@ -1,0 +1,119 @@
+{
+    "rclcpp::GenericRate<Clock>::GenericRate": [
+        {
+            "args": [
+                "double"
+            ],
+            "return": "rclcpp::GenericRate<Clock",
+            "template": [
+                {
+                    "name": "class Clock",
+                    "value": "std::chrono::high_resolution_clock"
+                }
+            ],
+            "include": "rclcpp/rate.hpp",
+            "ref": [
+                "http://docs.ros2.org/latest/api/rclcpp/classrclcpp_1_1GenericRate.html#aff738ca0ffbd04d34f663d90724af1e3",
+                "http://docs.ros2.org/latest/api/rclcpp/classrclcpp_1_1GenericRate.html",
+                "http://docs.ros2.org/latest/api/rclcpp/classrclcpp_1_1Clock.html"
+            ],
+            "func_type": "constructor"
+        },
+        {
+            "args": [
+                "std::chrono::nanoseconds"
+            ],
+            "return": "rclcpp::GenericRate<Clock",
+            "template": [
+                {
+                    "name": "class Clock",
+                    "value": "std::chrono::high_resolution_clock"
+                }
+            ],
+            "include": "rclcpp/rate.hpp",
+            "ref": [
+                "http://docs.ros2.org/latest/api/rclcpp/classrclcpp_1_1GenericRate.html#aef242e542d5f799b998d85425aa5c36f",
+                "http://en.cppreference.com/w/cpp/chrono/duration.html",
+                "http://docs.ros2.org/latest/api/rclcpp/classrclcpp_1_1GenericRate.html",
+                "http://docs.ros2.org/latest/api/rclcpp/classrclcpp_1_1Clock.html"
+            ],
+            "func_type": "constructor"
+        }
+    ],
+    "rclcpp::GenericRate<Clock>::sleep": {
+        "args": [
+            "void"
+        ],
+        "return": "virtual bool rclcpp::GenericRate<Clock",
+        "template": [
+            {
+                "name": "class Clock",
+                "value": "std::chrono::high_resolution_clock"
+            }
+        ],
+        "include": "rclcpp/rate.hpp",
+        "ref": [
+            "http://docs.ros2.org/latest/api/rclcpp/classrclcpp_1_1GenericRate.html#a24810c63ec3fc0d5a9d873a654c56e9b",
+            "http://docs.ros2.org/latest/api/rclcpp/classrclcpp_1_1GenericRate.html",
+            "http://docs.ros2.org/latest/api/rclcpp/classrclcpp_1_1Clock.html",
+            "http://docs.ros2.org/latest/api/rclcpp/classrclcpp_1_1RateBase.html#ad6444622103be41488eb58bf12bf45a9"
+        ]
+    },
+    "rclcpp::GenericRate<Clock>::is_steady": {
+        "args": [
+            "void"
+        ],
+        "return": "virtual bool rclcpp::GenericRate<Clock",
+        "template": [
+            {
+                "name": "class Clock",
+                "value": "std::chrono::high_resolution_clock"
+            }
+        ],
+        "include": "rclcpp/rate.hpp",
+        "ref": [
+            "http://docs.ros2.org/latest/api/rclcpp/classrclcpp_1_1GenericRate.html#a4440aac47b8b09fbd0f3c7b002591634",
+            "http://docs.ros2.org/latest/api/rclcpp/classrclcpp_1_1GenericRate.html",
+            "http://docs.ros2.org/latest/api/rclcpp/classrclcpp_1_1Clock.html",
+            "http://docs.ros2.org/latest/api/rclcpp/classrclcpp_1_1RateBase.html#aa8975f51922655656808a3624490a477"
+        ]
+    },
+    "rclcpp::GenericRate<Clock>::reset": {
+        "args": [
+            "void"
+        ],
+        "return": "virtual void rclcpp::GenericRate<Clock",
+        "template": [
+            {
+                "name": "class Clock",
+                "value": "std::chrono::high_resolution_clock"
+            }
+        ],
+        "include": "rclcpp/rate.hpp",
+        "ref": [
+            "http://docs.ros2.org/latest/api/rclcpp/classrclcpp_1_1GenericRate.html#af865b167266c1c36ad45aa5f4fd363b2",
+            "http://docs.ros2.org/latest/api/rclcpp/classrclcpp_1_1GenericRate.html",
+            "http://docs.ros2.org/latest/api/rclcpp/classrclcpp_1_1Clock.html",
+            "http://docs.ros2.org/latest/api/rclcpp/classrclcpp_1_1RateBase.html#a3fbd56efff72fb3c5728e6d764b0494a"
+        ]
+    },
+    "rclcpp::GenericRate<Clock>::period": {
+        "args": [
+            "void"
+        ],
+        "return": "std::chrono::nanoseconds rclcpp::GenericRate<Clock",
+        "template": [
+            {
+                "name": "class Clock",
+                "value": "std::chrono::high_resolution_clock"
+            }
+        ],
+        "include": "rclcpp/rate.hpp",
+        "ref": [
+            "http://docs.ros2.org/latest/api/rclcpp/classrclcpp_1_1GenericRate.html#a51a6d5e21037f9d966cb235761b624bd",
+            "http://en.cppreference.com/w/cpp/chrono/duration.html",
+            "http://docs.ros2.org/latest/api/rclcpp/classrclcpp_1_1GenericRate.html",
+            "http://docs.ros2.org/latest/api/rclcpp/classrclcpp_1_1Clock.html"
+        ]
+    }
+}

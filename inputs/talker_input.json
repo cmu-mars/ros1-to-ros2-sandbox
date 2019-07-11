@@ -6,19 +6,34 @@
         ],
         [
             "const std::string&",
+            "std_msgs::String",
             "const std::string&",
             "int"
         ],
         [
+            "int"
+        ],
+        [
+            "int"
+        ],
+        [
+            "std::shared_ptr<PublisherT>"
+        ],
+        [
             "std::shared_ptr<rclcpp::Node>",
-            "std::shared_ptr<SubscriptionT>"
+            "std::shared_ptr<PublisherT>"
+        ],
+        [
         ]
     ],
     "input_var_to_type": {
         "argc": "int",
         "argv": "char **",
         "node_name": "std::string",
+        "advertise_template_type_input": "std_msgs::String",
         "topic_name": "std::string",
         "queue_size": "int",
+        "pause_duration": "int",
+        "loop_rate_duration": "int"
     }
 }

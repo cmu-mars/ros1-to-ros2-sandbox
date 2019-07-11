@@ -129,7 +129,7 @@ public class Synthesis {
 		LOGGER.info("Beginning synthesis of ROS2 code.");
 //		System.setProperty("log4j.configurationFile", "ros2sy/src/resources/log4j2.xml");
 		LOGGER.info("Getting methods");
-		ArrayList<Method> methods = ParseJson.getAllMethods("node", "publisher", "rclcpp", "subscription");
+		ArrayList<Method> methods = ParseJson.getAllMethods("node", "publisher", "rclcpp", "subscription", "rate", "message", "duration");
 		
 		ArrayList<String> dontClone = new ArrayList<>();
 		dontClone.add("void");
@@ -142,24 +142,53 @@ public class Synthesis {
 		
 		SearchSpace search = new SearchSpace(methods, "scrape_rclcpp_docs/tags.json", mtpn);
 		
+		// Block 0
 		search.addBlock("initialization");
+		
+		// Block 1
 		search.addBlock("node", "constructor");
-		search.addToLastBlock("subscription", "constructor");
+//		search.addToLastBlock("subscription", "constructor");		
+		search.addToLastBlock("publisher", "constructor");
+		
+		// Block 2
+		// search.addBlock("spin");
+		// talker only from now on:
+		search.addBlock("duration");
+		search.addToLastBlock("sleep");
+		
+		// Block 3
+		search.addBlock("rate");
+		
+		
+		// Block 4
+		
+		search.addBlock("message", "constructor");
+		search.addToLastBlock("message", "data");
+		search.addToLastBlock("message", "data");
+		search.addToLastBlock("publish");
+		
+		// Block 5
 		search.addBlock("spin");
+
+		// Block 6
+		search.addBlock("rate", "sleep");
 		
 		ArrayList<String> neverUse = search.getNameIntersect("shutdown");
 		
 		InputVariables ivs = new InputVariables();
 		
-		HashMap<String, String> varsToTypes = ParseJson.getInputVariableToType("inputs/listener_input.json");
+//		HashMap<String, String> varsToTypes = ParseJson.getInputVariableToType("inputs/listener_input.json");
+		HashMap<String, String> varsToTypes = ParseJson.getInputVariableToType("inputs/talker_input.json");
 		
 		for (Map.Entry<String, String> e : varsToTypes.entrySet()) {
 			ivs.addInput(e.getKey(), e.getValue());
 		}
 		
-		ArrayList<ArrayList<String>> inputs = ParseJson.getInputTypesFromFile("inputs/listener_input.json");
+//		ArrayList<ArrayList<String>> inputs = ParseJson.getInputTypesFromFile("inputs/listener_input.json");
+		ArrayList<ArrayList<String>> inputs = ParseJson.getInputTypesFromFile("inputs/talker_input.json");
 		
-		ArrayList<ArrayList<String>> correctAnswers = ParseJson.getCorrectAnswersFromFile("inputs/correct-answers.json");
+		// ArrayList<ArrayList<String>> correctAnswers = ParseJson.getCorrectAnswersFromFile("inputs/correct-answers.json");
+		ArrayList<ArrayList<String>> correctAnswers = ParseJson.getCorrectAnswersFromFile("inputs/correct-answers-talker.json");
 		
 		ArrayList<String> correctSequence = new ArrayList<String>();
 		LOGGER.info("Beginning synthesis loop");

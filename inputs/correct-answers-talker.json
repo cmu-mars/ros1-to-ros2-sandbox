@@ -1,0 +1,32 @@
+{
+    "answers": [
+        [
+            "rclcpp::init"
+        ],
+        [
+            "rclcpp::Node::make_shared",
+            "rclcpp::Node::create_publisher"
+        ],
+        [
+            "std::chrono::seconds",
+            "rclcpp::sleep_for"
+        ],
+        [
+            "rclcpp::GenericRate<Clock>"
+        ],
+        [
+            "std_msgs::msgs::String::make_shared",
+            "std_msgs::msgs::String::data",
+            "std_msgs::msgs::String::data",
+            "rclcpp::Publisher::publish"
+        ],
+        [
+            "rclcpp::spin_some2"
+        ],
+        [
+            "rclcpp::GenericRate<Clock>::sleep"
+        ]
+    ]
+}
+
+        

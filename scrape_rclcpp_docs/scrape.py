@@ -385,7 +385,8 @@ urlDict = {
   "node": "http://docs.ros2.org/latest/api/rclcpp/classrclcpp_1_1Node.html",
   "publisher": "http://docs.ros2.org/latest/api/rclcpp/classrclcpp_1_1Publisher.html",
   "subscription": "http://docs.ros2.org/latest/api/rclcpp/classrclcpp_1_1Subscription.html",
-  "rclcpp": "http://docs.ros2.org/latest/api/rclcpp/namespacerclcpp.html"
+  "rclcpp": "http://docs.ros2.org/latest/api/rclcpp/namespacerclcpp.html",
+  "rate": "http://docs.ros2.org/latest/api/rclcpp/classrclcpp_1_1GenericRate.html"
 }
 
 mydir = "jsons"
@@ -394,6 +395,10 @@ if (not os.path.isdir(mydir)):
   os.mkdir(mydir)
 
 sigs = {}
+
+def hasExtras(name):
+  return name in ["node"]
+
 
 for name,url in urlDict.items():
   signatures = getSignatures(url)
@@ -414,8 +419,8 @@ for name,url in urlDict.items():
         if "include" in funcsig:
           funcsig["include"] = "rclcpp/" + funcsig["include"]
 
-  if name == "node":
-    with open("node_extras.json", "r") as f:
+  if hasExtras(name):
+    with open("{}_extras.json".format(name), "r") as f:
       extra = json.load(f)
       for key in extra:
         if key not in signatures:
@@ -446,6 +451,14 @@ def isRelatedTo(funcName, sig, someKey):
     return True
   return sig["return"].find(someKey) > -1
 
+fileJsons = ["message", "duration"]
+
+for js in fileJsons:
+  with open("jsons/{}.json".format(js), "r") as f:
+    jsonOnly = json.load(f)
+    sigs[js] = jsonOnly
+    print(jsonOnly)
+
 
 def addKeyToTags(tags, category, name):
   if category not in tags:
@@ -455,6 +468,15 @@ def addKeyToTags(tags, category, name):
 
 def stringContains(theString, containedSubstring):
   return theString.find(containedSubstring) > -1
+
+def inNamespace(functionName, namespace):
+  return (len(functionName) > len(namespace)) and (functionName.find(namespace) > -1)
+
+def getBaseFunctionName(functionName):
+  if functionName.find(":") > -1:
+    startIndex = functionName.rfind(":") + 1
+    return functionName[startIndex:]
+  return "SORRY"
 
 tags = {
   "tag_to_sigs": {},
@@ -470,30 +492,59 @@ otherSubTag = "subscri"
 pubTag = "publisher"
 spinTag = "spin"
 shutTag = "shutdown"
+sleepTag = "sleep"
+okTag = "ok"
+publishTag = "publish"
+messageTag = "messages"
+dataTag = "data"
+
+def getContainsPredicate(string):
+  return lambda fName, mSig: stringContains(fName, string)
+
+def getRelatedToPredicate(tag):
+  return lambda fName, mSig: isRelatedTo(fName, mSig, tag)
 
 predicateTags = {}
 
 predicateTags[conTag] = [
-  lambda fName, mSig: isRelatedTo(fName, mSig, otherConTag),
+  getRelatedToPredicate(otherConTag), #lambda fName, mSig: isRelatedTo(fName, mSig, otherConTag),
   lambda fName, mSig: isConstructorMethod(mSig)
 ]
 predicateTags[initTag] = [
   lambda fName, mSig: stringContains(fName, "init") and not stringContains(fName, "is_initialized")
 ]
 predicateTags[subTag] = [
-  lambda fName, mSig: isRelatedTo(fName, mSig, subTag),
-  lambda fName, mSig: isRelatedTo(fName, mSig, otherSubTag),
+  getRelatedToPredicate(subTag),
+  getRelatedToPredicate(otherSubTag)
+  #lambda fName, mSig: isRelatedTo(fName, mSig, subTag),
+  #lambda fName, mSig: isRelatedTo(fName, mSig, otherSubTag),
 ]
 predicateTags[pubTag] = [
-  lambda fName, mSig: isRelatedTo(fName, mSig, pubTag)
+  getRelatedToPredicate(pubTag)
+  #lambda fName, mSig: isRelatedTo(fName, mSig, pubTag)
 ]
 predicateTags[spinTag] = [
-  lambda fName, mSig: stringContains(fName, spinTag)
+  getContainsPredicate(spinTag)
+  #lambda fName, mSig: stringContains(fName, spinTag)
 ]
 predicateTags[shutTag] = [
   lambda fName, mSig: stringContains(fName, shutTag) and not stringContains(fName, "on_" + shutTag)
 ]
-
+predicateTags[sleepTag] = [
+  lambda fName, mSig: stringContains(fName, sleepTag)
+]
+predicateTags[okTag] = [
+  lambda fName, mSig: stringContains(fName, okTag) and stringContains(fName, "::" + okTag)
+]
+predicateTags[publishTag] = [
+  lambda fName, mSig: inNamespace(fName, "rclcpp::Publisher") and stringContains(getBaseFunctionName(fName), publishTag)
+]
+predicateTags[messageTag] = [
+  lambda fName, mSig: inNamespace(fName, "std_msgs::msgs")
+]
+predicateTags[dataTag] = [
+  lambda fName, mSig: inNamespace(fName, "std_msgs::msgs") and stringContains(fName, dataTag)
+]
 
 
 for tagName,signatures in sigs.items():

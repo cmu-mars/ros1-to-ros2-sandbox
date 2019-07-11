@@ -1,0 +1,12 @@
+{
+    "std::chrono::seconds": {
+        "args": [
+            "int"
+        ],
+        "func_type": "constructor",
+        "object_constructor": "true",
+        "return": "",
+        "include": "<chrono>",
+        "ref": []
+    }
+}

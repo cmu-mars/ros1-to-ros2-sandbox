@@ -73,7 +73,10 @@
             "rclcpp::create_publisher",
             "rclcpp::create_service",
             "rclcpp::create_subscription",
-            "rclcpp::create_subscription_factory"
+            "rclcpp::create_subscription_factory",
+            "rclcpp::GenericRate<Clock>::GenericRate",
+            "std_msgs::msgs::String::make_shared",
+            "std::chrono::seconds"
         ],
         "publisher": [
             "rclcpp::Node::create_publisher",
@@ -98,6 +101,9 @@
             "rclcpp::Subscription<CallbackMessageT, Alloc>::get_intra_process_subscription_handle",
             "rclcpp::create_subscription",
             "rclcpp::create_subscription_factory"
+        ],
+        "publish": [
+            "rclcpp::Publisher<MessageT, Alloc>::publish"
         ],
         "rclcpp": [
             "rclcpp::get_contexts",
@@ -144,8 +150,36 @@
             "rclcpp::init",
             "rclcpp::init_and_remove_ros_arguments"
         ],
+        "ok": [
+            "rclcpp::ok"
+        ],
         "shutdown": [
             "rclcpp::shutdown"
+        ],
+        "sleep": [
+            "rclcpp::sleep_for",
+            "rclcpp::GenericRate<Clock>::sleep"
+        ],
+        "rate": [
+            "rclcpp::GenericRate<Clock>::GenericRate",
+            "rclcpp::GenericRate<Clock>::sleep",
+            "rclcpp::GenericRate<Clock>::is_steady",
+            "rclcpp::GenericRate<Clock>::reset",
+            "rclcpp::GenericRate<Clock>::period"
+        ],
+        "message": [
+            "std_msgs::msgs::String::make_shared",
+            "std_msgs::msgs::String::data"
+        ],
+        "messages": [
+            "std_msgs::msgs::String::make_shared",
+            "std_msgs::msgs::String::data"
+        ],
+        "data": [
+            "std_msgs::msgs::String::data"
+        ],
+        "duration": [
+            "std::chrono::seconds"
         ]
     },
     "sig_to_tags": {
@@ -334,7 +368,8 @@
             "publisher"
         ],
         "rclcpp::Publisher<MessageT, Alloc>::publish": [
-            "publisher"
+            "publisher",
+            "publish"
         ],
         "rclcpp::Publisher<MessageT, Alloc>::get_allocator": [
             "publisher"
@@ -454,7 +489,8 @@
             "rclcpp"
         ],
         "rclcpp::ok": [
-            "rclcpp"
+            "rclcpp",
+            "ok"
         ],
         "rclcpp::is_initialized": [
             "rclcpp"
@@ -467,7 +503,8 @@
             "rclcpp"
         ],
         "rclcpp::sleep_for": [
-            "rclcpp"
+            "rclcpp",
+            "sleep"
         ],
         "rclcpp::add_will_overflow": [
             "rclcpp"
@@ -483,6 +520,37 @@
         ],
         "rclcpp::get_c_string": [
             "rclcpp"
+        ],
+        "rclcpp::GenericRate<Clock>::GenericRate": [
+            "rate",
+            "constructor"
+        ],
+        "rclcpp::GenericRate<Clock>::sleep": [
+            "rate",
+            "sleep"
+        ],
+        "rclcpp::GenericRate<Clock>::is_steady": [
+            "rate"
+        ],
+        "rclcpp::GenericRate<Clock>::reset": [
+            "rate"
+        ],
+        "rclcpp::GenericRate<Clock>::period": [
+            "rate"
+        ],
+        "std_msgs::msgs::String::make_shared": [
+            "message",
+            "constructor",
+            "messages"
+        ],
+        "std_msgs::msgs::String::data": [
+            "message",
+            "messages",
+            "data"
+        ],
+        "std::chrono::seconds": [
+            "duration",
+            "constructor"
         ]
     }
 }

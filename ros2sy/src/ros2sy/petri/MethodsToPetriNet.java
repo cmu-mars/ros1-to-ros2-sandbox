@@ -505,7 +505,7 @@ public class MethodsToPetriNet {
 			// Creates a flow with default weight 1
 			pn.createFlow(p, t);
 		} catch (FlowExistsException e) {
-			LOGGER.warn("Caught exception in MethodsToPetriNet.addFlowToPetri:", e);
+			LOGGER.warn("Flow already existed, but will increase weight of flow:", e);
 //			LOGGER.info(e);
 			
 			try {

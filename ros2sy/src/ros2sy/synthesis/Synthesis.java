@@ -41,7 +41,12 @@ public class Synthesis {
 
 		List<Result> unsorted_result = new ArrayList<>();
 		ArrayList<ArrayList<String>> sorted_result = new ArrayList<ArrayList<String>>();
-
+		
+		// Multiplicative identity
+//		int numMinCostSolutions = 1;
+		int min = 10000;
+		int count = 0;
+		int totalCount = 0;
 		while (loc <= max_loc) {
 			// create a formula that has the same semantics as the petri-net
 			Encoding encoding = new SequentialEncoding(net, loc);
@@ -57,6 +62,7 @@ public class Synthesis {
 			
 			// reachability analysis
 			List<Variable> result = Encoding.solver.findPath(loc);
+			
 			while (!result.isEmpty()) {
 				LOGGER.trace("============================");
 				ArrayList<String> api_result = new ArrayList<>();
@@ -64,13 +70,24 @@ public class Synthesis {
 					api_result.add(s.getName());
 				  	LOGGER.trace(s.getName());
 				}
-			  LOGGER.trace("Cost = {}", Encoding.solver.getCost());
-				Result r = new Result(api_result, Encoding.solver.getCost());
+				int cost = Encoding.solver.getCost();
+				if (cost < min) {
+					min = cost;
+					count = 0;
+				}
+				if (min == cost) {
+					count++;
+				}
+				totalCount++;
+			  LOGGER.trace("Cost = {}", cost);
+				Result r = new Result(api_result, cost);
 				unsorted_result.add(r);
 				result = Encoding.solver.findPath(loc);
 			}
+			
 			loc++;
 		}
+		LOGGER.info("Min cost: {}, fraction of solutions with min cost: {}/{}", min, count, totalCount);
 
 		Collections.sort(unsorted_result, new ResultComp());
 
@@ -109,14 +126,18 @@ public class Synthesis {
 	}
 	
 	public static void main(String[] args) throws Exception {
-		System.setProperty("log4j.configurationFile", "ros2sy/src/resources/log4j2.xml");
-
+		LOGGER.info("Beginning synthesis of ROS2 code.");
+//		System.setProperty("log4j.configurationFile", "ros2sy/src/resources/log4j2.xml");
+		LOGGER.info("Getting methods");
 		ArrayList<Method> methods = ParseJson.getAllMethods("node", "publisher", "rclcpp", "subscription");
 		
 		ArrayList<String> dontClone = new ArrayList<>();
 		dontClone.add("void");
 		
+		LOGGER.info("Creating petri net from methods");
 		MethodsToPetriNet mtpn = new MethodsToPetriNet(methods, dontClone);
+		
+		LOGGER.info("Outputting petri net as a DOT file");
 		MethodsToPetriNet.createDotFile(mtpn.getNet(), "dot/full_search.dot");
 		
 		SearchSpace search = new SearchSpace(methods, "scrape_rclcpp_docs/tags.json", mtpn);
@@ -141,8 +162,9 @@ public class Synthesis {
 		ArrayList<ArrayList<String>> correctAnswers = ParseJson.getCorrectAnswersFromFile("inputs/correct-answers.json");
 		
 		ArrayList<String> correctSequence = new ArrayList<String>();
-		
+		LOGGER.info("Beginning synthesis loop");
 		for (int i = 0; i < search.numBlocks(); i++) {
+			LOGGER.info("Synthesizing code for block #{}", i + 1);
 			List<List<String>> k = search.getBlock(i);
 
 			ArrayList<String> dontUse = search.othersExcept(i, neverUse);
@@ -171,6 +193,7 @@ public class Synthesis {
 			Synthesis.checkAllSolutions(i, strss, correctAnswers);
 		}
 		
+		LOGGER.info("Filling holes in generated code");
 		SketchFiller filler = new SketchFiller(mtpn, correctSequence);
 		
 		filler.fillSketches("ex1/sketches/listener.sketch", ivs);

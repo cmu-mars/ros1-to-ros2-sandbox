@@ -212,17 +212,17 @@ public class CppCode {
 					for (String inputName : inputs.keySet()) {
 						Type inputType = inputs.get(inputName);
 						
-						LOGGER.info("{},{}", t.valueTypeName, inputType.valueTypeName);
-						LOGGER.info(t.arrayLevel);
-						LOGGER.info(inputType.arrayLevel);
-						LOGGER.info(t.pointerLevel);
-						LOGGER.info(inputType.pointerLevel);
+						LOGGER.trace("{},{}", t.valueTypeName, inputType.valueTypeName);
+						LOGGER.trace(t.arrayLevel);
+						LOGGER.trace(inputType.arrayLevel);
+						LOGGER.trace(t.pointerLevel);
+						LOGGER.trace(inputType.pointerLevel);
 						if (t.asParamsEqual(inputType)) {
-							LOGGER.info("The type " + t.toString() + " is equivalent to the type " + inputType.toString());
+							LOGGER.trace("The type " + t.toString() + " is equivalent to the type " + inputType.toString());
 							holeyCode = holeyCode.replaceFirst(holeTag, inputName);
 							break;
 						} else {
-							LOGGER.info("The type {} is NOT equivalent to the type {}", t.toString(), inputType.toString());
+							LOGGER.trace("The type {} is NOT equivalent to the type {}", t.toString(), inputType.toString());
 						}
 					}
 					

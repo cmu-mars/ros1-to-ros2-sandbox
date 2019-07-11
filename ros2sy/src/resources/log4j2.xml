@@ -6,9 +6,7 @@
   	</Properties>
   	<Appenders>
     	<Console name="STDOUT" target="SYSTEM_OUT">
-      		<PatternLayout pattern="%d{HH:mm:ss.SSS} %-5p [%t] (%F:%L) - %m%n">
-      			<RegexReplacement regex="\\.java" replacement="" />
-      		</PatternLayout>
+      		<PatternLayout pattern="%d{HH:mm:ss.SSS} %-5p [%t] (%F:%L) - %m%n"/>
     	</Console>
     	<RollingFile name="file1" fileName="${logDir}/${filename}"
     				 filePattern="${logDir}/%d{yyyy-MM-dd HH.mm.ss}.log">
@@ -22,6 +20,10 @@
   	<Loggers>
     	<Logger name="ros2sy" level="all" includeLocation="true">
     		<AppenderRef ref="STDOUT" level="debug"/>
+    		<AppenderRef ref="file1"/>
+    	</Logger>
+    	<Logger name="ros2sy.logic" level="all" includeLocation="true" additivity="folse">
+    		<AppenderRef ref="STDOUT" level="info"/>
     		<AppenderRef ref="file1"/>
     	</Logger>
     	<Root level="all">

@@ -44,7 +44,7 @@ public class SequentialEncoding implements Encoding {
 	
 	public void doesNotOccur(List<String> knowledge) {
 		
-		LOGGER.info("Knowledge: {}", knowledge);
+		LOGGER.trace("Knowledge: {}", knowledge);
 //		LOGGER.info(knowledge);
 		
 		for (String hint : knowledge) {
@@ -80,7 +80,7 @@ public class SequentialEncoding implements Encoding {
 		}
 
 		if (solver.loc_variables.size() < nb_new_vars) {
-			LOGGER.info("ERROR: not enough variables in the formula to include refactoring information!");
+			LOGGER.warn("ERROR: not enough variables in the formula to include refactoring information!");
 			return;
 		}
 

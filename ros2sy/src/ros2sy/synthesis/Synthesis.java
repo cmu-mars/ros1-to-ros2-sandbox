@@ -38,6 +38,7 @@ public class Synthesis {
 
 	public static ArrayList<ArrayList<String>> synthesizeAll(PetriNet net, List<String> inputs, int max_loc, List<List<String>> k, List<String> prevent) {
 		int loc = 1;
+		LOGGER.info("Received the following inputs: {}", inputs.toString());
 
 		List<Result> unsorted_result = new ArrayList<>();
 		ArrayList<ArrayList<String>> sorted_result = new ArrayList<ArrayList<String>>();
@@ -157,7 +158,7 @@ public class Synthesis {
 		search.addToLastBlock("sleep");
 		
 		// Block 3
-		search.addBlock("rate");
+		search.addBlock("rate", "constructor");
 		
 		
 		// Block 4
@@ -201,7 +202,7 @@ public class Synthesis {
 			LOGGER.debug("Block: {}", k);
 //			LOGGER.trace(dontUse);
 			
-			ArrayList<ArrayList<String>> strss = Synthesis.synthesizeAll(mtpn.getNet(), inputs.get(i), 3, k, dontUse);
+			ArrayList<ArrayList<String>> strss = Synthesis.synthesizeAll(mtpn.getNet(), inputs.get(i), 4, k, dontUse);
 			
 			
 			String blocksSubstring = k.toString().substring(0, Math.min(k.toString().length(), 54));

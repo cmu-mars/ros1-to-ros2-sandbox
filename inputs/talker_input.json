@@ -13,7 +13,7 @@
             "int"
         ],
         [
-            "int"
+            "std::chrono::nanoseconds"
         ],
         [
             "std::shared_ptr<PublisherT>"

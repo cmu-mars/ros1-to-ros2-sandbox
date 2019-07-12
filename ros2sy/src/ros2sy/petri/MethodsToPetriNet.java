@@ -326,6 +326,8 @@ public class MethodsToPetriNet {
 				if (m.isClassMethod) {
 					String instanceType = m.fromClass.toString();
 					
+					LOGGER.trace("Creating class method edge <{}> to <{}>", instanceType, t.getId());
+					
 					Place inst = MethodsToPetriNet.getPetriPlace(pn, instanceType);
 					pn.createFlow(inst, t);
 				}

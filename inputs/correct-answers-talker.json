@@ -12,7 +12,7 @@
             "rclcpp::sleep_for"
         ],
         [
-            "rclcpp::GenericRate<Clock>"
+            "rclcpp::GenericRate<Clock>::GenericRate"
         ],
         [
             "std_msgs::msgs::String::make_shared",

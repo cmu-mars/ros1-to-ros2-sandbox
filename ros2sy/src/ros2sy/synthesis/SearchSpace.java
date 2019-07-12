@@ -79,6 +79,17 @@ public class SearchSpace {
 			}
 		}
 		
+		for (int i = 0; i < this.numSetsPerBlock(exception); i++) {
+			for (int j = 0; j < this.searchBlocks.get(exception).get(i).size(); j++) {
+				int index = others.indexOf(this.searchBlocks.get(exception).get(i).get(j));
+				while (index > -1) {
+					others.remove(index);
+					
+					index = others.indexOf(this.searchBlocks.get(exception).get(i).get(j));
+				}
+			}
+		}
+		
 		return others;
 	}
 	

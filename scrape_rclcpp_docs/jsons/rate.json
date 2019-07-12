@@ -4,7 +4,8 @@
             "args": [
                 "double"
             ],
-            "return": "rclcpp::GenericRate<Clock",
+            "return": "rclcpp::GenericRate<Clock>",
+            "func_type": "constructor",
             "template": [
                 {
                     "name": "class Clock",
@@ -16,14 +17,14 @@
                 "http://docs.ros2.org/latest/api/rclcpp/classrclcpp_1_1GenericRate.html#aff738ca0ffbd04d34f663d90724af1e3",
                 "http://docs.ros2.org/latest/api/rclcpp/classrclcpp_1_1GenericRate.html",
                 "http://docs.ros2.org/latest/api/rclcpp/classrclcpp_1_1Clock.html"
-            ],
-            "func_type": "constructor"
+            ]
         },
         {
             "args": [
                 "std::chrono::nanoseconds"
             ],
-            "return": "rclcpp::GenericRate<Clock",
+            "return": "",
+            "func_type": "constructor",
             "template": [
                 {
                     "name": "class Clock",
@@ -36,15 +37,14 @@
                 "http://en.cppreference.com/w/cpp/chrono/duration.html",
                 "http://docs.ros2.org/latest/api/rclcpp/classrclcpp_1_1GenericRate.html",
                 "http://docs.ros2.org/latest/api/rclcpp/classrclcpp_1_1Clock.html"
-            ],
-            "func_type": "constructor"
+            ]
         }
     ],
     "rclcpp::GenericRate<Clock>::sleep": {
         "args": [
             "void"
         ],
-        "return": "virtual bool rclcpp::GenericRate<Clock",
+        "return": "virtual bool",
         "template": [
             {
                 "name": "class Clock",
@@ -63,7 +63,7 @@
         "args": [
             "void"
         ],
-        "return": "virtual bool rclcpp::GenericRate<Clock",
+        "return": "virtual bool",
         "template": [
             {
                 "name": "class Clock",
@@ -82,7 +82,7 @@
         "args": [
             "void"
         ],
-        "return": "virtual void rclcpp::GenericRate<Clock",
+        "return": "virtual void",
         "template": [
             {
                 "name": "class Clock",
@@ -101,7 +101,7 @@
         "args": [
             "void"
         ],
-        "return": "std::chrono::nanoseconds rclcpp::GenericRate<Clock",
+        "return": "std::chrono::nanoseconds",
         "template": [
             {
                 "name": "class Clock",

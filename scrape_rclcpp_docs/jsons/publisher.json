@@ -7,7 +7,7 @@
             "const PublisherEventCallbacks &",
             "const std::shared_ptr<MessageAlloc> &"
         ],
-        "return": "rclcpp::Publisher<MessageT, Alloc",
+        "return": "rclcpp::Publisher<MessageT,",
         "template": [
             {
                 "name": "MessageT"
@@ -34,7 +34,7 @@
         "args": [
             "size_t"
         ],
-        "return": "mapped_ring_buffer::MappedRingBufferBase::SharedPtr rclcpp::Publisher<MessageT, Alloc",
+        "return": "mapped_ring_buffer::MappedRingBufferBase::SharedPtr rclcpp::Publisher<MessageT,",
         "template": [
             {
                 "name": "MessageT"
@@ -56,7 +56,7 @@
             "args": [
                 "std::unique_ptr<MessageT, MessageDeleter>"
             ],
-            "return": "virtual void rclcpp::Publisher<MessageT, Alloc",
+            "return": "virtual void rclcpp::Publisher<MessageT,",
             "template": [
                 {
                     "name": "MessageT"
@@ -78,7 +78,7 @@
             "args": [
                 "const std::shared_ptr<const MessageT> &"
             ],
-            "return": "virtual void rclcpp::Publisher<MessageT, Alloc",
+            "return": "virtual void rclcpp::Publisher<MessageT,",
             "template": [
                 {
                     "name": "MessageT"
@@ -99,7 +99,7 @@
             "args": [
                 "const MessageT &"
             ],
-            "return": "virtual void rclcpp::Publisher<MessageT, Alloc",
+            "return": "virtual void rclcpp::Publisher<MessageT,",
             "template": [
                 {
                     "name": "MessageT"
@@ -119,7 +119,7 @@
             "args": [
                 "const MessageT *"
             ],
-            "return": "virtual void rclcpp::Publisher<MessageT, Alloc",
+            "return": "virtual void rclcpp::Publisher<MessageT,",
             "template": [
                 {
                     "name": "MessageT"
@@ -139,7 +139,7 @@
             "args": [
                 "const rcl_serialized_message_t &"
             ],
-            "return": "void rclcpp::Publisher<MessageT, Alloc",
+            "return": "void rclcpp::Publisher<MessageT,",
             "template": [
                 {
                     "name": "MessageT"
@@ -160,7 +160,7 @@
             "args": [
                 "const rcl_serialized_message_t *"
             ],
-            "return": "void rclcpp::Publisher<MessageT, Alloc",
+            "return": "void rclcpp::Publisher<MessageT,",
             "template": [
                 {
                     "name": "MessageT"
@@ -181,7 +181,7 @@
             "args": [
                 "std::shared_ptr<const rcl_serialized_message_t>"
             ],
-            "return": "void rclcpp::Publisher<MessageT, Alloc",
+            "return": "void rclcpp::Publisher<MessageT,",
             "template": [
                 {
                     "name": "MessageT"
@@ -204,7 +204,7 @@
         "args": [
             "void"
         ],
-        "return": "std::shared_ptr<MessageAlloc> rclcpp::Publisher<MessageT, Alloc",
+        "return": "std::shared_ptr<MessageAlloc> rclcpp::Publisher<MessageT,",
         "template": [
             {
                 "name": "MessageT"

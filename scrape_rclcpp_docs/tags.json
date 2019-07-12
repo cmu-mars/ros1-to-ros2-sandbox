@@ -76,8 +76,8 @@
             "rclcpp::create_subscription_factory",
             "rclcpp::GenericRate<Clock>::GenericRate",
             "std_msgs::msgs::String::make_shared",
-            "std::chrono::seconds",
-            "std::chrono::nanoseconds"
+            "std::chrono::seconds::seconds",
+            "std::chrono::nanoseconds::nanoseconds"
         ],
         "publisher": [
             "rclcpp::Node::create_publisher",
@@ -180,8 +180,8 @@
             "std_msgs::msgs::String::data"
         ],
         "duration": [
-            "std::chrono::seconds",
-            "std::chrono::nanoseconds"
+            "std::chrono::seconds::seconds",
+            "std::chrono::nanoseconds::nanoseconds"
         ]
     },
     "sig_to_tags": {
@@ -550,11 +550,11 @@
             "messages",
             "data"
         ],
-        "std::chrono::seconds": [
+        "std::chrono::seconds::seconds": [
             "duration",
             "constructor"
         ],
-        "std::chrono::nanoseconds": [
+        "std::chrono::nanoseconds::nanoseconds": [
             "duration",
             "constructor"
         ]

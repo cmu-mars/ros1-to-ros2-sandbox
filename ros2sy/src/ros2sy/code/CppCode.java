@@ -126,11 +126,16 @@ public class CppCode {
 				isPointerFieldAccess = true;
 			} else {
 				int numHolesOffset = 0;
-				if (!m.returnType.getPlainType().equals("void")) {
+				if (!m.returnType.getPlainType().equals("void") && !m.returnType.toString().equals("")) {
 					String id = this.getFreshId();
 					this.results.put(id, m.returnType);
 					in.addNewResult(id, m.returnType, i);
 					code += m.returnType.toString() + " " + id + " = ";
+				} else if (m.isConstructor) {
+					String id = this.getFreshId();
+					this.results.put(id,  m.fromClass);
+					in.addNewResult(id, m.fromClass, i);
+					code += m.fromClass.toString() + " " + id + " = ";
 				}
 				if (m.isClassMethod) {
 					code += "#" + Integer.toString(holes);
@@ -144,7 +149,7 @@ public class CppCode {
 					holes++;
 					numHolesOffset = 1;
 				}
-				code += m.name + "(";
+				code += m.getPrintingName() + "(";
 				int numArgHoles = this.numHolesPerApi.get(i) - numHolesOffset;
 				for (int j = 0; j < numArgHoles; j++) {
 					code += "#" + Integer.toString(holes);

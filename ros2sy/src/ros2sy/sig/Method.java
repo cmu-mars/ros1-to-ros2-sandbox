@@ -5,6 +5,9 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import ros2sy.exception.ArgParseException;
 import ros2sy.petri.MethodsToPetriNet;
 
@@ -15,6 +18,7 @@ import ros2sy.petri.MethodsToPetriNet;
  *
  */
 public class Method {
+	private static final Logger LOGGER = LogManager.getLogger(Method.class.getName());
 	public boolean isConstructor;
 	public String name;
 	public ArrayList<Arg> args;
@@ -28,7 +32,7 @@ public class Method {
 	public ArrayList<String> include = new ArrayList<>();
 	
 	private static String [] rclcpp_classes = {
-		"Node", "Publisher", "Subscriber", "Rate"
+		"Node", "Publisher", "Subscriber", "Rate", "GenericRate<Clock>"
 	};
 	
 	/**
@@ -55,6 +59,7 @@ public class Method {
 		this.methodType = Method.determineMethodType(name);
 		this.isClassMethod = this.methodType == MethodType.CLASS_METHOD;
 		
+		
 		if (this.isClassMethod) {
 			int lowest = this.name.length();
 			int lowestIndex = -1;
@@ -65,8 +70,11 @@ public class Method {
 					lowestIndex = i;
 				}
 			}
+			LOGGER.trace("The method <{}> has lowest index ({})", name, lowestIndex);
 			if (lowestIndex != -1) {
 				this.fromClass = new Type("rclcpp::" + Method.rclcpp_classes[lowestIndex]);
+			} else {
+				this.fromClass = new Type(this.name.substring(0, this.name.lastIndexOf("::")));
 			}
 		}
 	}
@@ -89,9 +97,14 @@ public class Method {
 		this.returnType = new Type(returnType);
 		
 		if (type.equals("constructor")) {
+			LOGGER.trace("The method <{}> is a constructor type", name);
 			this.methodType = MethodType.CONSTRUCTOR;
 		} else if (type.equals("macro")) {
+			LOGGER.trace("The method <{}> is a macro type", name);
 			this.methodType = MethodType.MACRO;
+		} else if (type.equals("member_access")) {
+			LOGGER.trace("The method <{}> is a member access type", name);
+			this.methodType = MethodType.MEMBER_ACCESS;
 		} else {
 			this.methodType = Method.determineMethodType(name);
 		}
@@ -99,7 +112,7 @@ public class Method {
 		this.isClassMethod = this.methodType == MethodType.CLASS_METHOD;
 		this.isConstructor = this.methodType == MethodType.CONSTRUCTOR;
 		
-		if (this.isClassMethod) {
+		if (this.isClassMethod || this.isConstructor) {
 			int lowest = this.name.length();
 			int lowestIndex = -1;
 			for (int i = 0; i < Method.rclcpp_classes.length; i++) {
@@ -113,6 +126,21 @@ public class Method {
 				this.fromClass = new Type("rclcpp::" + Method.rclcpp_classes[lowestIndex]);
 			}
 		}
+	}
+	
+	public String getBaseName() {
+		int lastIndex = this.name.lastIndexOf("::");
+		if (lastIndex > -1) {
+			return this.name.substring(lastIndex + 2);
+		}
+		return this.name;
+	}
+	
+	public String getPrintingName() {
+		if (this.isClassMethod) {
+			return this.getBaseName();
+		}
+		return this.name;
 	}
 	
 	public void addInclude(String includeString) {
@@ -271,11 +299,17 @@ public class Method {
 	private static MethodType determineMethodType(String name) {
 		if (name.startsWith("rclcpp")) {
 			if (Method.stringContains(name, rclcpp_classes)) {
+				LOGGER.trace("Method with name <{}> is a class method", name);
 				return MethodType.CLASS_METHOD;
 			} else {
+				LOGGER.trace("Method with name <{}> is an RCLCPP function", name);
 				return MethodType.RCLCPP_FUNCTION;
 			}
+		} else if (name.startsWith("std::")) {
+			LOGGER.trace("The method with name <{}> is a class method.", name);
+			return MethodType.CLASS_METHOD;
 		}
+		LOGGER.trace("The method with name <{}> in just a default method type.", name);
 		return MethodType.DEFAULT_METHOD_TYPE;
 	}
 	

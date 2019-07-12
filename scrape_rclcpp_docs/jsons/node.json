@@ -766,7 +766,7 @@
         "args": [
             "void"
         ],
-        "return": "std::map<std::string, std::vector<std::string>>",
+        "return": "std::map<std::string,std::vector<std::string>>",
         "include": "rclcpp/node.hpp",
         "ref": [
             "http://docs.ros2.org/latest/api/rclcpp/classrclcpp_1_1Node.html#ab64ee81d61071100f222b819eab3e311",
@@ -779,7 +779,7 @@
         "args": [
             "void"
         ],
-        "return": "std::map<std::string, std::vector<std::string>>",
+        "return": "std::map<std::string,std::vector<std::string>>",
         "include": "rclcpp/node.hpp",
         "ref": [
             "http://docs.ros2.org/latest/api/rclcpp/classrclcpp_1_1Node.html#a0d400bbd606a936a556b747f519eab38",

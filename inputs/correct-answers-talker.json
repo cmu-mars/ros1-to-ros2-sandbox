@@ -16,7 +16,9 @@
         ],
         [
             "std_msgs::msgs::String::make_shared",
-            "std_msgs::msgs::String::data",
+            "std_msgs::msgs::String::data"
+        ],
+        [
             "std_msgs::msgs::String::data",
             "rclcpp::Publisher::publish"
         ],

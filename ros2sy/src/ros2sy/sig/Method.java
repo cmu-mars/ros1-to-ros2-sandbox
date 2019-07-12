@@ -128,6 +128,39 @@ public class Method {
 		}
 	}
 	
+	public String apply(String ...givenArgs) {
+		String functionString = "";
+		
+		int minArgs = this.numInstancesRequired() + this.numRequiredArgs();
+		int maxArgs = this.numInstancesRequired() + this.numRequiredArgs() + this.numOptionalArgs();
+		
+		if (givenArgs.length < minArgs) {
+			LOGGER.warn("COULD NOT APPLY TO METHOD {}: too few arguments given, need at least {} but was given {}", Integer.toString(this.numInstancesRequired() + this.numRequiredArgs()), Integer.toString(givenArgs.length));
+		} else if (givenArgs.length > maxArgs) {
+			LOGGER.warn("COULD NOT APPLY TO METHOD {}: too many arguments given, need at most {} but was given {}", Integer.toString(maxArgs), Integer.toString(givenArgs.length));
+		} else {
+			if (this.numInstancesRequired() > 0) {
+				functionString = givenArgs[0] + "." + this.getBaseName() + "(";
+			} else {
+				functionString = this.name + "(";
+			}
+			
+			for (int i = this.numInstancesRequired(); i < givenArgs.length; i++) {
+				functionString = functionString + givenArgs[i];
+				if (i < givenArgs.length - 1) {
+					functionString = functionString + ", ";
+				}
+			}
+			functionString = functionString + ")";
+		}
+		
+		return functionString;
+	}
+	
+	public int numInstancesRequired() {
+		return (this.isClassMethod) ? 1 : 0;
+	}
+	
 	public String getBaseName() {
 		int lastIndex = this.name.lastIndexOf("::");
 		if (lastIndex > -1) {

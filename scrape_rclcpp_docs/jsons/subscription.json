@@ -9,7 +9,8 @@
             "const SubscriptionEventCallbacks &",
             "typename message_memory_strategy::MessageMemoryStrategy<CallbackMessageT, Alloc>::SharedPtr (=message_memory_strategy::MessageMemoryStrategy<CallbackMessageT,\u00a0Alloc>::create_default())"
         ],
-        "return": "rclcpp::Subscription<CallbackMessageT,",
+        "return": "",
+        "func_type": "constructor",
         "template": [
             {
                 "name": "CallbackMessageT"
@@ -32,14 +33,13 @@
             "http://docs.ros2.org/latest/api/rclcpp/classrclcpp_1_1message__memory__strategy_1_1MessageMemoryStrategy.html",
             "http://docs.ros2.org/latest/api/rclcpp/classrclcpp_1_1Node.html#a6dbcf674cc0fe7ec611a44f08b6720fe",
             "http://docs.ros2.org/latest/api/rclcpp/namespacerclcpp_1_1memory__strategy.html"
-        ],
-        "func_type": "constructor"
+        ]
     },
     "rclcpp::Subscription<CallbackMessageT, Alloc>::set_message_memory_strategy": {
         "args": [
             "typename message_memory_strategy::MessageMemoryStrategy<CallbackMessageT, Alloc>::SharedPtr"
         ],
-        "return": "void rclcpp::Subscription<CallbackMessageT,",
+        "return": "void",
         "template": [
             {
                 "name": "CallbackMessageT"
@@ -61,7 +61,7 @@
         "args": [
             "void"
         ],
-        "return": "std::shared_ptr<void> rclcpp::Subscription<CallbackMessageT,",
+        "return": "std::shared_ptr<void>",
         "template": [
             {
                 "name": "CallbackMessageT"
@@ -83,7 +83,7 @@
         "args": [
             "void"
         ],
-        "return": "std::shared_ptr<rcl_serialized_message_t> rclcpp::Subscription<CallbackMessageT,",
+        "return": "std::shared_ptr<rcl_serialized_message_t>",
         "template": [
             {
                 "name": "CallbackMessageT"
@@ -107,7 +107,7 @@
             "std::shared_ptr<void> &",
             "const rmw_message_info_t &"
         ],
-        "return": "void rclcpp::Subscription<CallbackMessageT,",
+        "return": "void",
         "template": [
             {
                 "name": "CallbackMessageT"
@@ -130,7 +130,7 @@
         "args": [
             "std::shared_ptr<void> &"
         ],
-        "return": "void rclcpp::Subscription<CallbackMessageT,",
+        "return": "void",
         "template": [
             {
                 "name": "CallbackMessageT"
@@ -152,7 +152,7 @@
         "args": [
             "std::shared_ptr<rcl_serialized_message_t> &"
         ],
-        "return": "void rclcpp::Subscription<CallbackMessageT,",
+        "return": "void",
         "template": [
             {
                 "name": "CallbackMessageT"
@@ -176,7 +176,7 @@
             "rcl_interfaces::msg::IntraProcessMessage &",
             "const rmw_message_info_t &"
         ],
-        "return": "void rclcpp::Subscription<CallbackMessageT,",
+        "return": "void",
         "template": [
             {
                 "name": "CallbackMessageT"
@@ -198,7 +198,7 @@
         "args": [
             "void"
         ],
-        "return": "const std::shared_ptr<rcl_subscription_t> rclcpp::Subscription<CallbackMessageT,",
+        "return": "const std::shared_ptr<rcl_subscription_t>",
         "template": [
             {
                 "name": "CallbackMessageT"

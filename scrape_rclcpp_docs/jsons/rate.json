@@ -4,7 +4,7 @@
             "args": [
                 "double"
             ],
-            "return": "rclcpp::GenericRate<Clock>",
+            "return": "",
             "func_type": "constructor",
             "template": [
                 {

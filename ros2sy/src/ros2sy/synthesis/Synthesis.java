@@ -160,18 +160,18 @@ public class Synthesis {
 		// Block 3
 		search.addBlock("rate", "constructor");
 		
-		
 		// Block 4
-		
 		search.addBlock("message", "constructor");
 		search.addToLastBlock("message", "data");
-		search.addToLastBlock("message", "data");
-		search.addToLastBlock("publish");
 		
 		// Block 5
+		search.addBlock("message", "data");
+		search.addToLastBlock("publish");
+		
+		// Block 6
 		search.addBlock("spin");
 
-		// Block 6
+		// Block 7
 		search.addBlock("rate", "sleep");
 		
 		ArrayList<String> neverUse = search.getNameIntersect("shutdown");

@@ -16,6 +16,10 @@
             "std::chrono::nanoseconds"
         ],
         [
+
+        ],
+        [
+            "std::shared_ptr<std_msgs::msgs::String>",
             "std::shared_ptr<PublisherT>"
         ],
         [

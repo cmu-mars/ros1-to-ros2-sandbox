@@ -263,7 +263,7 @@ def extractSignature(div, func_name, func_permalink, url, base_url, include, nam
   returnType = ""
   nameAndRetType = div.find("td", class_="memname")
   if nameAndRetType is not None:
-    txt = removeSpacesBeforeAngleBrackets(nameAndRetType.getText().strip())
+    txt = re.sub(r", ", r",", removeSpacesBeforeAngleBrackets(nameAndRetType.getText().strip()))
     #print("<{}>".format(txt))
     lastSpace = txt.rfind(" ")
     if lastSpace > -1:

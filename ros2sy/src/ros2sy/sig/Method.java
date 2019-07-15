@@ -30,9 +30,11 @@ public class Method {
 	public String ros1Name = "";
 	public HashSet<String> tags = new HashSet<String>();
 	public ArrayList<String> include = new ArrayList<>();
+	public ArrayList<TemplateParameter> tparams = new ArrayList<>();
+	public boolean hasTemplateParamaters = false;
 	
 	private static String [] rclcpp_classes = {
-		"Node", "Publisher", "Subscriber", "Rate", "GenericRate<Clock>"
+		"Node", "Publisher<MessageT, Alloc>", "Subscription<CallbackMessageT, Alloc>", "Rate", "GenericRate<Clock>"
 	};
 	
 	/**
@@ -128,11 +130,33 @@ public class Method {
 		}
 	}
 	
+	public void addTemplateParameter(String name) {
+		if (!this.hasTemplateParamaters) {
+			this.hasTemplateParamaters = true;
+		}
+		if (name.equals("MessageT")) {
+			this.tparams.add(new MessageT(name));
+		} else {
+			this.tparams.add(new TemplateParameter(name));
+		}
+	}
+	
+	public void addTemplateParameter(String name, String value) {
+		if (!this.hasTemplateParamaters) {
+			this.hasTemplateParamaters = true;
+		}
+		if (name.equals("MessageT")) {
+			this.tparams.add(new MessageT(name, value));
+		} else {
+			this.tparams.add(new TemplateParameter(name, value));
+		}
+	}
+	
 	public String apply(String ...givenArgs) {
 		String functionString = "";
 		
-		int minArgs = this.numInstancesRequired() + this.numRequiredArgs();
-		int maxArgs = this.numInstancesRequired() + this.numRequiredArgs() + this.numOptionalArgs();
+		int minArgs = this.numTemplateParametersRequired() + this.numInstancesRequired() + this.numRequiredArgs();
+		int maxArgs = this.tparams.size() + this.numInstancesRequired() + this.numRequiredArgs() + this.numOptionalArgs();
 		
 		if (givenArgs.length < minArgs) {
 			LOGGER.warn("COULD NOT APPLY TO METHOD {}: too few arguments given, need at least {} but was given {}", Integer.toString(this.numInstancesRequired() + this.numRequiredArgs()), Integer.toString(givenArgs.length));
@@ -155,6 +179,19 @@ public class Method {
 		}
 		
 		return functionString;
+	}
+	
+	public int numTemplateParametersRequired() {
+		if (!this.hasTemplateParamaters) {
+			return 0;
+		}
+		int count = 0;
+		for (int i = 0; i < this.tparams.size(); i++) {
+			if (!tparams.get(i).hasDefault) {
+				count++;
+			}
+		}
+		return count;
 	}
 	
 	public int numInstancesRequired() {

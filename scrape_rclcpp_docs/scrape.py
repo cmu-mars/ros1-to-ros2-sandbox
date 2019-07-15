@@ -227,15 +227,24 @@ def extractSignature(div, func_name, func_permalink, url, base_url, include, nam
     #print("")
     #print("template: " + txt)
     #print("")
-    splits = txt.split(", typename")
+    splits = txt.split(",")
+    #splits = txt.split(", typename")
     #print(splits)
 
+    splits = [split.strip() for split in splits]
+
     typename = "typename"
+    klass = "class"
     equals = "="
     for i in range(len(splits)):
       string = splits[i].strip()
-      if string.find(typename) > -1:
+      if string.startswith(typename):
+        print("old string: {}".format(string))
         string = string[len(typename):].strip()
+        print("new string: {}".format(string))
+      if string.startswith(klass):
+        print("old string: {}".format(string))
+        string = string[len(klass):].strip()
         print("new string: {}".format(string))
       if string.find(equals):
         stringSplits = string.split(equals)
@@ -399,6 +408,35 @@ sigs = {}
 def hasExtras(name):
   return name in ["node"]
 
+def hasMakeShared(name):
+  return name in ["node", "publisher", "subscription"]
+
+def replaceAllInDictionary(find, replace, dic):
+  if isinstance(dic, dict):
+    for key in dic:
+      newKey = re.sub(find, replace, key)
+      dic[key] = replaceAllInDictionary(find, replace, dic.pop(key))
+    return dic
+  elif isinstance(dic, str):
+    return re.sub(find, replace, dic)
+  elif isinstance(dic, list):
+    for i in range(len(dic)):
+      dic[i] = replaceAllInDictionary(find, replace, dic[i])
+    return dic
+  else:
+    print("WARNING: DID NOT GET A DICTIONARY, STRING, or ARRAY: {}".format(dic))
+
+classNames = {
+  "node": "Node",
+  "publisher": "Publisher<MessageT, Alloc>",
+  "subscription": "Subscription<CallbackMessageT, Alloc>"
+}
+
+classConstructor = {
+  "node": "rclcpp::Node::Node",
+  "publisher": "rclcpp::Publisher<MessageT, Alloc>::Publisher",
+  "subscription": "rclcpp::Subscription<CallbackMessageT, Alloc>::Subscription"
+}
 
 for name,url in urlDict.items():
   signatures = getSignatures(url)
@@ -419,6 +457,13 @@ for name,url in urlDict.items():
         if "include" in funcsig:
           funcsig["include"] = "rclcpp/" + funcsig["include"]
 
+  """if hasMakeShared(name):
+    with open("make-shared.json", "r") as f:
+      makeShrd = replaceAllInDictionary(r"#CLASS#", classNames[name], json.load(f))
+      for key in makeShrd:
+        if key not in signatures:
+          signatures[key] = makeShrd[key]"""
+      
   if hasExtras(name):
     with open("{}_extras.json".format(name), "r") as f:
       extra = json.load(f)

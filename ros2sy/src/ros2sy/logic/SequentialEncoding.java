@@ -344,10 +344,14 @@ public class SequentialEncoding implements Encoding {
 		assert (pnet != null);
 
 		for (Place p : pnet.getPlaces()) {
+			if (p.getMaxToken() == 0) {
+				LOGGER.warn("The place with id <{}> has a max token of 0", p.getId());
+			}
 			for (int t = 0; t <= loc; t++) {
 				for (int v = 0; v <= p.getMaxToken(); v++) {
 					// create a variable with <place in the petri-net, timestamp, value>
 					Triple<Place, Integer, Integer> triple = new ImmutableTriple<Place, Integer, Integer>(p, t, v);
+					LOGGER.trace("Adding triple ({}, {}, {})", p.getId(), t, v);
 					Variable var = new Variable(nbVariables, p.getId(), Type.PLACE, t, v);
 					place2variable.put(triple, var);
 					// solver.id2variable.put(nbVariables, var);
@@ -407,9 +411,25 @@ public class SequentialEncoding implements Encoding {
 		for (Pair<Place, Integer> p : state) {
 			Triple<Place, Integer, Integer> place = new ImmutableTriple<Place, Integer, Integer>(p.getLeft(), timestep,
 					p.getRight());
-			int v = place2variable.get(place).getId();
-			solver.setTrue(v);
-			visited.add(p.getLeft());
+			try {
+				int v = place2variable.get(place).getId();				
+				solver.setTrue(v);
+				visited.add(p.getLeft());
+			} catch (NullPointerException e) {
+				LOGGER.debug("A NullPointerException {}: {}", state, timestep);
+				
+				try {
+					place2variable.get(place);
+					
+					try {
+						place2variable.get(place).getId();
+					} catch (NullPointerException e2) {
+						LOGGER.debug("The NullPointerException was because of getting the id: {}, the place: {}", place2variable.get(place), place);
+					}
+				} catch (NullPointerException e1) {
+					LOGGER.debug("The null pointer exception was because of place: {}", place);
+				}
+			}
 		}
 	}
 

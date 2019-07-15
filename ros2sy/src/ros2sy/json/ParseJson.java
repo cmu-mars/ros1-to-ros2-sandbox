@@ -376,6 +376,27 @@ public class ParseJson {
 						}
 					}
 				}
+				if (jo.has("template")) {
+					JsonArray jarray = jo.get("template").getAsJsonArray();
+					
+					for (JsonElement elm : jarray) {
+						if (elm.isJsonObject()) {
+							JsonObject temp = elm.getAsJsonObject();
+							
+							if (temp.has("name")) {
+								String name = temp.get("name").getAsString();
+								if (temp.has("value")) {
+									String val = temp.get("value").getAsString();
+									
+									methods.get(index).addTemplateParameter(name, val);
+								} else {
+									methods.get(index).addTemplateParameter(name);
+								}
+							}
+						}
+					}
+				}
+				
 			} else {
 				Set<String> keys = jo.keySet();
 				

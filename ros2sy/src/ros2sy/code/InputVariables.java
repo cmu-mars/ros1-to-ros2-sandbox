@@ -28,7 +28,7 @@ public class InputVariables {
 		
 		for (String inputName : inputs.keySet()) {
 			Type tipe = inputs.get(inputName);
-			String t = tipe.getPlainType();
+			String t = tipe.getPlainName();
 			if (!plainTypeToType.containsKey(t)) {
 				plainTypeToType.put(t, tipe);
 			}
@@ -49,11 +49,11 @@ public class InputVariables {
 	
 	public void addInput(String name, String typeName) {
 		Type t = new Type(typeName);
-		if (hasTypeForPlain(t.getPlainType())) {
-			String plain = t.getPlainType();
+		if (hasTypeForPlain(t.getPlainName())) {
+			String plain = t.getPlainName();
 			t = typeForString(plain);
 		} else {
-			plainTypeToType.put(t.getPlainType(), t);
+			plainTypeToType.put(t.getPlainName(), t);
 		}
 		this.addInput(name,  t);
 	}
@@ -77,7 +77,7 @@ public class InputVariables {
 	}
 	
 	private void updateTypeCounts(Type t) {
-		this.updateTypeCounts(t.getPlainType());
+		this.updateTypeCounts(t.getPlainName());
 	}
 	
 	private void updateTypeCounts(String typeString) {
@@ -147,7 +147,7 @@ public class InputVariables {
 						} else if (paramType.isSharedPointer && (paramType.valueTypeName.equals(t.valueTypeName))) {
 							names.add(pair.getLeft());
 						} else {
-							LOGGER.info("The type " + paramType.toString() + " and " + t.toString() + " are not equivalent as parameters.");
+							LOGGER.trace("The type " + paramType.toString() + " and " + t.toString() + " are not equivalent as parameters.");
 						}
 					}
 				}

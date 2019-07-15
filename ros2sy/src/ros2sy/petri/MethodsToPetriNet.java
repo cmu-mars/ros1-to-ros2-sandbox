@@ -70,9 +70,8 @@ public class MethodsToPetriNet {
 		// the methods themselves.
 		this.net = MethodsToPetriNet.convert(this, this.methods);
 		
-		Set<Place> places = this.net.getPlaces();
-		Place[] placeArray = new Place [places.size()];
-		places.toArray(placeArray);
+		Place[] placeArray = new Place [this.net.getPlaces().size()];
+		this.net.getPlaces().toArray(placeArray);
 		
 		this.addParamEquivalences();
 		
@@ -80,8 +79,33 @@ public class MethodsToPetriNet {
 		for (int i = 0; i < placeArray.length; i++) {
 			if (!this.isOptional(placeArray[i]) && !this.silly.contains(placeArray[i].getId())) {
 				MethodsToPetriNet.addClone(net, placeArray[i]);
+				
+				String plain = Type.getPlainName(placeArray[i].getId());
+				
+				if (!plain.equals(placeArray[i].getId())) {
+					if (!net.containsPlace(plain)) {
+						net.createPlace(plain);
+						LOGGER.debug("The petri net did not contain the place {}, vs {}", plain, placeArray[i].getId());
+						MethodsToPetriNet.addTransition(net, plain, placeArray[i].getId());
+					} else if (!net.containsTransition(plain + "_to_" + placeArray[i].getId())) {
+						
+						LOGGER.debug("The petri net did not contain the transition {}_to_{}", plain, placeArray[i].getId());
+						MethodsToPetriNet.addTransition(net, plain, placeArray[i].getId());
+					}
+				}
+				
+				if (!plain.matches("std::shared_ptr.*")) {
+					String shared = "std::shared_ptr<" + plain + ">";
+					if (!shared.equals(placeArray[i].getId())) {						
+						if (!net.containsPlace(shared) || !net.containsTransition(shared + "_to_" + placeArray[i].getId())) {
+							if (!net.containsPlace(shared)) net.createPlace(shared);
+							MethodsToPetriNet.addTransition(net, shared, placeArray[i].getId());
+						}
+					}
+				}
 			}
 		}
+		
 		
 		if (net.containsPlace("size_t") && net.containsPlace("int")) {
 			Place size_t = net.getPlace("size_t");
@@ -101,6 +125,8 @@ public class MethodsToPetriNet {
 			MethodsToPetriNet.addTransition(net, "std::shared_ptr<rclcpp::Node>", "rclcpp::Node::SharedPtr");
 		}
 		
+		Set<Place> places = this.net.getPlaces();
+		
 		for (Place p : places) {
 			int max = 0;
 			for (Flow f : p.getPostsetEdges()) {
@@ -108,6 +134,7 @@ public class MethodsToPetriNet {
 					max = f.getWeight();
 				}
 			}
+			LOGGER.trace("Setting max token of {} to {}", p.getId(), max + 1);
 			p.setMaxToken(max + 1);
 		}
 	}

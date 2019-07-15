@@ -126,7 +126,7 @@ public class CppCode {
 				isPointerFieldAccess = true;
 			} else {
 				int numHolesOffset = 0;
-				if (!m.returnType.getPlainType().equals("void") && !m.returnType.toString().equals("")) {
+				if (!m.returnType.getPlainName().equals("void") && !m.returnType.toString().equals("")) {
 					String id = this.getFreshId();
 					this.results.put(id, m.returnType);
 					in.addNewResult(id, m.returnType, i);
@@ -196,7 +196,7 @@ public class CppCode {
 		ArrayList<Integer> holesLeft = new ArrayList<Integer>();
 		for (int i = 0; i < this.holeTypes.size(); i++) {
 			Type t = this.holeTypes.get(i);
-			String plain = t.getPlainType();
+			String plain = t.getPlainName();
 			String holeTag = "#" + Integer.toString(i);
 			
 			if (!in.hasTypeCountsForString(plain)) {
@@ -333,6 +333,23 @@ public class CppCode {
 		return lineNumber;
 	}
 	
+	/**
+	 * Recursively fill in the rest of the holes.
+	 * 
+	 * This function is something like a factorial or exponential in time as
+	 * a function of the number of remaining holes that need to be filled, so
+	 * only use this function with very small numbers of remaining holes.
+	 * 
+	 * @param holeyCode							the String representation of the code thus far,
+	 * 															which still has some hole tags to fill
+	 * @param in											the input variables object which helps to keep
+	 * 															track of available results
+	 * @param remainingHoleIndices		a list of all of the hole indices that need
+	 * 															filling
+	 * @return												a list of all of the possible code snippets
+	 * 															that can result from the inputs and code
+	 * 															given
+	 */
 	private ArrayList<String> fillRemainingHoles(String holeyCode, InputVariables in, ArrayList<Integer> remainingHoleIndices) {
 		ArrayList<String> possibleFills = new ArrayList<String>();
 		LOGGER.info(remainingHoleIndices.size());
@@ -342,14 +359,14 @@ public class CppCode {
 		}
 		
 		int first = remainingHoleIndices.get(0);
-		LOGGER.info(first);
+		LOGGER.trace("First hole index: {}", first);
 		
 		String holeTag = "#" + Integer.toString(first);
 		ArrayList<Integer> rest = new ArrayList<Integer>(remainingHoleIndices.subList(1, remainingHoleIndices.size()));
 		
-		String holeTypeName = this.holeTypes.get(first).getPlainType();
-		LOGGER.info(holeTypeName);
-		LOGGER.info(in.hasNamesForString(holeTypeName));
+		String holeTypeName = this.holeTypes.get(first).getPlainName();
+		LOGGER.trace("The name of the #{}'s type: {}", first, holeTypeName);
+		LOGGER.trace("Do we have any results of type <{}>: {}", holeTypeName, in.hasNamesForString(holeTypeName));
 		if (in.hasNamesForString(holeTypeName)) {
 			for (String varName : in.getNamesForString(holeTypeName)) {
 				possibleFills.addAll(fillRemainingHoles(holeyCode.replaceFirst(holeTag, varName), in, rest));
@@ -375,7 +392,7 @@ public class CppCode {
 	 * @param t	the type of a hole
 	 */
 	private void updateHoleTypeCounts(Type t) {
-		String tipe = t.getPlainType();
+		String tipe = t.getPlainName();
 		if (!typeCounts.containsKey(tipe)) {
 			typeCounts.put(tipe,  0);
 		}

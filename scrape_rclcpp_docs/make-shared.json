@@ -1,0 +1,11 @@
+{
+    "rclcpp::#CLASS#::make_shared": {
+        "args": [],
+        "return": "std::shared_ptr<#CLASS#>",
+        "func_type": "constructor",
+        "ref": [
+            "https://en.cppreference.com/w/cpp/memory/shared_ptr/make_shared",
+            "https://en.cppreference.com/w/cpp/memory/enable_shared_from_this"
+        ]
+    }
+}

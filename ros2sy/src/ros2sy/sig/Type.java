@@ -2,12 +2,16 @@ package ros2sy.sig;
 
 import java.util.ArrayList;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 /**
  * A class that represents a C++ type.
  * 
  * @author audrey
  */
 public class Type {
+	private static final Logger LOGGER = LogManager.getLogger(Type.class.getName());
 	private String typeName;
 	
 	public boolean isReference;
@@ -112,7 +116,10 @@ public class Type {
 //		}
 		
 		this.valueTypeName = this.typeName.replaceAll("\\s*(const|\\*)\\s*", "");
+		this.valueTypeName = this.valueTypeName.replaceAll("\\s?const\\s?", "");
 		this.valueTypeName = this.valueTypeName.trim();
+		
+		LOGGER.trace("Value type name vs type name: {} -- {}", this.valueTypeName, this.typeName);
 		
 		if (valueTypeName.matches("^std::shared_ptr<.+>$")) {
 //			LOGGER.info("This valueTypeName matches a shared pointer: <" + valueTypeName + ">, <" + this.typeName + ">");
@@ -147,8 +154,12 @@ public class Type {
 	 * 
 	 * @return		a String representing the "minimalist" form of a type.
 	 */
-	public String getPlainType() {
+	public String getPlainName() {
 		String plain = this.valueTypeName;
+		
+		if (this.isSharedPointer) {
+			plain = "std::shared_ptr<" + plain + ">";
+		}
 		if (this.isPointer) {
 			plain = plain + " ";
 		}
@@ -163,6 +174,14 @@ public class Type {
 			}
 		}
 		return plain;
+	}
+	
+	public static String getPlainName(String typeName) {
+		return (new Type(typeName)).getPlainName();
+	}
+	
+	public Type getPlainType() {
+		return new Type(this.getPlainName());
 	}
 	
 	/**

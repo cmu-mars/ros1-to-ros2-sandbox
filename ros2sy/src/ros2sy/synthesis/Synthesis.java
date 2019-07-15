@@ -163,10 +163,11 @@ public class Synthesis {
 		// Block 4
 		search.addBlock("message", "constructor");
 		search.addToLastBlock("message", "data");
+		search.addToLastBlock("message", "data");
 		
 		// Block 5
-		search.addBlock("message", "data");
-		search.addToLastBlock("publish");
+//		search.addBlock("message", "data");		
+		search.addBlock("publish");
 		
 		// Block 6
 		search.addBlock("spin");
@@ -206,8 +207,8 @@ public class Synthesis {
 			
 			
 			String blocksSubstring = k.toString().substring(0, Math.min(k.toString().length(), 54));
-			blocksSubstring = blocksSubstring + ((blocksSubstring.length() < k.toString().length()) ? "...]" : "") + ": ";
-			LOGGER.debug("Number of possibilities generated for block {}{}", blocksSubstring, strss.size());
+			blocksSubstring = blocksSubstring + ((blocksSubstring.length() < k.toString().length()) ? "...]" : "");
+			LOGGER.debug("Number of possibilities generated for block {}: {}", blocksSubstring, strss.size());
 			
 			if (strss.size() > 0) {
 				correctSequence.addAll(strss.get(0));

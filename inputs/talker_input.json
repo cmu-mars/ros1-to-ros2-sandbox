@@ -16,11 +16,11 @@
             "std::chrono::nanoseconds"
         ],
         [
-
+            "void"
         ],
         [
-            "std::shared_ptr<std_msgs::msgs::String>",
-            "std::shared_ptr<PublisherT>"
+            "std::shared_ptr<MessageT>",
+            "std::shared_ptr<rclcpp::Publisher<MessageT, Alloc>>"
         ],
         [
             "std::shared_ptr<rclcpp::Node>",

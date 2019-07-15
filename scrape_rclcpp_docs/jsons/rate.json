@@ -8,7 +8,7 @@
             "func_type": "constructor",
             "template": [
                 {
-                    "name": "class Clock",
+                    "name": "Clock",
                     "value": "std::chrono::high_resolution_clock"
                 }
             ],
@@ -27,7 +27,7 @@
             "func_type": "constructor",
             "template": [
                 {
-                    "name": "class Clock",
+                    "name": "Clock",
                     "value": "std::chrono::high_resolution_clock"
                 }
             ],
@@ -47,7 +47,7 @@
         "return": "virtual bool",
         "template": [
             {
-                "name": "class Clock",
+                "name": "Clock",
                 "value": "std::chrono::high_resolution_clock"
             }
         ],
@@ -66,7 +66,7 @@
         "return": "virtual bool",
         "template": [
             {
-                "name": "class Clock",
+                "name": "Clock",
                 "value": "std::chrono::high_resolution_clock"
             }
         ],
@@ -85,7 +85,7 @@
         "return": "virtual void",
         "template": [
             {
-                "name": "class Clock",
+                "name": "Clock",
                 "value": "std::chrono::high_resolution_clock"
             }
         ],
@@ -104,7 +104,7 @@
         "return": "std::chrono::nanoseconds",
         "template": [
             {
-                "name": "class Clock",
+                "name": "Clock",
                 "value": "std::chrono::high_resolution_clock"
             }
         ],

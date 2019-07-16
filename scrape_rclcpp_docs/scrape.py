@@ -127,6 +127,17 @@ def getNamespace(soup):
       print("namespace: " + namespace)
   return namespace
 
+def isClass(soup):
+  divs = soup("div", class_="title")
+  print("len of divs: {}".format(len(divs)))
+
+  if len(divs) == 1:
+    mydiv = divs[0]
+    print("text: " + mydiv.getText().strip())
+    txt = mydiv.getText().strip()
+    return txt.find("Class") > -1
+  return False
+
 def getFunctionsTable(soup):
   tables = soup("table")
   print(len(tables))
@@ -195,16 +206,7 @@ def getNextSiblingsOfHeader(hdr):
   return sibs
 
 def getImmediateSiblingsOfHeaders(headers):
-  headersSiblings = [getNextSiblingsOfHeader(hdr) for hdr in headers]
-  #for i in range(len(headers)):
-  #  hdr = headers[i]
-  #  sibs = headersSiblings[i]
-  #  for j in range(i, len(headers)):
-  #    if i != j:
-  #      for k in range(len(sibs)-1, 0, -1):
-  #        if sibs[k] in headersSiblings[j]:
-  #          sibs.pop(k)
-  return headersSiblings
+  return [getNextSiblingsOfHeader(hdr) for hdr in headers]
 
 def getUniqueElmts(elmtList):
   newList = []
@@ -213,6 +215,47 @@ def getUniqueElmts(elmtList):
       newList.append(elmt)
   return newList
 
+def extractTemplate(templateString):
+  txt = templateString
+  template = []
+  begin = len("template<")
+  end = len(txt) - 1
+  txt = txt[begin:end]
+  #print("")
+  #print("template: " + txt)
+  #print("")
+  splits = txt.split(",")
+  #splits = txt.split(", typename")
+  #print(splits)
+
+  splits = [split.strip() for split in splits]
+  
+  typename = "typename"
+  klass = "class"
+  equals = "="
+  for i in range(len(splits)):
+    string = splits[i].strip()
+    if string.startswith(typename):
+      print("old string: {}".format(string))
+      string = string[len(typename):].strip()
+      print("new string: {}".format(string))
+    if string.startswith(klass):
+      print("old string: {}".format(string))
+      string = string[len(klass):].strip()
+      print("new string: {}".format(string))
+    if string.find(equals) > -1:
+      stringSplits = string.split(equals)
+      if len(stringSplits) == 2:
+        template.append({
+          "name": stringSplits[0].strip(),
+          "value": stringSplits[1].strip()
+        })
+    else:
+      template.append({
+        "name": string
+      })
+  return template
+
 def extractSignature(div, func_name, func_permalink, url, base_url, include, namespace):
   divTemplate = div.find("div", class_="memtemplate")
   template = []
@@ -220,7 +263,8 @@ def extractSignature(div, func_name, func_permalink, url, base_url, include, nam
     #print(divTemplate)
 
     txt = divTemplate.getText().strip()
-    # take off `template<` and ending `>` strings:
+    template = extractTemplate(txt)
+    """# take off `template<` and ending `>` strings:
     begin = len("template<")
     end = len(txt) - 1
     txt = txt[begin:end]
@@ -256,7 +300,7 @@ def extractSignature(div, func_name, func_permalink, url, base_url, include, nam
         else:
           template.append({
             "name": string
-          })
+          })"""
     #print(template)
     #print("")
   sigTable = div.find("table", class_="memname")
@@ -323,7 +367,104 @@ def isNotDeconstructor(header2):
   return not header2.contents[1].strip().startswith("~")
 
 #def getSignaturesForFunction(functionHeader, 
+
+def addNamespace(tipe, namespace, originalTypedefs):
+  def quantify(name):
+    print("Name: {}, name in original typedefs: {}".format(name, name in originalTypedefs))
+    name = re.sub(r"typename|class", r"", name).strip()
+    if name.find("::") > -1:
+      firstName = name[:name.find("::")]
+      if firstName in originalTypedefs:
+        return namespace + "::" + name
+    if name in originalTypedefs:
+      return namespace + "::" + name
+    elif name.find("Alloc") > -1:
+      return name
+    elif (not name.endswith("T")) and name.find("allocator::") == -1 and name.find("std::") == -1 and name.find("rclcpp::") == -1 and name.lower() != name:
+      return "rclcpp::" + name
+    elif name.find("allocator::") > -1:
+      return "rclcpp::" + name
+    return name
+  def cleanParams(string, a, b):
+    params = string[a + 1:b].split(",")
+    return list(map(lambda x: re.sub(r"typename|class", r"", addNamespace(x.strip(), namespace, originalTypedefs)).strip(), params))
+    
   
+  firstAngle = tipe.find("<")
+  lastAngle = tipe.rfind(">")
+  if firstAngle != -1 and lastAngle != -1:
+    origType = re.sub(r"typename|class", r"", tipe[:firstAngle]).strip()
+    params = tipe[firstAngle + 1:lastAngle].split(",")
+    last = tipe[lastAngle + 1:] if lastAngle + 1 < len(tipe) else ""
+    params = list(map(lambda x: re.sub(r"typename|class", r"", addNamespace(x.strip(), namespace, originalTypedefs)), params))
+    origType = quantify(origType)
+    """if origType.find("std::") == -1 and origType.find("rclcpp::") == -1
+      origType = namespace + "::" + origType"""
+    return origType + "<" + ", ".join(params) + ">" + last
+  elif tipe.find("(") != -1 and tipe.rfind(")") != -1:
+    firstParen = tipe.find("(")
+    lastParen = tipe.rfind(")")
+    origType = quantify(re.sub(r"typename|class", r"", tipe[:firstParen]).strip())
+    params = cleanParams(tipe, firstParen, lastParen)
+    last = tipe[lastParen + 1:] if lastAngle + 1 < len(tipe) else ""
+    return origType + "(" + ", ".join(params) + ")" + last
+  #tipe = quantify(tipe)
+  """if tipe.find("std::") == -1:
+    tipe = namespace + "::" + tipe"""
+  return quantify(tipe)
+
+def getTypedefs(url):
+  typedefs = {}
+  soup = getSoup(url)
+  include = getIncludeString(soup)
+  namespace = getNamespace(soup)
+  groups = getGroupHeaders(soup)
+  wanted = soup("a", attrs={"name": ["typedef-members", "pub-types"]})
+  template = []
+  tipesProvided = []
+
+  def startsWithTemplate(htmlElmt):
+    return htmlElmt.getText().strip().startswith("template") if not isinstance(htmlElmt, bs4.NavigableString) else htmlElmt.strip().startswith("template")
+  
+  h3s = soup("h3")
+  for h3 in h3s:
+    if startsWithTemplate(h3):
+      for child in h3.children:
+        if startsWithTemplate(child):
+          template = extractTemplate(child)
+          break
+      break
+  
+  
+  if isClass(soup):
+    tipesProvided.append(namespace)
+    
+  print("Wanted:", wanted)
+  if (len(wanted) == 1):
+    fakeTypedefs = {}
+    header = wanted[0]
+    table = header.find_parent("table", class_="memberdecls")
+
+    rows = [row.find("td", class_="memItemRight") for row in table("tr") if hasClassStartingWith(row, "memitem")]
+    
+    for tr in rows:
+      text = tr.getText()
+      print(text)
+      splits = [s.strip() for s in text.split("=")]
+      if len(splits) == 2:
+        print("Adding ({}, {}) to the typedefs".format(splits[0], splits[1]))
+        fakeTypedefs[splits[0]] = removeSpacesBeforeAngleBrackets(splits[1])
+        #typedefs[namespace + "::" + splits[0]] = addNamespace(removeSpacesBeforeAngleBrackets(splits[1]), namespace)
+      else:
+        print("Too many/few splits: {}", str(splits))
+
+    for tipe,definition in fakeTypedefs.items():
+      newKey = namespace + "::" + tipe
+      typedefs[newKey] = addNamespace(definition, namespace, fakeTypedefs)
+      tipesProvided.append(newKey)
+  return {include: {"defs": typedefs, "types": tipesProvided}} if len(template) == 0 else {include: {"defs": typedefs, "types": tipesProvided, "template": template}}
+  
+
 def getSignatures(url):
   base_url = url[:(-len(os.path.basename(url)))]
   signatures = {}
@@ -388,22 +529,23 @@ def getSignatures(url):
               divSibling = divSibling.find_next_sibling("div", class_="memitem")
   return signatures
 
+def addKeyToTags(tags, category, name):
+  if category not in tags:
+    tags[category] = []
+  if name not in tags[category]:
+    tags[category].append(name)
 
+def stringContains(theString, containedSubstring):
+  return theString.find(containedSubstring) > -1
 
-urlDict = {
-  "node": "http://docs.ros2.org/latest/api/rclcpp/classrclcpp_1_1Node.html",
-  "publisher": "http://docs.ros2.org/latest/api/rclcpp/classrclcpp_1_1Publisher.html",
-  "subscription": "http://docs.ros2.org/latest/api/rclcpp/classrclcpp_1_1Subscription.html",
-  "rclcpp": "http://docs.ros2.org/latest/api/rclcpp/namespacerclcpp.html",
-  "rate": "http://docs.ros2.org/latest/api/rclcpp/classrclcpp_1_1GenericRate.html"
-}
+def inNamespace(functionName, namespace):
+  return (len(functionName) > len(namespace)) and (functionName.find(namespace) > -1)
 
-mydir = "jsons"
-
-if (not os.path.isdir(mydir)):
-  os.mkdir(mydir)
-
-sigs = {}
+def getBaseFunctionName(functionName):
+  if functionName.find(":") > -1:
+    startIndex = functionName.rfind(":") + 1
+    return functionName[startIndex:]
+  return "SORRY"
 
 def hasExtras(name):
   return name in ["node"]
@@ -426,6 +568,52 @@ def replaceAllInDictionary(find, replace, dic):
   else:
     print("WARNING: DID NOT GET A DICTIONARY, STRING, or ARRAY: {}".format(dic))
 
+def isConstructorMethod(sig):
+  ftKey = "func_type"
+  conKey = "constructor"
+  if isinstance(sig, list):
+    for s in sig:
+      if ftKey not in s or s[ftKey] != "constructor":
+        return False
+    return True
+  else:
+    return ftKey in sig and sig[ftKey] == "constructor"
+
+def isRelatedTo(funcName, sig, someKey):
+  if funcName.lower().find(someKey) > -1:
+    return True
+  if isinstance(sig, list):
+    for s in sig:
+      if s["return"].find(someKey) == -1:
+        return False
+    return True
+  return sig["return"].find(someKey) > -1
+
+    
+urlDict = {
+  "node": "http://docs.ros2.org/latest/api/rclcpp/classrclcpp_1_1Node.html",
+  "publisher": "http://docs.ros2.org/latest/api/rclcpp/classrclcpp_1_1Publisher.html",
+  "subscription": "http://docs.ros2.org/latest/api/rclcpp/classrclcpp_1_1Subscription.html",
+  "rclcpp": "http://docs.ros2.org/latest/api/rclcpp/namespacerclcpp.html",
+  "rate": "http://docs.ros2.org/latest/api/rclcpp/classrclcpp_1_1GenericRate.html"
+}
+
+mydir = "jsons"
+
+if (not os.path.isdir(mydir)):
+  os.mkdir(mydir)
+
+sigs = {}
+
+hppFilesPrefix = {
+  "node": "rclcpp/",
+  "messages": "",
+  "publisher": "rclcpp/",
+  "subscription": "rclcpp/",
+  "rate": "rclcpp/",
+  "rclcpp": "rclcpp/rclcpp.hpp"
+}
+
 classNames = {
   "node": "Node",
   "publisher": "Publisher<MessageT, Alloc>",
@@ -438,8 +626,18 @@ classConstructor = {
   "subscription": "rclcpp::Subscription<CallbackMessageT, Alloc>::Subscription"
 }
 
+typeDefinitions = {}
+
 for name,url in urlDict.items():
   signatures = getSignatures(url)
+  tipeDefs = getTypedefs(url)
+
+  for key in tipeDefs:
+    if name in hppFilesPrefix:
+      typeDefinitions[hppFilesPrefix[name] + key] = tipeDefs[key]
+    else:
+      typeDefinitions[key] = tipeDefs[key]
+      
   if name == "rclcpp":
     for func,funcsig in signatures.items():
       if isinstance(funcsig, list):
@@ -475,26 +673,19 @@ for name,url in urlDict.items():
   with open(os.path.join(mydir, name + ".json"), "w") as f:
     f.write(json.dumps(signatures, indent=4))
 
-def isConstructorMethod(sig):
-  ftKey = "func_type"
-  conKey = "constructor"
-  if isinstance(sig, list):
-    for s in sig:
-      if ftKey not in s or s[ftKey] != "constructor":
-        return False
-    return True
-  else:
-    return ftKey in sig and sig[ftKey] == "constructor"
 
-def isRelatedTo(funcName, sig, someKey):
-  if funcName.lower().find(someKey) > -1:
-    return True
-  if isinstance(sig, list):
-    for s in sig:
-      if s["return"].find(someKey) == -1:
-        return False
-    return True
-  return sig["return"].find(someKey) > -1
+typeDefinitions["std_msgs/msgs/string.hpp"] = {
+  "defs": {},
+  "types": [
+    "std_msgs::msgs::String"
+  ]
+}
+
+# Write types to a file
+with open(os.path.join(mydir, "types.json"), "w") as f:
+  f.write(json.dumps(typeDefinitions, indent=4))
+    
+
 
 fileJsons = ["message", "duration"]
 
@@ -505,23 +696,7 @@ for js in fileJsons:
     print(jsonOnly)
 
 
-def addKeyToTags(tags, category, name):
-  if category not in tags:
-    tags[category] = []
-  if name not in tags[category]:
-    tags[category].append(name)
 
-def stringContains(theString, containedSubstring):
-  return theString.find(containedSubstring) > -1
-
-def inNamespace(functionName, namespace):
-  return (len(functionName) > len(namespace)) and (functionName.find(namespace) > -1)
-
-def getBaseFunctionName(functionName):
-  if functionName.find(":") > -1:
-    startIndex = functionName.rfind(":") + 1
-    return functionName[startIndex:]
-  return "SORRY"
 
 tags = {
   "tag_to_sigs": {},

@@ -1,0 +1,115 @@
+{
+    "rclcpp/node.hpp": {
+        "defs": {
+            "rclcpp::Node::OnParametersSetCallbackType": "rclcpp::node_interfaces::NodeParametersInterface::OnParametersSetCallbackType"
+        },
+        "types": [
+            "rclcpp::Node",
+            "rclcpp::Node::OnParametersSetCallbackType"
+        ]
+    },
+    "rclcpp/publisher.hpp": {
+        "defs": {
+            "rclcpp::Publisher<MessageT, Alloc>::MessageAllocTraits": "allocator::AllocRebind<MessageT, Alloc>",
+            "rclcpp::Publisher<MessageT, Alloc>::MessageAlloc": "rclcpp::Publisher<MessageT, Alloc>::MessageAllocTraits::allocator_type",
+            "rclcpp::Publisher<MessageT, Alloc>::MessageDeleter": "rclcpp::allocator::Deleter<rclcpp::Publisher<MessageT, Alloc>::MessageAlloc, MessageT>",
+            "rclcpp::Publisher<MessageT, Alloc>::MessageUniquePtr": "std::unique_ptr<MessageT, rclcpp::Publisher<MessageT, Alloc>::MessageDeleter>",
+            "rclcpp::Publisher<MessageT, Alloc>::MessageSharedPtr": "std::shared_ptr<const MessageT>",
+            "rclcpp::Publisher<MessageT, Alloc>::IntraProcessManagerSharedPtr": "std::shared_ptr<rclcpp::intra_process_manager::IntraProcessManager>"
+        },
+        "types": [
+            "rclcpp::Publisher<MessageT, Alloc>",
+            "rclcpp::Publisher<MessageT, Alloc>::MessageAllocTraits",
+            "rclcpp::Publisher<MessageT, Alloc>::MessageAlloc",
+            "rclcpp::Publisher<MessageT, Alloc>::MessageDeleter",
+            "rclcpp::Publisher<MessageT, Alloc>::MessageUniquePtr",
+            "rclcpp::Publisher<MessageT, Alloc>::MessageSharedPtr",
+            "rclcpp::Publisher<MessageT, Alloc>::IntraProcessManagerSharedPtr"
+        ],
+        "template": [
+            {
+                "name": "MessageT"
+            },
+            {
+                "name": "Alloc",
+                "value": "std::allocator<void>"
+            }
+        ]
+    },
+    "rclcpp/subscription.hpp": {
+        "defs": {
+            "rclcpp::Subscription<CallbackMessageT, Alloc>::MessageAllocTraits": "allocator::AllocRebind<CallbackMessageT, Alloc>",
+            "rclcpp::Subscription<CallbackMessageT, Alloc>::MessageAlloc": "rclcpp::Subscription<CallbackMessageT, Alloc>::MessageAllocTraits::allocator_type",
+            "rclcpp::Subscription<CallbackMessageT, Alloc>::MessageDeleter": "rclcpp::allocator::Deleter<rclcpp::Subscription<CallbackMessageT, Alloc>::MessageAlloc, CallbackMessageT>",
+            "rclcpp::Subscription<CallbackMessageT, Alloc>::ConstMessageSharedPtr": "std::shared_ptr<const CallbackMessageT>",
+            "rclcpp::Subscription<CallbackMessageT, Alloc>::MessageUniquePtr": "std::unique_ptr<CallbackMessageT, rclcpp::Subscription<CallbackMessageT, Alloc>::MessageDeleter>",
+            "rclcpp::Subscription<CallbackMessageT, Alloc>::IntraProcessManagerWeakPtr": "std::weak_ptr<rclcpp::intra_process_manager::IntraProcessManager>"
+        },
+        "types": [
+            "rclcpp::Subscription<CallbackMessageT, Alloc>",
+            "rclcpp::Subscription<CallbackMessageT, Alloc>::MessageAllocTraits",
+            "rclcpp::Subscription<CallbackMessageT, Alloc>::MessageAlloc",
+            "rclcpp::Subscription<CallbackMessageT, Alloc>::MessageDeleter",
+            "rclcpp::Subscription<CallbackMessageT, Alloc>::ConstMessageSharedPtr",
+            "rclcpp::Subscription<CallbackMessageT, Alloc>::MessageUniquePtr",
+            "rclcpp::Subscription<CallbackMessageT, Alloc>::IntraProcessManagerWeakPtr"
+        ],
+        "template": [
+            {
+                "name": "CallbackMessageT"
+            },
+            {
+                "name": "Alloc",
+                "value": "std::allocator<void>"
+            }
+        ]
+    },
+    "rclcpp/rclcpp.hpp": {
+        "defs": {
+            "rclcpp::ParameterMap": "std::unordered_map<std::string, std::vector<rclcpp::Parameter>>",
+            "rclcpp::PublisherOptions": "PublisherOptionsWithAllocator<std::allocator<void>>",
+            "rclcpp::QOSDeadlineRequestedInfo": "rmw_requested_deadline_missed_status_t",
+            "rclcpp::QOSDeadlineOfferedInfo": "rmw_offered_deadline_missed_status_t",
+            "rclcpp::QOSLivelinessChangedInfo": "rmw_liveliness_changed_status_t",
+            "rclcpp::QOSLivelinessLostInfo": "rmw_liveliness_lost_status_t",
+            "rclcpp::QOSDeadlineRequestedCallbackType": "std::function<void(rclcpp::QOSDeadlineRequestedInfo &)>",
+            "rclcpp::QOSDeadlineOfferedCallbackType": "std::function<void(rclcpp::QOSDeadlineOfferedInfo &)>",
+            "rclcpp::QOSLivelinessChangedCallbackType": "std::function<void(rclcpp::QOSLivelinessChangedInfo &)>",
+            "rclcpp::QOSLivelinessLostCallbackType": "std::function<void(rclcpp::QOSLivelinessLostInfo &)>",
+            "rclcpp::Rate": "rclcpp::GenericRate<std::chrono::system_clock>",
+            "rclcpp::WallRate": "rclcpp::GenericRate<std::chrono::steady_clock>",
+            "rclcpp::SubscriptionOptions": "SubscriptionOptionsWithAllocator<std::allocator<void>>",
+            "rclcpp::VoidCallbackType": "std::function<void()>",
+            "rclcpp::TimerCallbackType": "std::function<void(rclcpp::TimerBase &)>"
+        },
+        "types": [
+            "rclcpp::ParameterMap",
+            "rclcpp::PublisherOptions",
+            "rclcpp::QOSDeadlineRequestedInfo",
+            "rclcpp::QOSDeadlineOfferedInfo",
+            "rclcpp::QOSLivelinessChangedInfo",
+            "rclcpp::QOSLivelinessLostInfo",
+            "rclcpp::QOSDeadlineRequestedCallbackType",
+            "rclcpp::QOSDeadlineOfferedCallbackType",
+            "rclcpp::QOSLivelinessChangedCallbackType",
+            "rclcpp::QOSLivelinessLostCallbackType",
+            "rclcpp::Rate",
+            "rclcpp::WallRate",
+            "rclcpp::SubscriptionOptions",
+            "rclcpp::VoidCallbackType",
+            "rclcpp::TimerCallbackType"
+        ]
+    },
+    "rclcpp/rate.hpp": {
+        "defs": {},
+        "types": [
+            "rclcpp::GenericRate<Clock>"
+        ]
+    },
+    "std_msgs/msgs/string.hpp": {
+        "defs": {},
+        "types": [
+            "std_msgs::msgs::String"
+        ]
+    }
+}

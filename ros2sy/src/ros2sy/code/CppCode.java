@@ -48,6 +48,13 @@ public class CppCode {
 	 * 							synthesizer using mt's PetriNet
 	 */
 	public CppCode(MethodsToPetriNet mt, ArrayList<String> apis) {
+		LOGGER.debug("The full sequence of APIs:");
+		int count = 0;
+		for (String api : apis) {
+			count++;
+			LOGGER.debug("{}. {}", count, api);
+		}
+		
 		this.apis = new ArrayList<Method>();
 		this.numHolesPerApi = new ArrayList<Integer>();
 		this.holeTypes = new ArrayList<Type>();
@@ -352,7 +359,7 @@ public class CppCode {
 	 */
 	private ArrayList<String> fillRemainingHoles(String holeyCode, InputVariables in, ArrayList<Integer> remainingHoleIndices) {
 		ArrayList<String> possibleFills = new ArrayList<String>();
-		LOGGER.info(remainingHoleIndices.size());
+//		LOGGER.info(remainingHoleIndices.size());
 		if (remainingHoleIndices.size() == 0) {
 			possibleFills.add(holeyCode);
 			return possibleFills;

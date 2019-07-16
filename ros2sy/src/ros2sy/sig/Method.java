@@ -184,6 +184,18 @@ public class Method {
 		return functionString;
 	}
 	
+	public ArrayList<TemplateParameter> getRequiredTemplateParameters() {
+		ArrayList<TemplateParameter> params = new ArrayList<>();
+		
+		for (TemplateParameter tp : tparams) {
+			if (!tp.hasDefault) {
+				params.add(tp);
+			}
+		}
+		
+		return params;
+	}
+	
 	public int numTemplateParametersRequired() {
 		return this.numRequiredTemplateParams;
 	}

@@ -58,13 +58,40 @@ public class SketchFiller {
 		this.replaceInAll(codes,  types);
 	}
 	
+	public ArrayList<String> getTypesAvailable(String code) {
+		ArrayList<String> includesGiven = new ArrayList<>();
+		
+		String [] lines = code.split("\n");
+		
+		for (String line : lines) {
+			if (line.indexOf("#include") > -1) {
+				String inclusion = "";
+				if (line.matches("#include <([^>]*)>")) {
+					inclusion = line.replaceAll("#include <([^>]*)>", "$1");
+				} else if (line.matches("#include \"([^\"]*)\"")) {
+					inclusion = line.replaceAll("#include \"([^>]*)\"", "$1");
+				}
+				
+				LOGGER.debug("Inclusion found: <{}>", inclusion);
+				
+				includesGiven.add(inclusion);
+			}
+		}
+		
+		return includesGiven;
+	}
+	
 	public void fillSketches(String sketchPath, InputVariables ivs) throws CodeGenerationException {
 		String sketchBaseName = getSketchBaseName(sketchPath);
 		
-		ArrayList<String> code = this.filler.generateCodeWithInputs(ivs.getInputs());
 		// Get the sketch
 		try {
 			String sketchContents = new String(Files.readAllBytes(Paths.get(sketchPath)));
+			
+			getTypesAvailable(sketchContents);
+			
+			ArrayList<String> code = this.filler.generateCodeWithInputs(ivs.getInputs());
+			
 			ArrayList<String> filledOutSketches = new ArrayList<String>();
 			for (String fill : code) {
 				String [] splits = fill.split("\n");

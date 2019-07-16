@@ -32,6 +32,8 @@ public class Method {
 	public ArrayList<String> include = new ArrayList<>();
 	public ArrayList<TemplateParameter> tparams = new ArrayList<>();
 	public boolean hasTemplateParamaters = false;
+	private int numRequiredTemplateParams = 0;
+	private int numRequiredTemplateParameters;
 	
 	private static String [] rclcpp_classes = {
 		"Node", "Publisher<MessageT, Alloc>", "Subscription<CallbackMessageT, Alloc>", "Rate", "GenericRate<Clock>"
@@ -134,6 +136,7 @@ public class Method {
 		if (!this.hasTemplateParamaters) {
 			this.hasTemplateParamaters = true;
 		}
+		this.numRequiredTemplateParams++;
 		if (name.equals("MessageT")) {
 			this.tparams.add(new MessageT(name));
 		} else {
@@ -182,16 +185,11 @@ public class Method {
 	}
 	
 	public int numTemplateParametersRequired() {
-		if (!this.hasTemplateParamaters) {
-			return 0;
-		}
-		int count = 0;
-		for (int i = 0; i < this.tparams.size(); i++) {
-			if (!tparams.get(i).hasDefault) {
-				count++;
-			}
-		}
-		return count;
+		return this.numRequiredTemplateParams;
+	}
+	
+	public int numTemplateParameters() {
+		return this.tparams.size();
 	}
 	
 	public int numInstancesRequired() {
@@ -227,6 +225,10 @@ public class Method {
 	
 	public HashSet<String> getTags() {
 		return this.tags;
+	}
+	
+	public boolean requiresTemplateParams() {
+		return this.hasTemplateParamaters && this.numRequiredTemplateParameters > 0;
 	}
 	
 	public boolean hasTag(String tagName) {

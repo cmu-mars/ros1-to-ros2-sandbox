@@ -209,6 +209,10 @@ public class Type {
 		return (this.isPointer == other.isPointer && this.isArrayType == other.isArrayType && this.pointerLevel == other.pointerLevel && this.arrayLevel == other.arrayLevel) || (this.pointerLevel + this.arrayLevel) == (other.pointerLevel + other.arrayLevel);
 	}
 	
+	public boolean isVirtual() {
+		return this.typeName.indexOf("virtual") > -1;
+	}
+	
 	/**
 	 * Returns the type of the string.
 	 */

@@ -126,7 +126,7 @@ public class CppCode {
 				isPointerFieldAccess = true;
 			} else {
 				int numHolesOffset = 0;
-				if (!m.returnType.getPlainName().equals("void") && !m.returnType.toString().equals("")) {
+				if (!m.returnType.getPlainName().equals("void") && !m.returnType.toString().equals("") && !m.returnType.isVirtual()) {
 					String id = this.getFreshId();
 					this.results.put(id, m.returnType);
 					in.addNewResult(id, m.returnType, i);

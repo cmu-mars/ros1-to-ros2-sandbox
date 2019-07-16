@@ -76,35 +76,65 @@ public class MethodsToPetriNet {
 		this.addParamEquivalences();
 		
 		// Add clones
-		for (int i = 0; i < placeArray.length; i++) {
-			if (!this.isOptional(placeArray[i]) && !this.silly.contains(placeArray[i].getId())) {
-				MethodsToPetriNet.addClone(net, placeArray[i]);
+		for (Place p : this.net.getPlaces()) {
+			if (!this.isOptional(p) && !this.silly.contains(p.getId())) {
+				MethodsToPetriNet.addClone(net, p);
 				
-				String plain = Type.getPlainName(placeArray[i].getId());
+				String plain = Type.getPlainName(p.getId());
 				
-				if (!plain.equals(placeArray[i].getId())) {
+				if (!plain.equals(p.getId())) {
 					if (!net.containsPlace(plain)) {
 						net.createPlace(plain);
-						LOGGER.debug("The petri net did not contain the place {}, vs {}", plain, placeArray[i].getId());
-						MethodsToPetriNet.addTransition(net, plain, placeArray[i].getId());
-					} else if (!net.containsTransition(plain + "_to_" + placeArray[i].getId())) {
+						LOGGER.trace("The petri net did not contain the place {}, vs {}", plain, p.getId());
+						MethodsToPetriNet.addTransition(net, plain, p.getId());
+					} else if (!net.containsTransition(plain + "_to_" + p.getId())) {
 						
-						LOGGER.debug("The petri net did not contain the transition {}_to_{}", plain, placeArray[i].getId());
-						MethodsToPetriNet.addTransition(net, plain, placeArray[i].getId());
+						LOGGER.trace("The petri net did not contain the transition {}_to_{}", plain, p.getId());
+						MethodsToPetriNet.addTransition(net, plain, p.getId());
 					}
 				}
 				
 				if (!plain.matches("std::shared_ptr.*")) {
 					String shared = "std::shared_ptr<" + plain + ">";
-					if (!shared.equals(placeArray[i].getId())) {						
-						if (!net.containsPlace(shared) || !net.containsTransition(shared + "_to_" + placeArray[i].getId())) {
+					if (!shared.equals(p.getId())) {						
+						if (!net.containsPlace(shared) || !net.containsTransition(shared + "_to_" + p.getId())) {
 							if (!net.containsPlace(shared)) net.createPlace(shared);
-							MethodsToPetriNet.addTransition(net, shared, placeArray[i].getId());
+							MethodsToPetriNet.addTransition(net, shared, p.getId());
 						}
 					}
 				}
 			}
 		}
+		
+//		for (int i = 0; i < placeArray.length; i++) {
+//			if (!this.isOptional(placeArray[i]) && !this.silly.contains(placeArray[i].getId())) {
+//				MethodsToPetriNet.addClone(net, placeArray[i]);
+//				
+//				String plain = Type.getPlainName(placeArray[i].getId());
+//				
+//				if (!plain.equals(placeArray[i].getId())) {
+//					if (!net.containsPlace(plain)) {
+//						net.createPlace(plain);
+//						LOGGER.trace("The petri net did not contain the place {}, vs {}", plain, placeArray[i].getId());
+//						MethodsToPetriNet.addTransition(net, plain, placeArray[i].getId());
+//					} else if (!net.containsTransition(plain + "_to_" + placeArray[i].getId())) {
+//						
+//						LOGGER.trace("The petri net did not contain the transition {}_to_{}", plain, placeArray[i].getId());
+//						MethodsToPetriNet.addTransition(net, plain, placeArray[i].getId());
+//					}
+//				}
+//				
+//				if (!plain.matches("std::shared_ptr.*")) {
+//					String shared = "std::shared_ptr<" + plain + ">";
+//					if (!shared.equals(placeArray[i].getId())) {						
+//						if (!net.containsPlace(shared) || !net.containsTransition(shared + "_to_" + placeArray[i].getId())) {
+//							if (!net.containsPlace(shared)) net.createPlace(shared);
+//							MethodsToPetriNet.addTransition(net, shared, placeArray[i].getId());
+//						}
+//					}
+//				}
+//			}
+//		}
 		
 		
 		if (net.containsPlace("size_t") && net.containsPlace("int")) {
@@ -125,9 +155,9 @@ public class MethodsToPetriNet {
 			MethodsToPetriNet.addTransition(net, "std::shared_ptr<rclcpp::Node>", "rclcpp::Node::SharedPtr");
 		}
 		
-		Set<Place> places = this.net.getPlaces();
+//		Set<Place> places = this.net.getPlaces();
 		
-		for (Place p : places) {
+		for (Place p : this.net.getPlaces()) {
 			int max = 0;
 			for (Flow f : p.getPostsetEdges()) {
 				if (f.getWeight() > max) {

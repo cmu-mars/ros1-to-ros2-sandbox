@@ -78,16 +78,23 @@ public class MethodsToPetriNet {
 		
 		ArrayList<Map.Entry<String, String>> entries = new ArrayList<>(parametricTypeReplacements.entrySet());
 		for (int i = 0; i < entries.size() - 1; i++) {
-			for (int j = i + 1; j < entries.size(); j++) {
-				String keyA = entries.get(i).getKey();
-				String keyB = entries.get(j).getKey();
-				String valueA = entries.get(i).getValue();
-				String valueB = entries.get(j).getValue();
-				
-				entries.get(i).setValue(valueA.replaceAll(keyB, valueB));
-				entries.get(j).setValue(valueB.replace(keyA, valueA));
+			for (int j = 0; j < entries.size(); j++) {
+				if (i != j) {
+					String keyA = entries.get(i).getKey();
+					String keyB = entries.get(j).getKey();
+					String valueA = entries.get(i).getValue();
+					String valueB = entries.get(j).getValue();
+					String newValueA = valueA.replaceAll("\\b" + keyB + "\\b", valueB);
+					String newValueB = valueB.replaceAll("\\b" + keyA + "\\b", newValueA);
+					parametricTypeReplacements.put(keyA, newValueA);
+					parametricTypeReplacements.put(keyB, newValueB);
+					entries.get(i).setValue(newValueA);
+					entries.get(j).setValue(newValueB);
+				}
 			}
 		}
+		
+		LOGGER.info("Parametric type replacements: {}", parametricTypeReplacements);
 		
 		// Get a bare-bones petri net, containing only what you can gather from
 		// the methods themselves.
@@ -108,7 +115,9 @@ public class MethodsToPetriNet {
 				if (!plain.equals(p.getId())) {
 					if (!net.containsPlace(plain)) {
 						net.createPlace(plain);
-						LOGGER.trace("The petri net did not contain the place {}, vs {}", plain, p.getId());
+						if (Type.isSharedPointer(p.getId())) {
+							LOGGER.info("The petri net did not contain the place {}, vs {}", plain, p.getId());
+						}
 						MethodsToPetriNet.addTransition(net, plain, p.getId());
 					} else if (!net.containsTransition(plain + "_to_" + p.getId())) {
 						
@@ -209,6 +218,17 @@ public class MethodsToPetriNet {
 		
 	public Method getMethodFromNickname(String nickname) {
 		return this.methodAliases.get(nickname);
+	}
+	
+	public String replaceTypeVars(String hasTypeVars) {
+		LOGGER.info("The parametric type replacements now: {}", this.parametricTypeReplacements);
+		String doesntHaveTypeVars = hasTypeVars;
+		
+		for (Map.Entry<String, String> typeVarEntry : this.parametricTypeReplacements.entrySet()) {
+			doesntHaveTypeVars = doesntHaveTypeVars.replaceAll(typeVarEntry.getKey(), typeVarEntry.getValue());
+		}
+		
+		return doesntHaveTypeVars;
 	}
 	
 	
@@ -373,11 +393,11 @@ public class MethodsToPetriNet {
 		PetriNet pn = new PetriNet();
 		mt.net = pn;
 		
-		for (Map.Entry<String, HashSet<String>> temp : templates.entrySet()) {
-			if (temp.getValue().size() == 1) {
-				mt.parametricTypeReplacements.put(temp.getKey(), (new ArrayList<String>(temp.getValue()).get(0)));
-			}
-		}
+//		for (Map.Entry<String, HashSet<String>> temp : templates.entrySet()) {
+//			if (temp.getValue().size() == 1) {
+//				mt.parametricTypeReplacements.put(temp.getKey(), (new ArrayList<String>(temp.getValue()).get(0)));
+//			}
+//		}
 		
 		HashMap<String, Integer> nameCounts = new HashMap<String, Integer>();
 		
@@ -594,12 +614,12 @@ public class MethodsToPetriNet {
 			// Creates a flow with default weight 1
 			pn.createFlow(p, t);
 		} catch (FlowExistsException e) {
-			LOGGER.warn("Flow already existed, but will increase weight of flow <{}, {}>", p.getId(), t.getId());
 //			LOGGER.info(e);
 			
 			try {
 				Flow f = pn.getFlow(p.getId(), t.getId());
 				int wt = f.getWeight();
+				LOGGER.trace("Flow already existed, but will increase weight of flow <{}, {}> from {} to {}", p.getId(), t.getId(), wt, wt + 1);
 				
 //				LOGGER.info("Increasing weight of flow (" + p.getId() + ", " + t.getId() + ") from " + Integer.toString(wt) + " to " + Integer.toString(wt + 1));
 				

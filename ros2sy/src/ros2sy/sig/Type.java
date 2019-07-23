@@ -1,6 +1,9 @@
 package ros2sy.sig;
 
+
+
 import java.util.ArrayList;
+
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -31,6 +34,7 @@ public class Type {
 	public int arrayLevel = 0;
 	
 	public String valueTypeName;
+	
 	
 	/**
 	 * Construct a Type object, given a string that contains the
@@ -125,8 +129,8 @@ public class Type {
 //			LOGGER.info("This valueTypeName matches a shared pointer: <" + valueTypeName + ">, <" + this.typeName + ">");
 			
 			int first = "std::shared_ptr<".length();
-			
-			this.valueTypeName = this.valueTypeName.substring(first, (this.valueTypeName.indexOf('>') == this.valueTypeName.lastIndexOf('>') ) ? this.valueTypeName.lastIndexOf('>') : this.valueTypeName.length() );
+			this.valueTypeName = this.valueTypeName.substring(first, this.valueTypeName.lastIndexOf('>'));
+//			this.valueTypeName = this.valueTypeName.substring(first, (this.valueTypeName.indexOf('>') == this.valueTypeName.lastIndexOf('>')) ? this.valueTypeName.lastIndexOf('>') : this.valueTypeName.length() );
 			this.isSharedPointer = true;
 		} else if (this.valueTypeName.indexOf("::SharedPtr") > -1) {
 			int index = this.valueTypeName.indexOf("::SharedPtr");
@@ -140,6 +144,7 @@ public class Type {
 		}
 		
 		this.typeName = this.typeName.trim();
+		
 		
 //		LOGGER.info("<" + this.valueTypeName + ">");
 	}
@@ -173,7 +178,13 @@ public class Type {
 				plain = plain + "[]";
 			}
 		}
+		
 		return plain;
+	}
+	
+	public static boolean isSharedPointer(String typeName) {
+		Type newType = new Type(typeName);
+		return newType.isSharedPointer;
 	}
 	
 	public static String getPlainName(String typeName) {
@@ -211,6 +222,20 @@ public class Type {
 	
 	public boolean isVirtual() {
 		return this.typeName.indexOf("virtual") > -1;
+	}
+	
+	private boolean numberOfAngleBracketsDoesntMatch(String str) {
+		int countR = 0;
+		int countL = 0;
+		for (int i = 0; i < str.length(); i++) {
+			if (str.charAt(i) == '<') {
+				countL++;
+			} else if (str.charAt(i) == '>') {
+				countR++;
+			}
+		}
+		
+		return countL == countR;
 	}
 	
 	/**

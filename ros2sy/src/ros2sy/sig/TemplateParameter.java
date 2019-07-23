@@ -5,6 +5,7 @@ import org.apache.logging.log4j.Logger;
 import ros2sy.json.ParseJson;
 
 import java.util.HashMap;
+import java.util.Set;
 
 public class TemplateParameter {
 	private static Logger LOGGER = LogManager.getLogger(TemplateParameter.class.getName());
@@ -47,9 +48,13 @@ public class TemplateParameter {
 		return parameterTypeRegexes.containsKey(key);
 	}
 	
+	public static Set<String> parameterKeys() {
+		return parameterTypeRegexes.keySet();
+	}
+	
 	public static boolean isParameterEquivalent(String key, String typeName) {
-		if (!parameterTypeRegexes.containsKey(key)) {
-			LOGGER.warn("Attempting to use key <{}>, which cannot be found in our dictionary of regexes for identifying parametric types: {}", key, parameterTypeRegexes);
+		if (!hasParameterKey(key)) {
+			LOGGER.trace("You attempted to use key <{}>, which cannot be found in our dictionary of regexes for identifying parametric types: {}", key, parameterTypeRegexes);
 			return false;
 		}
 		return typeName.matches(parameterTypeRegexes.get(key));

@@ -18,6 +18,7 @@ import ros2sy.json.ParseJson;
 import ros2sy.logic.Encoding;
 import ros2sy.logic.EncodingUtil;
 import ros2sy.logic.SequentialEncoding;
+import ros2sy.sig.Type;
 import uniol.apt.adt.pn.PetriNet;
 import ros2sy.logic.Variable;
 import ros2sy.petri.MethodsToPetriNet;
@@ -206,11 +207,17 @@ public class Synthesis {
 		HashMap<String, String> varsToTypes = ParseJson.getInputVariableToType("inputs/talker_input.json");
 		
 		for (Map.Entry<String, String> e : varsToTypes.entrySet()) {
-			ivs.addInput(e.getKey(), e.getValue());
+			ivs.addInput(e.getKey(), mtpn.replaceTypeVars(e.getValue()));
 		}
 		
 //		ArrayList<ArrayList<String>> inputs = ParseJson.getInputTypesFromFile("inputs/listener_input.json");
 		ArrayList<ArrayList<String>> inputs = ParseJson.getInputTypesFromFile("inputs/talker_input.json");
+		
+		for (ArrayList<String> strings : inputs) {
+			for (int i = 0; i < strings.size(); i++) {
+				strings.set(i, mtpn.replaceTypeVars(strings.get(i)));
+			}
+		}
 		
 		// ArrayList<ArrayList<String>> correctAnswers = ParseJson.getCorrectAnswersFromFile("inputs/correct-answers.json");
 		ArrayList<ArrayList<String>> correctAnswers = ParseJson.getCorrectAnswersFromFile("inputs/correct-answers-talker.json");
@@ -227,7 +234,7 @@ public class Synthesis {
 			LOGGER.debug("Block: {}", k);
 			LOGGER.debug("Don't use: {}", dontUse);
 			
-			ArrayList<ArrayList<String>> strss = Synthesis.synthesizeAll(mtpn.getNet(), inputs.get(i), 5, k, dontUse);
+			ArrayList<ArrayList<String>> strss = Synthesis.synthesizeAll(mtpn.getNet(), inputs.get(i), 4, k, dontUse);
 			
 			String blocksString = k.toString();
 			

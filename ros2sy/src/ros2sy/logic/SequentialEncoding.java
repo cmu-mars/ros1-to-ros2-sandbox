@@ -140,7 +140,7 @@ public class SequentialEncoding implements Encoding {
 				coeffs.push(w);
 				objective.push(var.getId());
 				names.add(var.getName() + "|w:" + w);
-				 LOGGER.trace("var= " + var.getName() + " weight= " + w);
+				LOGGER.trace("var={}, weight={}", var.getName(), w);
 			}
 		}
 

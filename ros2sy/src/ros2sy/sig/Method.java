@@ -360,21 +360,23 @@ public class Method {
 		return strings;
 	}
 	
+	public static Type replaceTypeParamsInType(HashMap<String, String> map, Type t) {
+		String tipeString = t.toString();
+		
+		for (Map.Entry<String, String> entry : map.entrySet()) {
+			tipeString = tipeString.replaceAll(entry.getKey(), entry.getValue());
+		}
+		return new Type(tipeString);
+	}
+	
 	public Method replaceParametricTypeVariables(HashMap<String, String> map) {
 		String newName = this.name;
+		String returnTypeString = this.returnType.toString();
+		ArrayList<String> newArgs = this.argsListToStringList();
 		for (Map.Entry<String, String> entry : map.entrySet()) {
 			newName = newName.replaceAll(entry.getKey(), entry.getValue());
-		}
-		
-		String returnTypeString = this.returnType.toString();
-		for (Map.Entry<String, String> entry : map.entrySet()) {
 			returnTypeString = returnTypeString.replaceAll(entry.getKey(), entry.getValue());
-		}
-		
-		ArrayList<String> newArgs = this.argsListToStringList();
-		
-		for (int i = 0; i < newArgs.size(); i++) {
-			for (Map.Entry<String, String> entry : map.entrySet()) {				
+			for (int i = 0; i < newArgs.size(); i++) {
 				newArgs.set(i, newArgs.get(i).replaceAll(entry.getKey(), entry.getValue()));
 			}
 		}
@@ -383,7 +385,7 @@ public class Method {
 		newMethod.methodType = this.methodType;
 		newMethod.isClassMethod = this.isClassMethod;
 		if (newMethod.isClassMethod) {
-			newMethod.fromClass = this.fromClass;	
+			newMethod.fromClass = Method.replaceTypeParamsInType(map, this.fromClass);
 		}
 		
 		

@@ -41,6 +41,12 @@ public class ParseJson {
 		
 	}
 	
+	public static HashMap<String, String> getParameterMatchMap(String filename) {
+		HashMap<String, String> paramMap = ParseJson.getDictionary(filename);
+		
+		return paramMap;
+	}
+	
 	public static ArrayList<String> getAvailableTypes(String fileName) {
 		ArrayList<String> tipes = new ArrayList<>();
 		

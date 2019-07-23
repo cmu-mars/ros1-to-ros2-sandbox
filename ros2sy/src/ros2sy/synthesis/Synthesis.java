@@ -141,18 +141,15 @@ public class Synthesis {
 		LOGGER.info("Available types: {}",  availableTypes);
 		LOGGER.info("Types: {}", templates);
 		for (String temp : templates) {
-			if (temp.equals("MessageT")) {				
-				for (String tipe : availableTypes) {
-					if (TemplateParameter.isMessageTEquivalent(tipe)) {
-						if (!templateToTypes.containsKey(temp)) {
-							templateToTypes.put(temp, new HashSet<String>());
-						}
-						
-						templateToTypes.get(temp).add(tipe);
+			for (String tipe : availableTypes) {
+//				if (TemplateParameter.isMessageTEquivalent(tipe)) {
+				if (TemplateParameter.isParameterEquivalent(temp, tipe)) {
+					if (!templateToTypes.containsKey(temp)) {
+						templateToTypes.put(temp, new HashSet<String>());
 					}
+					
+					templateToTypes.get(temp).add(tipe);
 				}
-			} else {
-			
 			}
 		}
 		
@@ -228,13 +225,16 @@ public class Synthesis {
 			
 
 			LOGGER.debug("Block: {}", k);
-//			LOGGER.trace(dontUse);
+			LOGGER.debug("Don't use: {}", dontUse);
 			
-			ArrayList<ArrayList<String>> strss = Synthesis.synthesizeAll(mtpn.getNet(), inputs.get(i), 4, k, dontUse);
+			ArrayList<ArrayList<String>> strss = Synthesis.synthesizeAll(mtpn.getNet(), inputs.get(i), 5, k, dontUse);
 			
+			String blocksString = k.toString();
 			
-			String blocksSubstring = k.toString().substring(0, Math.min(k.toString().length(), 54));
-			blocksSubstring = blocksSubstring + ((blocksSubstring.length() < k.toString().length()) ? "...]" : "");
+			int len = (blocksString.length() <= 54) ? blocksString.length() : 50;
+			
+			String blocksSubstring = blocksString.substring(0, len);
+			blocksSubstring = blocksSubstring + ((blocksSubstring.length() < blocksString.length()) ? "...]" : "");
 			LOGGER.debug("Number of possibilities generated for block {}: {}", blocksSubstring, strss.size());
 			
 			if (strss.size() > 0) {

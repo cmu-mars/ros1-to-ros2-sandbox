@@ -52,6 +52,8 @@ public class MethodsToPetriNet {
 	
 	HashMap<Method, ArrayList<String>> aliasesForMethods = new HashMap<Method, ArrayList<String>>();
 	
+	HashMap<String, String> parametricTypeReplacements = new HashMap<>();
+	
 	/**
 	 * Instantiate the a MethodsToPetriNet object, which contains information
 	 * about how the APIs of interest relate to a PetriNet.
@@ -67,6 +69,25 @@ public class MethodsToPetriNet {
 		
 		this.typeAliases.put("int", "size_t");
 		this.methodAliases = new HashMap<>();
+		
+		for (Map.Entry<String, HashSet<String>> temp : templateReplacements.entrySet()) {
+			if (temp.getValue().size() == 1) {
+				parametricTypeReplacements.put(temp.getKey(), (new ArrayList<String>(temp.getValue()).get(0)));
+			}
+		}
+		
+		ArrayList<Map.Entry<String, String>> entries = new ArrayList<>(parametricTypeReplacements.entrySet());
+		for (int i = 0; i < entries.size() - 1; i++) {
+			for (int j = i + 1; j < entries.size(); j++) {
+				String keyA = entries.get(i).getKey();
+				String keyB = entries.get(j).getKey();
+				String valueA = entries.get(i).getValue();
+				String valueB = entries.get(j).getValue();
+				
+				entries.get(i).setValue(valueA.replaceAll(keyB, valueB));
+				entries.get(j).setValue(valueB.replace(keyA, valueA));
+			}
+		}
 		
 		// Get a bare-bones petri net, containing only what you can gather from
 		// the methods themselves.
@@ -98,10 +119,14 @@ public class MethodsToPetriNet {
 				
 				if (!plain.matches("std::shared_ptr.*")) {
 					String shared = "std::shared_ptr<" + plain + ">";
+					Type originalType = new Type(p.getId());
+					
+					String transitionId = (!originalType.isSharedPointer) ? shared + "::Shared_to_unshared" : shared + "_to_" + p.getId();
+					
 					if (!shared.equals(p.getId())) {						
-						if (!net.containsPlace(shared) || !net.containsTransition(shared + "_to_" + p.getId())) {
+						if (!net.containsPlace(shared) || !net.containsTransition(transitionId)) {
 							if (!net.containsPlace(shared)) net.createPlace(shared);
-							MethodsToPetriNet.addTransition(net, shared, p.getId());
+							MethodsToPetriNet.addTransition(net, shared, transitionId, p.getId());
 						}
 					}
 				}
@@ -213,6 +238,8 @@ public class MethodsToPetriNet {
 	 * @param nickname		a String that is an alias for this method
 	 */
 	public void addMethodNickname(Method m, String nickname) {
+		LOGGER.trace("Nickname: {}; Contains nickname: {}; Has method's nicknames: {}, Method has particular nickname: {}; Method: {}", nickname, this.hasMethodWithNickname(nickname), this.hasNicknamesOfMethod(m), this.hasParticularNicknameOfMethod(m, nickname), m);
+		
 		if (!this.methodAliases.containsKey(nickname)) {
 			this.methodAliases.put(nickname, m);
 		}
@@ -346,18 +373,16 @@ public class MethodsToPetriNet {
 		PetriNet pn = new PetriNet();
 		mt.net = pn;
 		
-		HashMap<String, String> replacers = new HashMap<>();
-		
 		for (Map.Entry<String, HashSet<String>> temp : templates.entrySet()) {
 			if (temp.getValue().size() == 1) {
-				replacers.put(temp.getKey(), (new ArrayList<String>(temp.getValue()).get(0)));
+				mt.parametricTypeReplacements.put(temp.getKey(), (new ArrayList<String>(temp.getValue()).get(0)));
 			}
 		}
 		
 		HashMap<String, Integer> nameCounts = new HashMap<String, Integer>();
 		
 		for (Method maybe : methods) {
-			Method m = (replacers.isEmpty()) ? maybe : maybe.replaceParametricTypeVariables(replacers);
+			Method m = (mt.parametricTypeReplacements.isEmpty()) ? maybe : maybe.replaceParametricTypeVariables(mt.parametricTypeReplacements);
 			if (maybe.hasTemplateParamaters) {				
 				LOGGER.trace("replaced template parameters: <{}>: {} vs {}", templates.toString(), maybe.toString(), m.toString());
 			}
@@ -367,12 +392,12 @@ public class MethodsToPetriNet {
 			}
 			nameCounts.put(m.name, nameCounts.get(m.name) + 1);
 			
-			Transition t = MethodsToPetriNet.makeMethodTransition(m, pn, nameCounts);
-			
+			Transition t = MethodsToPetriNet.makeMethodTransition(m, mt.net, nameCounts);
+//			mt.addMethodNickname(m, t.getId());
 			mt.addMethodNickname(maybe, t.getId());
 			
 			String returnType = m.returnType.toString();
-			Place ret = MethodsToPetriNet.getPetriPlace(pn, returnType);
+			Place ret = MethodsToPetriNet.getPetriPlace(mt.net, returnType);
 			if (m.returnType.isSharedPointer) {
 				String transName = m.returnType.toString() + "::Shared_to_unshared";
 //				mt.addMethodNickname(mt.de_ptr, transName);
@@ -386,10 +411,10 @@ public class MethodsToPetriNet {
 					
 					LOGGER.trace("Creating class method edge <{}> to <{}>", instanceType, t.getId());
 					
-					Place inst = MethodsToPetriNet.getPetriPlace(pn, instanceType);
+					Place inst = MethodsToPetriNet.getPetriPlace(mt.net, instanceType);
 					pn.createFlow(inst, t);
 				}
-				MethodsToPetriNet.addTransitionFlowToPetri(pn, m.args, t, ret);
+				MethodsToPetriNet.addTransitionFlowToPetri(mt.net, m.args, t, ret);
 			} else {
 				ArrayList<Arg> mandatory = m.getMandatoryArgs();
 				if (m.isClassMethod) {
@@ -410,16 +435,17 @@ public class MethodsToPetriNet {
 					Transition opt = MethodsToPetriNet.createAlternateTransition(mt, t, i);
 					//pn.createTransition(t.getId() + "(ALT-" + Integer.toString(i) + ")");
 					mt.addMethodNickname(maybe, opt.getId());
+					mt.addMethodNickname(m, opt.getId());
 					
 					// Add an additional arg that this transition will need to take
 					mandatory.add(options.get(i));
 					
-					MethodsToPetriNet.addTransitionFlowToPetri(pn, mandatory, opt, ret);
+					MethodsToPetriNet.addTransitionFlowToPetri(mt.net, mandatory, opt, ret);
 				}	
 			}
 		}
 		
-		return pn;
+		return mt.net;
 	}
 
 	/**
@@ -568,7 +594,7 @@ public class MethodsToPetriNet {
 			// Creates a flow with default weight 1
 			pn.createFlow(p, t);
 		} catch (FlowExistsException e) {
-			LOGGER.warn("Flow already existed, but will increase weight of flow:", e);
+			LOGGER.warn("Flow already existed, but will increase weight of flow <{}, {}>", p.getId(), t.getId());
 //			LOGGER.info(e);
 			
 			try {
@@ -590,7 +616,7 @@ public class MethodsToPetriNet {
 	 * Creates a brand new transition based on a given method in the 
 	 * given PetriNet, with a fresh name, even if the method is 
 	 * overloaded.
-	 * 
+	 * s
 	 * @param m				the Method to be added
 	 * @param pn				the PetriNet to add a transition representing m
 	 * 								to

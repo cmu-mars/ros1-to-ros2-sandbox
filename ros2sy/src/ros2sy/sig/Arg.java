@@ -87,7 +87,7 @@ public class Arg {
 	 */
 	@Override
 	public String toString() {
-		return this.argType.toString() + ((this.hasDefault) ? " [" + this.defaultValue + "]" : "");
+		return this.argType.toString() + ((this.hasDefault) ? " (=" + this.defaultValue + ")" : "");
 	}
 	
 }

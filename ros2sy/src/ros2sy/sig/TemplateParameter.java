@@ -1,9 +1,19 @@
 package ros2sy.sig;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import ros2sy.json.ParseJson;
+
+import java.util.HashMap;
+
 public class TemplateParameter {
+	private static Logger LOGGER = LogManager.getLogger(TemplateParameter.class.getName());
+	
 	public String name;
 	public boolean hasDefault;
 	private String defaultValue;
+	
+	private static HashMap<String, String> parameterTypeRegexes = ParseJson.getParameterMatchMap("inputs/param-map.json");
 	
 	public TemplateParameter(String name) {
 		this.name = name;
@@ -31,6 +41,18 @@ public class TemplateParameter {
 	
 	public static boolean isMessageTEquivalent(String s) {
 		return s.indexOf("::msgs::") > -1;
+	}
+	
+	public static boolean hasParameterKey(String key) {
+		return parameterTypeRegexes.containsKey(key);
+	}
+	
+	public static boolean isParameterEquivalent(String key, String typeName) {
+		if (!parameterTypeRegexes.containsKey(key)) {
+			LOGGER.warn("Attempting to use key <{}>, which cannot be found in our dictionary of regexes for identifying parametric types: {}", key, parameterTypeRegexes);
+			return false;
+		}
+		return typeName.matches(parameterTypeRegexes.get(key));
 	}
 	
 	public String getDefaultValue() {

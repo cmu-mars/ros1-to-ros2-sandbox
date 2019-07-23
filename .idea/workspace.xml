@@ -2,24 +2,16 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="46f2318b-28f7-4211-91ea-772e3c38fbbd" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/.idea/.name" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/ant.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/codeStyles/codeStyleConfig.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/compiler.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/modules.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/ros2sy.iml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build.xml" beforeDir="false" afterPath="$PROJECT_DIR$/build.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/inputs/talker_input.json" beforeDir="false" afterPath="$PROJECT_DIR$/inputs/talker_input.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ros2sy/src/resources/log4j2.xml" beforeDir="false" afterPath="$PROJECT_DIR$/ros2sy/resources/log4j2.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ros2sy.iml" beforeDir="false" afterPath="$PROJECT_DIR$/ros2sy.iml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/ros2sy/src/ros2sy/json/ParseJson.java" beforeDir="false" afterPath="$PROJECT_DIR$/ros2sy/src/ros2sy/json/ParseJson.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ros2sy/src/ros2sy/logic/SequentialEncoding.java" beforeDir="false" afterPath="$PROJECT_DIR$/ros2sy/src/ros2sy/logic/SequentialEncoding.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/ros2sy/src/ros2sy/petri/MethodsToPetriNet.java" beforeDir="false" afterPath="$PROJECT_DIR$/ros2sy/src/ros2sy/petri/MethodsToPetriNet.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ros2sy/src/ros2sy/sig/Arg.java" beforeDir="false" afterPath="$PROJECT_DIR$/ros2sy/src/ros2sy/sig/Arg.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/ros2sy/src/ros2sy/sig/Method.java" beforeDir="false" afterPath="$PROJECT_DIR$/ros2sy/src/ros2sy/sig/Method.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/ros2sy/src/ros2sy/sig/TemplateParameter.java" beforeDir="false" afterPath="$PROJECT_DIR$/ros2sy/src/ros2sy/sig/TemplateParameter.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/ros2sy/src/ros2sy/synthesis/Synthesis.java" beforeDir="false" afterPath="$PROJECT_DIR$/ros2sy/src/ros2sy/synthesis/Synthesis.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/scrape_rclcpp_docs/scrape.py" beforeDir="false" afterPath="$PROJECT_DIR$/scrape_rclcpp_docs/scrape.py" afterDir="false" />
     </list>
     <ignored path="$PROJECT_DIR$/out/" />
     <ignored path="$PROJECT_DIR$/build/" />
@@ -35,85 +27,59 @@
     <option name="MAKE_PROJECT_ON_SAVE" value="true" />
   </component>
   <component name="FileEditorManager">
-    <splitter split-orientation="horizontal" split-proportion="0.5120385">
+    <splitter split-orientation="horizontal" split-proportion="0.45441285">
       <split-first>
         <leaf>
           <file pinned="false" current-in-tab="false">
-            <entry file="file://$PROJECT_DIR$/ros2sy/src/ros2sy/sig/MessageT.java">
-              <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="-7">
-                  <caret line="16" column="1" selection-start-line="16" selection-start-column="1" selection-end-line="16" selection-end-column="1" />
-                </state>
-              </provider>
-            </entry>
-          </file>
-          <file pinned="false" current-in-tab="false">
             <entry file="file://$PROJECT_DIR$/ros2sy/src/ros2sy/code/CppCode.java">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="540">
-                  <caret line="36" column="2" selection-start-line="36" selection-start-column="2" selection-end-line="36" selection-end-column="2" />
+                <state relative-caret-position="268">
+                  <caret line="41" column="5" selection-start-line="41" selection-start-column="5" selection-end-line="41" selection-end-column="5" />
                   <folding>
                     <element signature="imports" expanded="true" />
                     <element signature="e#907#924#0" expanded="true" />
-                  </folding>
-                </state>
-              </provider>
-            </entry>
-          </file>
-          <file pinned="false" current-in-tab="false">
-            <entry file="file://$PROJECT_DIR$/ros2sy/src/ros2sy/petri/MethodsToPetriNet.java">
-              <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="585">
-                  <caret line="38" column="17" selection-start-line="38" selection-start-column="17" selection-end-line="38" selection-end-column="17" />
-                  <folding>
-                    <element signature="imports" expanded="true" />
-                    <element signature="e#1651#1678#0" expanded="true" />
-                    <element signature="e#5219#5220#0" expanded="true" />
-                    <element signature="e#5249#5250#0" expanded="true" />
-                    <element signature="e#5296#5297#0" expanded="true" />
-                    <element signature="e#5331#5332#0" expanded="true" />
-                    <element signature="e#5373#5374#0" expanded="true" />
-                    <element signature="e#5411#5412#0" expanded="true" />
-                    <element signature="e#5451#5452#0" expanded="true" />
-                    <element signature="e#5496#5497#0" expanded="true" />
-                    <element signature="e#5541#5542#0" expanded="true" />
-                    <element signature="e#5560#5561#0" expanded="true" />
-                    <element signature="e#5740#5741#0" expanded="true" />
-                    <element signature="e#5791#5792#0" expanded="true" />
-                    <element signature="e#6013#6014#0" expanded="true" />
-                    <element signature="e#6059#6060#0" expanded="true" />
-                    <element signature="e#8172#8173#0" expanded="true" />
-                    <element signature="e#8194#8195#0" expanded="true" />
-                    <element signature="e#11988#12005#0" expanded="true" />
-                    <element signature="e#14518#14519#0" expanded="true" />
-                    <element signature="e#14577#14578#0" expanded="true" />
-                    <element signature="e#14759#14775#0" expanded="true" />
-                    <element signature="e#14950#14966#0" expanded="true" />
-                    <element signature="e#21362#21363#0" expanded="true" />
-                    <element signature="e#21405#21406#0" expanded="true" />
-                    <element signature="e#21828#21834#0" expanded="true" />
+                    <element signature="e#6646#6655#0" expanded="true" />
+                    <element signature="e#9900#9908#0" expanded="true" />
+                    <element signature="e#10163#10169#0" expanded="true" />
+                    <element signature="e#11781#11789#0" expanded="true" />
                   </folding>
                 </state>
               </provider>
             </entry>
           </file>
           <file pinned="false" current-in-tab="true">
-            <entry file="file://$PROJECT_DIR$/ros2sy/src/ros2sy/sig/Method.java">
+            <entry file="file://$PROJECT_DIR$/ros2sy/src/ros2sy/petri/MethodsToPetriNet.java">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="-3835">
-                  <caret line="35" column="46" selection-start-line="35" selection-start-column="46" selection-end-line="35" selection-end-column="46" />
+                <state relative-caret-position="477">
+                  <caret line="87" column="62" selection-start-line="87" selection-start-column="62" selection-end-line="87" selection-end-column="62" />
                   <folding>
                     <element signature="imports" expanded="true" />
+                    <element signature="e#1652#1679#0" expanded="true" />
+                    <element signature="e#5192#5193#0" expanded="true" />
+                    <element signature="e#5222#5223#0" expanded="true" />
+                    <element signature="e#5269#5270#0" expanded="true" />
+                    <element signature="e#5304#5305#0" expanded="true" />
+                    <element signature="e#5346#5347#0" expanded="true" />
+                    <element signature="e#5384#5385#0" expanded="true" />
+                    <element signature="e#5424#5425#0" expanded="true" />
+                    <element signature="e#5469#5470#0" expanded="true" />
+                    <element signature="e#5514#5515#0" expanded="true" />
+                    <element signature="e#5533#5534#0" expanded="true" />
+                    <element signature="e#5713#5714#0" expanded="true" />
+                    <element signature="e#5764#5765#0" expanded="true" />
+                    <element signature="e#5986#5987#0" expanded="true" />
+                    <element signature="e#6032#6033#0" expanded="true" />
+                    <element signature="e#8145#8146#0" expanded="true" />
+                    <element signature="e#8167#8168#0" expanded="true" />
+                    <element signature="e#11961#11978#0" expanded="true" />
+                    <element signature="e#14526#14527#0" expanded="true" />
+                    <element signature="e#14585#14586#0" expanded="true" />
+                    <element signature="e#14767#14783#0" expanded="true" />
+                    <element signature="e#14958#14974#0" expanded="true" />
+                    <element signature="e#21362#21363#0" expanded="true" />
+                    <element signature="e#21405#21406#0" expanded="true" />
+                    <element signature="e#21828#21834#0" expanded="true" />
                   </folding>
-                </state>
-              </provider>
-            </entry>
-          </file>
-          <file pinned="false" current-in-tab="false">
-            <entry file="file://$PROJECT_DIR$/ros2sy/src/ros2sy/exception/ArgParseException.java">
-              <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="105">
-                  <caret line="7" column="13" selection-start-line="7" selection-start-column="13" selection-end-line="7" selection-end-column="13" />
                 </state>
               </provider>
             </entry>
@@ -130,8 +96,55 @@
           <file pinned="false" current-in-tab="false">
             <entry file="file://$PROJECT_DIR$/ros2sy/src/ros2sy/json/ParseJson.java">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="231">
-                  <caret line="21" selection-start-line="21" selection-end-line="21" />
+                <state relative-caret-position="443">
+                  <caret line="45" column="4" selection-start-line="45" selection-start-column="4" selection-end-line="45" selection-end-column="4" />
+                  <folding>
+                    <element signature="imports" expanded="true" />
+                    <element signature="e#2123#2139#0" expanded="true" />
+                    <element signature="e#9178#9186#0" expanded="true" />
+                    <element signature="e#10177#10185#0" expanded="true" />
+                    <element signature="e#10920#10928#0" expanded="true" />
+                    <element signature="e#14568#14576#0" expanded="true" />
+                    <element signature="e#15854#15862#0" expanded="true" />
+                    <element signature="e#16879#16887#0" expanded="true" />
+                  </folding>
+                </state>
+              </provider>
+            </entry>
+          </file>
+          <file pinned="false" current-in-tab="false">
+            <entry file="file://$PROJECT_DIR$/ros2sy/src/ros2sy/sig/Method.java">
+              <provider selected="true" editor-type-id="text-editor">
+                <state relative-caret-position="362">
+                  <caret line="388" column="5" selection-start-line="388" selection-end-line="389" />
+                  <folding>
+                    <element signature="imports" expanded="true" />
+                    <element signature="e#6760#6761#0" expanded="true" />
+                    <element signature="e#6804#6805#0" expanded="true" />
+                    <element signature="e#6844#6845#0" expanded="true" />
+                    <element signature="e#6877#6878#0" expanded="true" />
+                    <element signature="e#6916#6917#0" expanded="true" />
+                    <element signature="e#6958#6959#0" expanded="true" />
+                    <element signature="e#7307#7308#0" expanded="true" />
+                    <element signature="e#7345#7346#0" expanded="true" />
+                    <element signature="e#7388#7389#0" expanded="true" />
+                    <element signature="e#7414#7415#0" expanded="true" />
+                    <element signature="e#7453#7454#0" expanded="true" />
+                    <element signature="e#7481#7482#0" expanded="true" />
+                    <element signature="e#7519#7520#0" expanded="true" />
+                    <element signature="e#7542#7543#0" expanded="true" />
+                    <element signature="e#7587#7588#0" expanded="true" />
+                    <element signature="e#7665#7666#0" expanded="true" />
+                    <element signature="e#7708#7709#0" expanded="true" />
+                    <element signature="e#7749#7750#0" expanded="true" />
+                    <element signature="e#7791#7792#0" expanded="true" />
+                    <element signature="e#7818#7819#0" expanded="true" />
+                    <element signature="e#8580#8581#0" expanded="true" />
+                    <element signature="e#8610#8611#0" expanded="true" />
+                    <element signature="e#8644#8645#0" expanded="true" />
+                    <element signature="e#8687#8688#0" expanded="true" />
+                    <element signature="e#10146#10154#0" expanded="true" />
+                  </folding>
                 </state>
               </provider>
             </entry>
@@ -143,8 +156,40 @@
           <file pinned="false" current-in-tab="true">
             <entry file="file://$PROJECT_DIR$/ros2sy/src/ros2sy/synthesis/Synthesis.java">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="-13">
-                  <caret line="149" column="12" lean-forward="true" selection-start-line="149" selection-start-column="12" selection-end-line="149" selection-end-column="12" />
+                <state relative-caret-position="360">
+                  <caret line="209" column="5" lean-forward="true" selection-start-line="209" selection-start-column="5" selection-end-line="209" selection-end-column="5" />
+                  <folding>
+                    <element signature="e#1512#1531#0" expanded="true" />
+                    <element signature="e#4413#4421#0" expanded="true" />
+                    <element signature="e#7209#7217#0" expanded="true" />
+                  </folding>
+                </state>
+              </provider>
+            </entry>
+          </file>
+          <file pinned="false" current-in-tab="false">
+            <entry file="file://$PROJECT_DIR$/ros2sy/src/ros2sy/logic/Encoding.java">
+              <provider selected="true" editor-type-id="text-editor">
+                <state relative-caret-position="60">
+                  <caret line="10" column="17" selection-start-line="10" selection-start-column="17" selection-end-line="10" selection-end-column="17" />
+                </state>
+              </provider>
+            </entry>
+          </file>
+          <file pinned="false" current-in-tab="false">
+            <entry file="file://$PROJECT_DIR$/ros2sy/src/ros2sy/logic/Variable.java">
+              <provider selected="true" editor-type-id="text-editor">
+                <state relative-caret-position="105">
+                  <caret line="7" column="13" selection-start-line="7" selection-start-column="13" selection-end-line="7" selection-end-column="13" />
+                </state>
+              </provider>
+            </entry>
+          </file>
+          <file pinned="false" current-in-tab="false">
+            <entry file="file://$PROJECT_DIR$/ros2sy/src/ros2sy/logic/SequentialEncoding.java">
+              <provider selected="true" editor-type-id="text-editor">
+                <state relative-caret-position="6165">
+                  <caret line="419" column="8" selection-start-line="419" selection-end-line="420" />
                 </state>
               </provider>
             </entry>
@@ -153,16 +198,25 @@
       </split-second>
     </splitter>
   </component>
+  <component name="FindInProjectRecents">
+    <findStrings>
+      <find>weight</find>
+    </findStrings>
+  </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
   <component name="IdeDocumentHistory">
     <option name="CHANGED_PATHS">
       <list>
-        <option value="$PROJECT_DIR$/ros2sy/src/ros2sy/petri/MethodsToPetriNet.java" />
+        <option value="$PROJECT_DIR$/build.xml" />
+        <option value="$PROJECT_DIR$/ros2sy/src/ros2sy/json/ParseJson.java" />
+        <option value="$PROJECT_DIR$/ros2sy/src/ros2sy/sig/TemplateParameter.java" />
+        <option value="$PROJECT_DIR$/ros2sy/src/ros2sy/logic/SequentialEncoding.java" />
+        <option value="$PROJECT_DIR$/ros2sy/src/ros2sy/sig/Arg.java" />
         <option value="$PROJECT_DIR$/ros2sy/src/ros2sy/sig/Method.java" />
         <option value="$PROJECT_DIR$/ros2sy/src/ros2sy/synthesis/Synthesis.java" />
-        <option value="$PROJECT_DIR$/build.xml" />
+        <option value="$PROJECT_DIR$/ros2sy/src/ros2sy/petri/MethodsToPetriNet.java" />
       </list>
     </option>
   </component>
@@ -180,6 +234,9 @@
   </component>
   <component name="ProjectView">
     <navigator proportions="" version="1">
+      <showExcludedFiles Scope="true" ProjectPane="true" />
+      <hideEmptyPackages ProjectPane="false" />
+      <abbreviatePackageNames ProjectPane="true" />
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
@@ -201,21 +258,6 @@
               <item name="ros1-to-ros2-sandbox" type="462c0819:PsiDirectoryNode" />
               <item name="build" type="462c0819:PsiDirectoryNode" />
               <item name="classes" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="ros2sy" type="b2602c69:ProjectViewProjectNode" />
-              <item name="ros1-to-ros2-sandbox" type="462c0819:PsiDirectoryNode" />
-              <item name="build" type="462c0819:PsiDirectoryNode" />
-              <item name="classes" type="462c0819:PsiDirectoryNode" />
-              <item name="ros2sy" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="ros2sy" type="b2602c69:ProjectViewProjectNode" />
-              <item name="ros1-to-ros2-sandbox" type="462c0819:PsiDirectoryNode" />
-              <item name="build" type="462c0819:PsiDirectoryNode" />
-              <item name="classes" type="462c0819:PsiDirectoryNode" />
-              <item name="ros2sy" type="462c0819:PsiDirectoryNode" />
-              <item name="sig" type="462c0819:PsiDirectoryNode" />
             </path>
             <path>
               <item name="ros2sy" type="b2602c69:ProjectViewProjectNode" />
@@ -306,10 +348,10 @@
     <property name="GenerateAntBuildDialog.generateSingleFile" value="true" />
     <property name="GenerateAntBuildDialog.outputFileNameProperty" value="ros1-to-ros2-sandbox" />
     <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
-    <property name="project.structure.last.edited" value="Project" />
-    <property name="project.structure.proportion" value="0.15" />
+    <property name="project.structure.last.edited" value="Modules" />
+    <property name="project.structure.proportion" value="0.225" />
     <property name="project.structure.side.proportion" value="0.2" />
-    <property name="settings.editor.selected.configurable" value="reference.projectsettings.compiler.excludes" />
+    <property name="settings.editor.selected.configurable" value="preferences.keymap" />
   </component>
   <component name="RecentsManager">
     <key name="MoveFile.RECENT_KEYS">
@@ -329,14 +371,19 @@
     </option>
   </component>
   <component name="RunManager" selected="Ant Target.Run">
-    <configuration name="Build" type="AntRunConfiguration">
+    <configuration name="Build" type="AntRunConfiguration" activateToolWindowBeforeRun="false">
       <antsettings antfile="file://$PROJECT_DIR$/build.xml" target="jar" />
       <method v="2">
         <option name="Make" enabled="true" />
       </method>
     </configuration>
-    <configuration name="Run" type="AntRunConfiguration">
+    <configuration name="Run" type="AntRunConfiguration" activateToolWindowBeforeRun="false">
       <antsettings antfile="file://$PROJECT_DIR$/build.xml" target="main" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration default="true" type="AntRunConfiguration" activateToolWindowBeforeRun="false">
       <method v="2">
         <option name="Make" enabled="true" />
       </method>
@@ -365,12 +412,12 @@
     <layout>
       <window_info id="Designer" order="0" />
       <window_info id="Favorites" order="1" side_tool="true" />
-      <window_info active="true" content_ui="combo" id="Project" order="2" sideWeight="0.5370879" visible="true" weight="0.12059765" />
-      <window_info anchor="bottom" id="Problems" />
+      <window_info content_ui="combo" id="Project" order="2" sideWeight="0.5370879" visible="true" weight="0.14727855" />
+      <window_info anchor="bottom" id="Problems" weight="0.3296501" />
       <window_info anchor="bottom" id="Version Control" />
       <window_info anchor="bottom" id="Terminal" weight="0.3296501" />
       <window_info anchor="bottom" id="Event Log" side_tool="true" />
-      <window_info anchor="bottom" id="Messages" visible="true" weight="0.33793738" />
+      <window_info active="true" anchor="bottom" id="Messages" visible="true" weight="0.34530386" />
       <window_info anchor="bottom" id="Message" order="0" />
       <window_info anchor="bottom" id="Find" order="1" />
       <window_info anchor="bottom" id="Run" order="2" />
@@ -383,11 +430,23 @@
       <window_info anchor="right" id="Commander" internal_type="SLIDING" order="2" type="SLIDING" weight="0.4" />
       <window_info anchor="right" id="Ant Build" order="3" weight="0.10992529" />
       <window_info anchor="right" content_ui="combo" id="Hierarchy" order="4" weight="0.25" />
-      <window_info anchor="right" id="Structure" order="5" sideWeight="0.46291208" visible="true" weight="0.16755603" />
+      <window_info anchor="right" id="Structure" order="5" sideWeight="0.46291208" visible="true" weight="0.12113127" />
     </layout>
   </component>
+  <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <breakpoints>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/ros2sy/src/ros2sy/sig/TemplateParameter.java</url>
+          <line>63</line>
+          <properties />
+          <option name="timeStamp" value="1" />
+        </line-breakpoint>
+      </breakpoints>
+    </breakpoint-manager>
+  </component>
   <component name="antWorkspaceConfiguration">
-    <option name="IS_AUTOSCROLL_TO_SOURCE" value="false" />
+    <option name="IS_AUTOSCROLL_TO_SOURCE" value="true" />
     <option name="FILTER_TARGETS" value="false" />
     <buildFile url="file://$PROJECT_DIR$/build.xml">
       <targetFilters>
@@ -401,13 +460,6 @@
     </buildFile>
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/ros2sy/src/ros2sy/sig/MessageT.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-7">
-          <caret line="16" column="1" selection-start-line="16" selection-start-column="1" selection-end-line="16" selection-end-column="1" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/.settings/org.eclipse.ltk.core.refactoring.prefs">
       <provider selected="true" editor-type-id="text-editor" />
     </entry>
@@ -432,80 +484,10 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/ros2sy/src/ros2sy/petri/MethodsToPetriNet.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="585">
-          <caret line="38" column="17" selection-start-line="38" selection-start-column="17" selection-end-line="38" selection-end-column="17" />
-          <folding>
-            <element signature="imports" expanded="true" />
-            <element signature="e#1651#1678#0" expanded="true" />
-            <element signature="e#5219#5220#0" expanded="true" />
-            <element signature="e#5249#5250#0" expanded="true" />
-            <element signature="e#5296#5297#0" expanded="true" />
-            <element signature="e#5331#5332#0" expanded="true" />
-            <element signature="e#5373#5374#0" expanded="true" />
-            <element signature="e#5411#5412#0" expanded="true" />
-            <element signature="e#5451#5452#0" expanded="true" />
-            <element signature="e#5496#5497#0" expanded="true" />
-            <element signature="e#5541#5542#0" expanded="true" />
-            <element signature="e#5560#5561#0" expanded="true" />
-            <element signature="e#5740#5741#0" expanded="true" />
-            <element signature="e#5791#5792#0" expanded="true" />
-            <element signature="e#6013#6014#0" expanded="true" />
-            <element signature="e#6059#6060#0" expanded="true" />
-            <element signature="e#8172#8173#0" expanded="true" />
-            <element signature="e#8194#8195#0" expanded="true" />
-            <element signature="e#11988#12005#0" expanded="true" />
-            <element signature="e#14518#14519#0" expanded="true" />
-            <element signature="e#14577#14578#0" expanded="true" />
-            <element signature="e#14759#14775#0" expanded="true" />
-            <element signature="e#14950#14966#0" expanded="true" />
-            <element signature="e#21362#21363#0" expanded="true" />
-            <element signature="e#21405#21406#0" expanded="true" />
-            <element signature="e#21828#21834#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/ros2sy/src/ros2sy/json/ParseJson.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="231">
-          <caret line="21" selection-start-line="21" selection-end-line="21" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/ros2sy/src/ros2sy/code/CppCode.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="540">
-          <caret line="36" column="2" selection-start-line="36" selection-start-column="2" selection-end-line="36" selection-end-column="2" />
-          <folding>
-            <element signature="imports" expanded="true" />
-            <element signature="e#907#924#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/ros2sy/src/ros2sy/exception/ArgParseException.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="105">
-          <caret line="7" column="13" selection-start-line="7" selection-start-column="13" selection-end-line="7" selection-end-column="13" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/ros2sy/src/ros2sy/synthesis/SearchSpace.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="180">
           <caret line="12" column="17" selection-start-line="12" selection-start-column="17" selection-end-line="12" selection-end-column="17" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/ros2sy/src/ros2sy/sig/Method.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-3835">
-          <caret line="35" column="46" selection-start-line="35" selection-start-column="46" selection-end-line="35" selection-end-column="46" />
-          <folding>
-            <element signature="imports" expanded="true" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -516,10 +498,182 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/.externalToolBuilders/org.eclipse.jdt.core.javabuilder.launch">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/.externalToolBuilders/ant_build.launch">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/ros2sy/src/ros2sy/logic/Variable.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="105">
+          <caret line="7" column="13" selection-start-line="7" selection-start-column="13" selection-end-line="7" selection-end-column="13" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/ros2sy/src/ros2sy/logic/SequentialEncoding.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="6165">
+          <caret line="419" column="8" selection-start-line="419" selection-end-line="420" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/ros2sy/src/ros2sy/logic/Encoding.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="60">
+          <caret line="10" column="17" selection-start-line="10" selection-start-column="17" selection-end-line="10" selection-end-column="17" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/ros2sy/src/ros2sy/sig/MessageT.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="180">
+          <caret line="16" column="1" selection-start-line="16" selection-start-column="1" selection-end-line="16" selection-end-column="1" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/ros2sy/src/ros2sy/code/CppCode.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="268">
+          <caret line="41" column="5" selection-start-line="41" selection-start-column="5" selection-end-line="41" selection-end-column="5" />
+          <folding>
+            <element signature="imports" expanded="true" />
+            <element signature="e#907#924#0" expanded="true" />
+            <element signature="e#6646#6655#0" expanded="true" />
+            <element signature="e#9900#9908#0" expanded="true" />
+            <element signature="e#10163#10169#0" expanded="true" />
+            <element signature="e#11781#11789#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/ros2sy/src/ros2sy/sig/TemplateParameter.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="274">
+          <caret line="48" column="2" lean-forward="true" selection-start-line="48" selection-start-column="2" selection-end-line="48" selection-end-column="2" />
+          <folding>
+            <element signature="imports" expanded="true" />
+            <element signature="e#887#888#0" expanded="true" />
+            <element signature="e#1008#1009#0" expanded="true" />
+            <element signature="e#1106#1107#0" expanded="true" />
+            <element signature="e#1161#1162#0" expanded="true" />
+            <element signature="e#1211#1212#0" expanded="true" />
+            <element signature="e#1650#1651#0" expanded="true" />
+            <element signature="e#1769#1770#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/ros2sy/src/ros2sy/json/ParseJson.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="443">
+          <caret line="45" column="4" selection-start-line="45" selection-start-column="4" selection-end-line="45" selection-end-column="4" />
+          <folding>
+            <element signature="imports" expanded="true" />
+            <element signature="e#2123#2139#0" expanded="true" />
+            <element signature="e#9178#9186#0" expanded="true" />
+            <element signature="e#10177#10185#0" expanded="true" />
+            <element signature="e#10920#10928#0" expanded="true" />
+            <element signature="e#14568#14576#0" expanded="true" />
+            <element signature="e#15854#15862#0" expanded="true" />
+            <element signature="e#16879#16887#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/ros2sy/src/ros2sy/sig/Arg.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="514">
+          <caret line="89" column="88" selection-start-line="89" selection-start-column="88" selection-end-line="89" selection-end-column="88" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/ros2sy/src/ros2sy/exception/ArgParseException.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="105">
+          <caret line="7" column="13" selection-start-line="7" selection-start-column="13" selection-end-line="7" selection-end-column="13" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/ros2sy/src/ros2sy/sig/Method.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="362">
+          <caret line="388" column="5" selection-start-line="388" selection-end-line="389" />
+          <folding>
+            <element signature="imports" expanded="true" />
+            <element signature="e#6760#6761#0" expanded="true" />
+            <element signature="e#6804#6805#0" expanded="true" />
+            <element signature="e#6844#6845#0" expanded="true" />
+            <element signature="e#6877#6878#0" expanded="true" />
+            <element signature="e#6916#6917#0" expanded="true" />
+            <element signature="e#6958#6959#0" expanded="true" />
+            <element signature="e#7307#7308#0" expanded="true" />
+            <element signature="e#7345#7346#0" expanded="true" />
+            <element signature="e#7388#7389#0" expanded="true" />
+            <element signature="e#7414#7415#0" expanded="true" />
+            <element signature="e#7453#7454#0" expanded="true" />
+            <element signature="e#7481#7482#0" expanded="true" />
+            <element signature="e#7519#7520#0" expanded="true" />
+            <element signature="e#7542#7543#0" expanded="true" />
+            <element signature="e#7587#7588#0" expanded="true" />
+            <element signature="e#7665#7666#0" expanded="true" />
+            <element signature="e#7708#7709#0" expanded="true" />
+            <element signature="e#7749#7750#0" expanded="true" />
+            <element signature="e#7791#7792#0" expanded="true" />
+            <element signature="e#7818#7819#0" expanded="true" />
+            <element signature="e#8580#8581#0" expanded="true" />
+            <element signature="e#8610#8611#0" expanded="true" />
+            <element signature="e#8644#8645#0" expanded="true" />
+            <element signature="e#8687#8688#0" expanded="true" />
+            <element signature="e#10146#10154#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/ros2sy/src/ros2sy/petri/MethodsToPetriNet.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="477">
+          <caret line="87" column="62" selection-start-line="87" selection-start-column="62" selection-end-line="87" selection-end-column="62" />
+          <folding>
+            <element signature="imports" expanded="true" />
+            <element signature="e#1652#1679#0" expanded="true" />
+            <element signature="e#5192#5193#0" expanded="true" />
+            <element signature="e#5222#5223#0" expanded="true" />
+            <element signature="e#5269#5270#0" expanded="true" />
+            <element signature="e#5304#5305#0" expanded="true" />
+            <element signature="e#5346#5347#0" expanded="true" />
+            <element signature="e#5384#5385#0" expanded="true" />
+            <element signature="e#5424#5425#0" expanded="true" />
+            <element signature="e#5469#5470#0" expanded="true" />
+            <element signature="e#5514#5515#0" expanded="true" />
+            <element signature="e#5533#5534#0" expanded="true" />
+            <element signature="e#5713#5714#0" expanded="true" />
+            <element signature="e#5764#5765#0" expanded="true" />
+            <element signature="e#5986#5987#0" expanded="true" />
+            <element signature="e#6032#6033#0" expanded="true" />
+            <element signature="e#8145#8146#0" expanded="true" />
+            <element signature="e#8167#8168#0" expanded="true" />
+            <element signature="e#11961#11978#0" expanded="true" />
+            <element signature="e#14526#14527#0" expanded="true" />
+            <element signature="e#14585#14586#0" expanded="true" />
+            <element signature="e#14767#14783#0" expanded="true" />
+            <element signature="e#14958#14974#0" expanded="true" />
+            <element signature="e#21362#21363#0" expanded="true" />
+            <element signature="e#21405#21406#0" expanded="true" />
+            <element signature="e#21828#21834#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/ros2sy/src/ros2sy/synthesis/Synthesis.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-13">
-          <caret line="149" column="12" lean-forward="true" selection-start-line="149" selection-start-column="12" selection-end-line="149" selection-end-column="12" />
+        <state relative-caret-position="360">
+          <caret line="209" column="5" lean-forward="true" selection-start-line="209" selection-start-column="5" selection-end-line="209" selection-end-column="5" />
+          <folding>
+            <element signature="e#1512#1531#0" expanded="true" />
+            <element signature="e#4413#4421#0" expanded="true" />
+            <element signature="e#7209#7217#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
@@ -580,7 +734,6 @@
             <option name="proportions">
               <list>
                 <option value="0.2" />
-                <option value="0.6" />
               </list>
             </option>
           </splitter-proportions>
@@ -589,6 +742,17 @@
       <state key="ProjectLibrariesConfigurable.UI">
         <settings>
           <last-edited>apt</last-edited>
+          <splitter-proportions>
+            <option name="proportions">
+              <list>
+                <option value="0.2" />
+              </list>
+            </option>
+          </splitter-proportions>
+        </settings>
+      </state>
+      <state key="ScopeChooserConfigurable.UI">
+        <settings>
           <splitter-proportions>
             <option name="proportions">
               <list>

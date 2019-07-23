@@ -22,6 +22,7 @@ import uniol.apt.adt.pn.PetriNet;
 import ros2sy.logic.Variable;
 import ros2sy.petri.MethodsToPetriNet;
 import ros2sy.sig.Method;
+import ros2sy.sig.TemplateParameter;
 import ros2sy.synthesis.*;
 
 public class Synthesis {
@@ -132,11 +133,36 @@ public class Synthesis {
 		LOGGER.info("Getting methods");
 		ArrayList<Method> methods = ParseJson.getAllMethods("node", "publisher", "rclcpp", "subscription", "rate", "message", "duration");
 		
+		ArrayList<String> availableTypes = ParseJson.getAvailableTypes("scrape_rclcpp_docs/jsons/types.json");
+		
+		HashSet<String> templates = new HashSet<String>(Method.getAllRequiredTemplateParameters(methods));
+		
+		HashMap<String, HashSet<String>> templateToTypes = new HashMap<>();
+		LOGGER.info("Available types: {}",  availableTypes);
+		LOGGER.info("Types: {}", templates);
+		for (String temp : templates) {
+			if (temp.equals("MessageT")) {				
+				for (String tipe : availableTypes) {
+					if (TemplateParameter.isMessageTEquivalent(tipe)) {
+						if (!templateToTypes.containsKey(temp)) {
+							templateToTypes.put(temp, new HashSet<String>());
+						}
+						
+						templateToTypes.get(temp).add(tipe);
+					}
+				}
+			} else {
+			
+			}
+		}
+		
+		LOGGER.info("Template types: {}", templateToTypes);
+		
 		ArrayList<String> dontClone = new ArrayList<>();
 		dontClone.add("void");
 		
 		LOGGER.info("Creating petri net from methods");
-		MethodsToPetriNet mtpn = new MethodsToPetriNet(methods, dontClone);
+		MethodsToPetriNet mtpn = new MethodsToPetriNet(methods, dontClone, templateToTypes);
 		
 		LOGGER.info("Outputting petri net as a DOT file");
 		MethodsToPetriNet.createDotFile(mtpn.getNet(), "dot/full_search.dot");
@@ -199,7 +225,8 @@ public class Synthesis {
 			List<List<String>> k = search.getBlock(i);
 
 			ArrayList<String> dontUse = search.othersExcept(i, neverUse);
-						
+			
+
 			LOGGER.debug("Block: {}", k);
 //			LOGGER.trace(dontUse);
 			

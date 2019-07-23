@@ -1,7 +1,8 @@
 <project name="ros2sy" basedir="." default="main">
-	<property name="lib.dir" value="ros2sy/lib"></property>
-	<property name="src.dir" value="ros2sy/src"/>
-	<property name="rsrc.dir" value="${src.dir}/resources"/>
+	<property name="pkg.dir" value="${ant.project.name}"/>
+	<property name="lib.dir" value="${pkg.dir}/lib"/>
+	<property name="src.dir" value="${pkg.dir}/src"/>
+	<property name="rsrc.dir" value="${pkg.dir}/resources"/>
 	<property name="build.dir" value="build"/>
 	<property name="classes.dir" value="${build.dir}/classes"/>
 	<property name="jar.dir" value="${build.dir}/jar"/>
@@ -22,7 +23,7 @@
 
     <target name="jar" depends="compile">
         <mkdir dir="${jar.dir}"/>
-        <jar destfile="${jar.dir}/ros2sy.jar" basedir="${classes.dir}">
+        <jar destfile="${jar.dir}/${ant.project.name}.jar" basedir="${classes.dir}">
             <manifest>
                 <attribute name="Main-Class" value="${main-class}"/>
             </manifest>
@@ -32,7 +33,7 @@
     <target name="run" depends="jar">
         <java fork="true" classname="${main-class}">
         	<classpath>
-        		<pathelement location="${jar.dir}/ros2sy.jar"/>
+        		<pathelement location="${jar.dir}/${ant.project.name}.jar"/>
         		<pathelement location="${lib.dir}/sat4j-pb.jar"/>
         		<pathelement location="${lib.dir}/apt.jar"/>
         		<pathelement location="${lib.dir}/commons-lang3-3.4.jar"/>

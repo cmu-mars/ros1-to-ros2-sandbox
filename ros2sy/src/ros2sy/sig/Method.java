@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -26,14 +27,13 @@ public class Method {
 	public boolean isClassMethod;
 	public Type fromClass;
 	public MethodType methodType;
-	public String instanceNeeded;
 	public String ros1Name = "";
-	public HashSet<String> tags = new HashSet<String>();
+	public HashSet<String> tags = new HashSet<>();
 	public ArrayList<String> include = new ArrayList<>();
 	public ArrayList<TemplateParameter> tparams = new ArrayList<>();
 	public boolean hasTemplateParamaters = false;
 	private int numRequiredTemplateParams = 0;
-	private int numRequiredTemplateParameters;
+//	private int numRequiredTemplateParameters;
 	
 	private static String [] rclcpp_classes = {
 		"Node", "Publisher<MessageT, Alloc>", "Subscription<CallbackMessageT, Alloc>", "Rate", "GenericRate<Clock>"
@@ -240,7 +240,7 @@ public class Method {
 	}
 	
 	public boolean requiresTemplateParams() {
-		return this.hasTemplateParamaters && this.numRequiredTemplateParameters > 0;
+		return this.hasTemplateParamaters && this.numRequiredTemplateParams > 0;
 	}
 	
 	public boolean hasTag(String tagName) {
@@ -259,11 +259,24 @@ public class Method {
 	@Override
 	public String toString() {
 		Object[] argsArray = this.args.toArray();
-		String str = "(" + (((Arg) argsArray[0]).toString());
+		String str = "";
+		if (this.hasTemplateParamaters) {
+			str = str + "<";
+			
+			for (int i = 0; i < this.tparams.size(); i++) {
+				str = str + this.tparams.get(i).toString() + ((i < this.tparams.size() - 1) ? ", " : "");
+			}
+			
+			str = str + ">";
+		}
+		
+		str = str + "(" + (((Arg) argsArray[0]).toString());
 		for (int i = 1; i < argsArray.length; i++) {
 			str = str + ", " + (((Arg) argsArray[i]).toString());
 		}
-		str = str + ") -> ";
+		str = str + ")";
+		
+		str = str + " -> ";
 		return this.name + ": " + str + this.returnType.toString();
 	}
 	
@@ -337,6 +350,58 @@ public class Method {
 		return man;
 	}
 	
+	private ArrayList<String> argsListToStringList() {
+		ArrayList<String> strings = new ArrayList<String>();
+		
+		for (Arg a : this.args) {
+			strings.add(a.toString());
+		}
+		
+		return strings;
+	}
+	
+	public Method replaceParametricTypeVariables(HashMap<String, String> map) {
+		String newName = this.name;
+		for (Map.Entry<String, String> entry : map.entrySet()) {
+			newName = newName.replaceAll(entry.getKey(), entry.getValue());
+		}
+		
+		String returnTypeString = this.returnType.toString();
+		for (Map.Entry<String, String> entry : map.entrySet()) {
+			returnTypeString = returnTypeString.replaceAll(entry.getKey(), entry.getValue());
+		}
+		
+		ArrayList<String> newArgs = this.argsListToStringList();
+		
+		for (int i = 0; i < newArgs.size(); i++) {
+			for (Map.Entry<String, String> entry : map.entrySet()) {				
+				newArgs.set(i, newArgs.get(i).replaceAll(entry.getKey(), entry.getValue()));
+			}
+		}
+		
+		Method newMethod = new Method(newName, newArgs, returnTypeString);
+		newMethod.methodType = this.methodType;
+		newMethod.isClassMethod = this.isClassMethod;
+		if (newMethod.isClassMethod) {
+			newMethod.fromClass = this.fromClass;	
+		}
+		
+		
+		for (TemplateParameter tp : this.tparams) {
+			if (!map.containsKey(tp.name)) {
+				if (tp.hasDefault) {
+					newMethod.addTemplateParameter(tp.name, tp.getDefaultValue());
+				} else {
+					newMethod.addTemplateParameter(tp.name);
+				}
+			} else {
+				newMethod.addTemplateParameter(tp.name, map.get(tp.name));
+			}
+		}
+		
+		return newMethod;
+	}
+	
 	/**
 	 * Get the list of all optional args to this method.
 	 * 
@@ -355,12 +420,31 @@ public class Method {
 		return opt;
 	}
 	
-	public static HashMap<String, HashSet<String>> methodSetsToStringSets(HashMap<String, HashSet<Method>> map, MethodsToPetriNet mtpn) {
+	public static Set<String> getAllRequiredTemplateParameters(ArrayList<Method> methods) {
+		HashSet<String> params = new HashSet<>();
+		
+		for (Method m : methods) {
+			if (m.requiresTemplateParams()) {
+				LOGGER.trace("The method {} requires {} template parameters", m.name, m.numRequiredTemplateParams);
+				for (TemplateParameter p : m.getRequiredTemplateParameters()) {
+					if (!params.contains(p.name)) {
+//						LOGGER.info("Found a template parameter with name <{}>",  p.name);
+						params.add(p.name);
+					}
+				}
+			}
+		}
+		
+		return params;
+	}
+	
+	public static HashMap<String, HashSet<String>> methodSetsToStringSets(HashMap<String, HashSet<Method>> tagsMap, MethodsToPetriNet mtpn) {
 		HashMap<String, HashSet<String>> namesByTag = new HashMap<>();
 		
-		for (Map.Entry<String, HashSet<Method>> entry : map.entrySet()) {
+		for (Map.Entry<String, HashSet<Method>> entry : tagsMap.entrySet()) {
 			namesByTag.put(entry.getKey(), new HashSet<String>());
 			for (Method m : entry.getValue()) {
+//				LOGGER.info("method.name={}, tag={}, names={}, nicknames={}", m.name,  entry.getKey(), namesByTag.get(entry.getKey()), mtpn.getNicknamesOfMethod(m));
 				namesByTag.get(entry.getKey()).addAll(mtpn.getNicknamesOfMethod(m));
 			}
 		}

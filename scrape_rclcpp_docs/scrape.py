@@ -372,12 +372,13 @@ def addNamespace(tipe, namespace, originalTypedefs):
   def quantify(name):
     print("Name: {}, name in original typedefs: {}".format(name, name in originalTypedefs))
     name = re.sub(r"typename|class", r"", name).strip()
+    sep = "::" if len(namespace) > 0 else ""
     if name.find("::") > -1:
       firstName = name[:name.find("::")]
       if firstName in originalTypedefs:
-        return namespace + "::" + name
+        return namespace + sep + name
     if name in originalTypedefs:
-      return namespace + "::" + name
+      return namespace + sep + name
     elif name.find("Alloc") > -1:
       return name
     elif (not name.endswith("T")) and name.find("allocator::") == -1 and name.find("std::") == -1 and name.find("rclcpp::") == -1 and name.lower() != name:

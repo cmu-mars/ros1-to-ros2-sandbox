@@ -28,4 +28,17 @@ public class TemplateParameter {
 	public String replaceWithName(String base, String replacement) {
 		return base.replaceAll(this.name, replacement);
 	}
+	
+	public static boolean isMessageTEquivalent(String s) {
+		return s.indexOf("::msgs::") > -1;
+	}
+	
+	public String getDefaultValue() {
+		return this.defaultValue;
+	}
+	
+	@Override
+	public String toString() {
+		return this.name + ((this.hasDefault) ? " = " + this.defaultValue : "");
+	}
 }

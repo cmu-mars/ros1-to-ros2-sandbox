@@ -1,4 +1,5 @@
 package ros2sy.petri;
+
 import ros2sy.exception.ArgParseException;
 import ros2sy.sig.*;
 
@@ -6,6 +7,7 @@ import java.io.FileWriter;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 
 import org.apache.logging.log4j.LogManager;
@@ -58,17 +60,17 @@ public class MethodsToPetriNet {
 	 * @param dontClone		an ArrayList, containing descriptions of types that
 	 * 										should not have clone edges.
 	 */
-	public MethodsToPetriNet(ArrayList<Method> methods, ArrayList<String> dontClone) {
+	public MethodsToPetriNet(ArrayList<Method> methods, ArrayList<String> dontClone, HashMap<String, HashSet<String>> templateReplacements) {
 		this.methods = methods;
 		this.silly = dontClone;
-		this.typeAliases = new HashMap<String, String>();
+		this.typeAliases = new HashMap<>();
 		
 		this.typeAliases.put("int", "size_t");
-		this.methodAliases = new HashMap<String, Method>();
+		this.methodAliases = new HashMap<>();
 		
 		// Get a bare-bones petri net, containing only what you can gather from
 		// the methods themselves.
-		this.net = MethodsToPetriNet.convert(this, this.methods);
+		this.net = MethodsToPetriNet.convert(this, this.methods, templateReplacements);
 		
 //		Place[] placeArray = new Place [this.net.getPlaces().size()];
 //		this.net.getPlaces().toArray(placeArray);
@@ -196,7 +198,11 @@ public class MethodsToPetriNet {
 	 * @return		a list of the known aliases for the given method
 	 */
 	public ArrayList<String> getNicknamesOfMethod(Method m) {
-		return this.aliasesForMethods.get(m);
+		if (this.aliasesForMethods.containsKey(m)) {
+			return this.aliasesForMethods.get(m);
+		}
+		LOGGER.warn("There are no aliases for this method <{}>", m);
+		return new ArrayList<String>();
 	}
 	
 	/**
@@ -213,7 +219,7 @@ public class MethodsToPetriNet {
 		if (!this.hasNicknamesOfMethod(m)) {
 			this.aliasesForMethods.put(m, new ArrayList<String>());
 		}
-		ArrayList<String> nicknames = this.aliasesForMethods.get(m);
+//		ArrayList<String> nicknames = this.aliasesForMethods.get(m);
 		if (!this.hasParticularNicknameOfMethod(m, nickname)) {
 			// Just trying to verify that it does this...
 			this.aliasesForMethods.get(m).add(nickname);
@@ -313,6 +319,17 @@ public class MethodsToPetriNet {
 		}
 		return name.substring(0, index);
 	}
+	
+	private static Transition createAlternateTransition(MethodsToPetriNet mtpn, Transition t, int altNumber) {
+		Transition newT = MethodsToPetriNet.createAlternateTransition(mtpn.net, t, altNumber);
+		mtpn.addMethodNickname(mtpn.getMethodFromNickname(t.getId()), newT.getId());
+		return newT;
+	}
+
+	private static Transition createAlternateTransition(PetriNet pn, Transition t, int altNumber) {
+		return pn.createTransition(t.getId() + "(ALT-"  + Integer.toString(altNumber) + ")");
+	}
+
 
 	/**
 	 * Convert the methods of the given MethodsToPetriNet object into a PetriNet.
@@ -325,12 +342,26 @@ public class MethodsToPetriNet {
 	 * @return					PetriNet representing the arguments and methods contained 
 	 * 								in the given ArrayList
 	 */
-	public static PetriNet convert(MethodsToPetriNet mt, ArrayList<Method> methods) {
+	public static PetriNet convert(MethodsToPetriNet mt, ArrayList<Method> methods, HashMap<String, HashSet<String>> templates) {
 		PetriNet pn = new PetriNet();
+		mt.net = pn;
+		
+		HashMap<String, String> replacers = new HashMap<>();
+		
+		for (Map.Entry<String, HashSet<String>> temp : templates.entrySet()) {
+			if (temp.getValue().size() == 1) {
+				replacers.put(temp.getKey(), (new ArrayList<String>(temp.getValue()).get(0)));
+			}
+		}
 		
 		HashMap<String, Integer> nameCounts = new HashMap<String, Integer>();
 		
-		for (Method m : methods) {
+		for (Method maybe : methods) {
+			Method m = (replacers.isEmpty()) ? maybe : maybe.replaceParametricTypeVariables(replacers);
+			if (maybe.hasTemplateParamaters) {				
+				LOGGER.trace("replaced template parameters: <{}>: {} vs {}", templates.toString(), maybe.toString(), m.toString());
+			}
+			
 			if (!nameCounts.containsKey(m.name)) {
 				nameCounts.put(m.name,	0);
 			}
@@ -338,15 +369,15 @@ public class MethodsToPetriNet {
 			
 			Transition t = MethodsToPetriNet.makeMethodTransition(m, pn, nameCounts);
 			
-			mt.addMethodNickname(m, t.getId());			
+			mt.addMethodNickname(maybe, t.getId());
 			
 			String returnType = m.returnType.toString();
 			Place ret = MethodsToPetriNet.getPetriPlace(pn, returnType);
 			if (m.returnType.isSharedPointer) {
 				String transName = m.returnType.toString() + "::Shared_to_unshared";
-				mt.addMethodNickname(mt.de_ptr, transName);
+//				mt.addMethodNickname(mt.de_ptr, transName);
 				
-				MethodsToPetriNet.addTransition(pn, returnType, transName, m.returnType.valueTypeName);
+				MethodsToPetriNet.addTransition(mt, mt.de_ptr, returnType, transName, m.returnType.valueTypeName);
 			}
 			
 			if (!m.hasOptionalArgs()) {
@@ -376,9 +407,9 @@ public class MethodsToPetriNet {
 				ArrayList<Arg> options = m.getOptionalArgs();
 				
 				for (int i = 0; i < options.size(); i++) {
-					Transition opt = MethodsToPetriNet.createAlternateTransition(pn, t, i);
+					Transition opt = MethodsToPetriNet.createAlternateTransition(mt, t, i);
 					//pn.createTransition(t.getId() + "(ALT-" + Integer.toString(i) + ")");
-					mt.addMethodNickname(m, opt.getId());
+					mt.addMethodNickname(maybe, opt.getId());
 					
 					// Add an additional arg that this transition will need to take
 					mandatory.add(options.get(i));
@@ -458,10 +489,6 @@ public class MethodsToPetriNet {
 		}
 	}
 
-	private static Transition createAlternateTransition(PetriNet pn, Transition t, int altNumber) {
-		return pn.createTransition(t.getId() + "(ALT-"  + Integer.toString(altNumber) + ")");
-	}
-
 	/**
 	 * Add a clone transition, and the appropriate edges, to the place p in the
 	 * petri net pn.
@@ -507,8 +534,13 @@ public class MethodsToPetriNet {
 			}
 			Place p = (!pn.containsPlace(strType)) ? pn.createPlace(strType) : pn.getPlace(strType);
 			MethodsToPetriNet.addFlowToPetri(pn, p, t);
-			
 		}
+	}
+	
+	private static void addTransition(MethodsToPetriNet mtpn, Method m, String p1_id, String t_id, String p2_id) {
+		mtpn.addMethodNickname(m, t_id);
+		
+		MethodsToPetriNet.addTransition(mtpn.getNet(), p1_id, t_id, p2_id);
 	}
 	
 	private static void addTransition(PetriNet pn, String p1_id, String t_id, String p2_id) {
@@ -518,6 +550,8 @@ public class MethodsToPetriNet {
 			Transition t = pn.createTransition(t_id);
 			pn.createFlow(p1, t);
 			pn.createFlow(t, p2);
+		} else {
+			LOGGER.warn("Did not create the transition with id <{}>: already exists in the petri net", t_id);
 		}
 	}
 	

@@ -41,6 +41,31 @@ public class ParseJson {
 		
 	}
 	
+	public static ArrayList<String> getAvailableTypes(String fileName) {
+		ArrayList<String> tipes = new ArrayList<>();
+		
+		try {
+			JsonObject jo = ParseJson.getJsonObjectFromFile(fileName);
+			
+			for (String key : jo.keySet()) {
+				if (jo.get(key).isJsonObject()) {
+					JsonObject value = jo.get(key).getAsJsonObject();
+					if (value.has("types") && value.get("types").isJsonArray()) {
+						for (JsonElement elt : value.get("types").getAsJsonArray()) {
+							if (elt.isJsonPrimitive()) {
+								tipes.add(elt.getAsString());
+							}
+						}
+					}
+				}
+			}
+		} catch (Exception e) {
+			LOGGER.warn("Caught an exception:", e);
+		}
+		
+		return tipes;
+	}
+	
 	/**
 	 * Finds the input variables map, given the name of a JSON file to parse the
 	 * map from.
@@ -377,6 +402,7 @@ public class ParseJson {
 					}
 				}
 				if (jo.has("template")) {
+					LOGGER.trace("Method <{}> has template types",  methods.get(index).name);
 					JsonArray jarray = jo.get("template").getAsJsonArray();
 					
 					for (JsonElement elm : jarray) {
@@ -387,14 +413,19 @@ public class ParseJson {
 								String name = temp.get("name").getAsString();
 								if (temp.has("value")) {
 									String val = temp.get("value").getAsString();
+									LOGGER.trace("Adding template parameter {}: {}", name, val);
 									
 									methods.get(index).addTemplateParameter(name, val);
 								} else {
+									
+									LOGGER.trace("Adding template parameter {}", name);
 									methods.get(index).addTemplateParameter(name);
 								}
 							}
 						}
 					}
+				} else {
+					LOGGER.trace("Method <{}> does not have template types", methods.get(index).name);
 				}
 				
 			} else {
@@ -507,7 +538,7 @@ public class ParseJson {
 		
 		// We're just going block these up in a silly way.
 		
-		MethodsToPetriNet mtpn = new MethodsToPetriNet(methods, sillyToClone);
+		MethodsToPetriNet mtpn = new MethodsToPetriNet(methods, sillyToClone, new HashMap<String, HashSet<String>>());
 		HashMap<String, ArrayList<String>> blockByRos1Name = new HashMap<String, ArrayList<String>>();
 		PetriNet pn = mtpn.getNet();
 		

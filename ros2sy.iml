@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<module type="JAVA_MODULE" version="4">
+  <component name="EclipseModuleManager">
+    <libelement value="jar://$MODULE_DIR$/ros2sy/lib/sat4j-pb.jar!/" />
+    <libelement value="jar://$MODULE_DIR$/ros2sy/lib/apt.jar!/" />
+    <libelement value="jar://$MODULE_DIR$/ros2sy/lib/commons-lang3-3.4.jar!/" />
+    <libelement value="jar://$MODULE_DIR$/ros2sy/lib/gson-2.8.5.jar!/" />
+    <libelement value="jar://$MODULE_DIR$/ros2sy/lib/log4j-api-2.12.0.jar!/" />
+    <libelement value="jar://$MODULE_DIR$/ros2sy/lib/log4j-core-2.12.0.jar!/" />
+    <libelement value="jar://$MODULE_DIR$/ros2sy/lib/log4j-api-2.12.0-javadoc.jar!/" />
+    <libelement value="jar://$MODULE_DIR$/ros2sy/lib/log4j-core-2.12.0-javadoc.jar!/" />
+    <src_description expected_position="0">
+      <src_folder value="file://$MODULE_DIR$/ros2sy/src" expected_position="0" />
+    </src_description>
+  </component>
+  <component name="NewModuleRootManager">
+    <output url="file://$MODULE_DIR$/build" />
+    <content url="file://$MODULE_DIR$">
+      <sourceFolder url="file://$MODULE_DIR$/ros2sy/src" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/ros2sy/resources" type="java-resource" />
+    </content>
+    <orderEntry type="sourceFolder" forTests="false" />
+    <orderEntry type="inheritedJdk" />
+    <orderEntry type="module-library" scope="PROVIDED">
+      <library name="sat4j-pb.jar">
+        <CLASSES>
+          <root url="jar://$MODULE_DIR$/ros2sy/lib/sat4j-pb.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library" scope="PROVIDED">
+      <library name="apt.jar">
+        <CLASSES>
+          <root url="jar://$MODULE_DIR$/ros2sy/lib/apt.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library" scope="PROVIDED">
+      <library name="commons-lang3-3.4.jar">
+        <CLASSES>
+          <root url="jar://$MODULE_DIR$/ros2sy/lib/commons-lang3-3.4.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library" scope="PROVIDED">
+      <library name="gson-2.8.5.jar">
+        <CLASSES>
+          <root url="jar://$MODULE_DIR$/ros2sy/lib/gson-2.8.5.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library" scope="PROVIDED">
+      <library name="log4j-api-2.12.0.jar">
+        <CLASSES>
+          <root url="jar://$MODULE_DIR$/ros2sy/lib/log4j-api-2.12.0.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library" scope="PROVIDED">
+      <library name="log4j-core-2.12.0.jar">
+        <CLASSES>
+          <root url="jar://$MODULE_DIR$/ros2sy/lib/log4j-core-2.12.0.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library" scope="PROVIDED">
+      <library name="log4j-api-2.12.0-javadoc.jar">
+        <CLASSES>
+          <root url="jar://$MODULE_DIR$/ros2sy/lib/log4j-api-2.12.0-javadoc.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library" scope="PROVIDED">
+      <library name="log4j-core-2.12.0-javadoc.jar">
+        <CLASSES>
+          <root url="jar://$MODULE_DIR$/ros2sy/lib/log4j-core-2.12.0-javadoc.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+      </library>
+    </orderEntry>
+  </component>
+</module>

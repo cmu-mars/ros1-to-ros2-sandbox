@@ -128,6 +128,8 @@ public class Method {
 			}
 			if (lowestIndex != -1) {
 				this.fromClass = new Type("rclcpp::" + Method.rclcpp_classes[lowestIndex]);
+			} else {
+				LOGGER.debug("Could not get fromClass for method {}", this.name);
 			}
 		}
 	}
@@ -291,10 +293,26 @@ public class Method {
 	
 	public String replaceTypeParams(String t) {
 		String tString = t.toString();
-		for (TemplateParameter tp : tparams) {
-			if (tp.hasDefault) {
-				tString = tString.replaceAll("\\b" + tp.name + "\\b", tp.getDefaultValue());
+		boolean changed = true;
+		while (changed) {
+			changed = false;
+			for (TemplateParameter tp : tparams) {
+				if (tp.hasDefault) {
+					if(tString.indexOf(tp.name) > -1) {
+						LOGGER.info("Replacing {} with {} in {} in method {}", tp.name, tp.getDefaultValue(), tString, this.name);
+						String newTString = tString.replaceAll("\\b" + tp.name + "\\b", tp.getDefaultValue());
+						if (!newTString.equals(tString)) {
+							changed = true;
+							tString = newTString;
+						}
+					}
+				}
 			}
+		}
+		
+		
+		if (tString.indexOf("Alloc") > -1 || t.indexOf("Alloc") > -1) {
+			LOGGER.info("{} -- Before vs After: {} vs {}", this.name, t, tString);
 		}
 		
 		return tString;
@@ -326,7 +344,7 @@ public class Method {
 		
 		String returnString = this.returnType.toString();
 		
-		str = str + " -> " + ((this.isConstructor) ? this.fromClass.toString() : this.returnType.toString());
+		str = str + " -> " + ((this.isConstructor && returnString.length() == 0) ? this.fromClass.toString() : returnString);
 		
 		return this.name + ": " + str; //str + this.returnType.toString();
 	}
@@ -381,6 +399,10 @@ public class Method {
 		return mandatory;
 	}
 	
+	public int getNumActualArgs(int numOptArgsUsing) {
+		return this.numRequiredArgs() + Math.min(this.numOptionalArgs(), numOptArgsUsing);
+	}
+	
 	/**
 	 * Get the list of all of the non-optional, i.e. mandatory
 	 * args to this method.
@@ -419,13 +441,57 @@ public class Method {
 		return tipe;
 	}
 	
+	public static String replaceTypeParamsInString(MethodsToPetriNet mtpn, String tipe) {
+		return mtpn.replaceTypeVars(tipe);
+	}
+	
+	public static Type replaceTypeParamsInType(MethodsToPetriNet mtpn, Type t) {
+		return new Type(mtpn.replaceTypeVars(t.toString()));
+	}
+	
 	public static Type replaceTypeParamsInType(HashMap<String, String> typeVarToType, Type t) {
 		return new Type(replaceTypeParamsInString(typeVarToType, t.toString()));
 	}
 	
+	public Method replaceParametricTypeVariables(MethodsToPetriNet mtpn) {
+		String newName = this.replaceTypeParams(this.name);
+		String returnTypeString = this.replaceTypeParams(this.returnType);
+		ArrayList<String> newArgs = this.argsListToStringList();
+		
+		newName = mtpn.replaceTypeVars(newName);
+		if (this.name.indexOf("rclcpp::Node::create_publisher") > -1) {
+			LOGGER.info("Return before: {}", returnTypeString);
+		}
+		returnTypeString = mtpn.replaceTypeVars(returnTypeString);
+		if (this.name.indexOf("rclcpp::Node::create_publisher") > -1) {
+			LOGGER.info("Return after: {}", returnTypeString);
+		}
+		for (int i = 0; i < newArgs.size(); i++) {
+			newArgs.set(i, mtpn.replaceTypeVars(newArgs.get(i)));
+		}
+		
+		Method newMethod = new Method(newName, newArgs, returnTypeString);
+		newMethod.methodType = this.methodType;
+		newMethod.isClassMethod = this.isClassMethod;
+		if (newMethod.isClassMethod) {
+			newMethod.fromClass = new Type(mtpn.replaceTypeVars(this.replaceTypeParams(this.fromClass)));
+		}
+		
+		for (TemplateParameter tp : this.tparams) {
+			if (tp.hasDefault) {
+				newMethod.addTemplateParameter(tp.name, this.replaceTypeParams(tp.getDefaultValue()));
+			} else if (mtpn.containsTypeVarKey(tp.name)) {
+				newMethod.addTemplateParameter(tp.name, this.replaceTypeParams(mtpn.getTypeVarReplacement(tp.name)));
+			} else {
+				newMethod.addTemplateParameter(tp.name);
+			}
+		}
+		return newMethod;
+	}
+	
 	public Method replaceParametricTypeVariables(HashMap<String, String> typeVarToType) {
 		String newName = this.replaceTypeParams(this.name);
-		String returnTypeString = this.replaceTypeParams(this.returnType;
+		String returnTypeString = this.replaceTypeParams(this.returnType);
 		ArrayList<String> newArgs = this.argsListToStringList();
 		
 		for (int i = 0; i < newArgs.size(); i++) {
@@ -451,7 +517,7 @@ public class Method {
 		for (TemplateParameter tp : this.tparams) {
 			if (!typeVarToType.containsKey(tp.name)) {
 				if (tp.hasDefault) {
-					newMethod.addTemplateParameter(tp.name, tp.getDefaultValue());
+					newMethod.addTemplateParameter(tp.name, this.replaceTypeParams(tp.getDefaultValue()));
 				} else {
 					newMethod.addTemplateParameter(tp.name);
 				}

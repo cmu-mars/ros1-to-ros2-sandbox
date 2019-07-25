@@ -29,6 +29,8 @@ public class CppCode {
 	 */
 	ArrayList<Method> apis;
 	ArrayList<Integer> numHolesPerApi;
+	ArrayList<Integer> numTypeVarHolesPerApi;
+	
 	HashMap<String, Integer> typeCounts = new HashMap<String, Integer>();
 	public int numHolesToFill;
 	ArrayList<Type> holeTypes;
@@ -57,26 +59,31 @@ public class CppCode {
 		
 		this.apis = new ArrayList<Method>();
 		this.numHolesPerApi = new ArrayList<Integer>();
+		this.numTypeVarHolesPerApi = new ArrayList<>();
 		this.holeTypes = new ArrayList<Type>();
 		for (String a : apis) {
 			if (mt.hasMethodWithNickname(a)) {
 				Method m = mt.getMethodFromNickname(a);
 				
 				if (mt.isNotDummyMethod(m)) {
-					this.apis.add(m);
 					
 					LOGGER.info("Number of required template parameters: ({}) -- {}/{}", m.name, m.numTemplateParametersRequired(), m.numTemplateParameters());
 					
 					if (mt.isPointerFieldAccess(m)) {
+						this.apis.add(m);
+						this.numTypeVarHolesPerApi.add(0);
 						this.numHolesPerApi.add(0);
 					} else {
+						m = m.replaceParametricTypeVariables(mt);
+						this.apis.add(m);
 						int instReq = (m.isClassMethod) ? 1 : 0;
 						int numReq = m.numRequiredArgs();
 						int numOpts = this.numberOptionals(a);
 						
 						this.numHolesPerApi.add(instReq + numReq + numOpts);
+						this.numTypeVarHolesPerApi.add(m.numTemplateParametersRequired());
 						
-					LOGGER.info("<" + Integer.toString(numOpts) + ", " + m.toString() + ">");
+						LOGGER.info("<" + Integer.toString(this.apis.size()) + ", " + m.toString() + ">");
 						
 						if (m.isClassMethod) {
 							this.holeTypes.add(m.fromClass);
@@ -132,12 +139,15 @@ public class CppCode {
 		for (int i = 0; i < this.apis.size(); i++) {
 			Method m = this.apis.get(i);
 			if (m.name.equals(MethodsToPetriNet.un_pointer_name)) {
+				LOGGER.info("We have a pointer dereference: {}", m.name);
 				isPointerFieldAccess = true;
 			} else {
+				LOGGER.info("We don't have a pointer dereference: {}", m.name);
 				int numHolesOffset = 0;
 				if (!m.returnType.getPlainName().equals("void") && !m.returnType.toString().equals("") && !m.returnType.isVirtual()) {
 					String id = this.getFreshId();
 					this.results.put(id, m.returnType);
+					LOGGER.info("Adding result type {} for hole {}", m.returnType, i);
 					in.addNewResult(id, m.returnType, i);
 					code += m.returnType.toString() + " " + id + " = ";
 				} else if (m.isConstructor) {
@@ -261,7 +271,7 @@ public class CppCode {
 		ArrayList<String> possibleFills = fillRemainingHoles(holeyCode, in, holesLeft);
 		LOGGER.info("We have {} possibile ways of filling", Integer.toString(possibleFills.size()));
 		for (String fill : possibleFills) {
-			LOGGER.trace("A possible way of filling the holes:\n{}", fill);
+			LOGGER.debug("A possible way of filling the holes:\n{}", fill);
 		}
 		
 		

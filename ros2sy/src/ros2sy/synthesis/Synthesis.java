@@ -207,7 +207,9 @@ public class Synthesis {
 		HashMap<String, String> varsToTypes = ParseJson.getInputVariableToType("inputs/talker_input.json");
 		
 		for (Map.Entry<String, String> e : varsToTypes.entrySet()) {
+			LOGGER.info("Adding variable: ({}, {})", e.getKey(), mtpn.replaceTypeVars(e.getValue()));
 			ivs.addInput(e.getKey(), mtpn.replaceTypeVars(e.getValue()));
+//			ivs.addInput(mtpn.replaceTypeVars(e.getKey()), )
 		}
 		
 //		ArrayList<ArrayList<String>> inputs = ParseJson.getInputTypesFromFile("inputs/listener_input.json");

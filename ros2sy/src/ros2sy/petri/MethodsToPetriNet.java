@@ -135,6 +135,11 @@ public class MethodsToPetriNet {
 					if (!shared.equals(p.getId())) {						
 						if (!net.containsPlace(shared) || !net.containsTransition(transitionId)) {
 							if (!net.containsPlace(shared)) net.createPlace(shared);
+							if (!originalType.isSharedPointer) {
+								addMethodNickname(this.de_ptr, transitionId);
+							} else {
+								addMethodNickname(dummy, transitionId);
+							}
 							MethodsToPetriNet.addTransition(net, shared, transitionId, p.getId());
 						}
 					}
@@ -221,7 +226,7 @@ public class MethodsToPetriNet {
 	}
 	
 	public String replaceTypeVars(String hasTypeVars) {
-		LOGGER.info("The parametric type replacements now: {}", this.parametricTypeReplacements);
+//		LOGGER.info("The parametric type replacements now: {}", this.parametricTypeReplacements);
 		String doesntHaveTypeVars = hasTypeVars;
 		
 		for (Map.Entry<String, String> typeVarEntry : this.parametricTypeReplacements.entrySet()) {
@@ -229,6 +234,14 @@ public class MethodsToPetriNet {
 		}
 		
 		return doesntHaveTypeVars;
+	}
+	
+	public boolean containsTypeVarKey(String key) {
+		return this.parametricTypeReplacements.containsKey(key);
+	}
+	
+	public String getTypeVarReplacement(String key) {
+		return this.parametricTypeReplacements.get(key);
 	}
 	
 	
@@ -415,6 +428,7 @@ public class MethodsToPetriNet {
 			Transition t = MethodsToPetriNet.makeMethodTransition(m, mt.net, nameCounts);
 //			mt.addMethodNickname(m, t.getId());
 			mt.addMethodNickname(maybe, t.getId());
+			mt.addMethodNickname(m, t.getId());
 			
 			String returnType = m.returnType.toString();
 			Place ret = MethodsToPetriNet.getPetriPlace(mt.net, returnType);

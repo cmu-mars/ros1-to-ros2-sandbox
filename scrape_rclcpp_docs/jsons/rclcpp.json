@@ -32,10 +32,10 @@
                 },
                 {
                     "name": "PublisherT",
-                    "value": "::rclcpp::Publisher<MessageT"
+                    "value": "rclcpp::Publisher<MessageT, AllocatorT>"
                 },
                 {
-                    "name": "AllocatorT>"
+                    "name": "NodeT"
                 }
             ],
             "ref": [
@@ -66,10 +66,7 @@
                 },
                 {
                     "name": "PublisherT",
-                    "value": "::rclcpp::Publisher<MessageT"
-                },
-                {
-                    "name": "AllocatorT>"
+                    "value": "rclcpp::Publisher<MessageT, AllocatorT>"
                 },
                 {
                     "name": "NodeT"
@@ -138,17 +135,19 @@
                     "name": "CallbackT"
                 },
                 {
-                    "name": "AllocatorT"
+                    "name": "AllocatorT",
+                    "value": "std::allocator<void>"
                 },
                 {
-                    "name": "CallbackMessageT"
+                    "name": "CallbackMessageT",
+                    "value": "rclcpp::subscription_traits::has_message_type<CallbackT>::type"
                 },
                 {
                     "name": "SubscriptionT",
-                    "value": "rclcpp::Subscription<CallbackMessageT"
+                    "value": "rclcpp::Subscription<CallbackMessageT, AllocatorT>"
                 },
                 {
-                    "name": "AllocatorT>"
+                    "name": "NodeT"
                 }
             ],
             "ref": [
@@ -185,14 +184,11 @@
                 },
                 {
                     "name": "CallbackMessageT",
-                    "value": "typename rclcpp::subscription_traits::has_message_type<CallbackT>::type"
+                    "value": "rclcpp::subscription_traits::has_message_type<CallbackT>::type"
                 },
                 {
                     "name": "SubscriptionT",
-                    "value": "rclcpp::Subscription<CallbackMessageT"
-                },
-                {
-                    "name": "AllocatorT>"
+                    "value": "rclcpp::Subscription<CallbackMessageT, AllocatorT>"
                 },
                 {
                     "name": "NodeT"
@@ -263,6 +259,10 @@
             ],
             "return": "rclcpp::executor::FutureReturnCode",
             "template": [
+                {
+                    "name": "NodeT",
+                    "value": "rclcpp::Node"
+                },
                 {
                     "name": "FutureT"
                 },

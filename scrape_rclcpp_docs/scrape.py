@@ -159,9 +159,34 @@ def getClassFunctionsFromRows(rows):
 def getGroupHeaders(soup):
   return [header for header in soup("h2") if hasClass(header, "groupheader")]
 
+def hasTemplateParams(row):
+  if isinstance(row, bs4.NavigableString):
+    return False
+  tparamRow = row.find_previous_sibling("tr")
+
+  if hasClassStartingWith(tparamRow, "separator") or hasClass(tparamRow, "heading"):
+    return False
+    
+  print("Previous sibling: {}".format(tparamRow))
+
+  if tparamRow is not None and (not isinstance(tparamRow, bs4.NavigableString)) and hasClassStartingWith(tparamRow, "memitem") and tparamRow.find("td", class_="memTemplParams") is not None:
+    print("Look at this row: {}".format(tparamRow.getText()))
+  
+  return (tparamRow is not None) and not isinstance(tparamRow, bs4.NavigableString) and hasClassStartingWith(tparamRow, "memitem") and tparamRow.find("td", class_="memTemplParams") is not None
+
+
+def getTemplate(row):
+  templateRow = row.find_previous_sibling("tr")
+
+  if hasClassStartingWith(templateRow, "memitem") and templateRow.find("td", class_="memTemplParams") is not None:
+    return extractTemplate(templateRow.getText())
+  return None
+
 def getPublicFunctionNames(soup):
   declTable = getFunctionsTable(soup)
   funcNames = []
+  functionTemplates = {}
+  
   if declTable:
     print("declTable does have memberdecls class")
     rows = declTable("tr")
@@ -181,11 +206,16 @@ def getPublicFunctionNames(soup):
               returnType = removeSpacesBeforeAngleBrackets(cellLeft.getText().strip())
               if (returnType != "virtual"):
                 func_name = cellRight.contents[0].getText().strip()
-                print("function name: " + func_name)
+                #print("function name: " + func_name)
                 funcNames.append(func_name)
+
+                if hasTemplateParams(row):
+                  
+                  functionTemplates[func_name] = getTemplate(row)
     else:
       print("declTable does not have memberdecls class.")
-  return funcNames
+  print(functionTemplates)
+  return funcNames, functionTemplates
   
 def isSoupString(soupElmt):
   return isinstance(soupElmt, bs4.NavigableString)
@@ -216,15 +246,17 @@ def getUniqueElmts(elmtList):
   return newList
 
 def extractTemplate(templateString):
-  txt = templateString
+  txt = re.sub(r"typename|class", r"", templateString)
   template = []
-  begin = len("template<")
-  end = len(txt) - 1
+  begin = txt.find("<")
+  begin = begin + 1 if begin > -1 else len("template<")
+  end = txt.rfind(">")
+  end = end if end > -1 else len(txt) - 1
   txt = txt[begin:end]
   #print("")
   #print("template: " + txt)
   #print("")
-  splits = txt.split(",")
+  splits = putBracketsBackTogether(txt.split(","), "<", ">", ",")
   #splits = txt.split(", typename")
   #print(splits)
 
@@ -248,7 +280,7 @@ def extractTemplate(templateString):
       if len(stringSplits) == 2:
         template.append({
           "name": stringSplits[0].strip(),
-          "value": stringSplits[1].strip()
+          "value": re.sub(r"^::", r"", stringSplits[1].strip())
         })
     else:
       template.append({
@@ -256,53 +288,20 @@ def extractTemplate(templateString):
       })
   return template
 
-def extractSignature(div, func_name, func_permalink, url, base_url, include, namespace):
-  divTemplate = div.find("div", class_="memtemplate")
+def extractSignature(div, func_name, func_permalink, url, base_url, include, namespace, templateMaybe=None):
   template = []
-  if divTemplate:
-    #print(divTemplate)
+  if templateMaybe is None:
+    divTemplate = div.find("div", class_="memtemplate")
+    if divTemplate:
+      #print(divTemplate)
 
-    txt = divTemplate.getText().strip()
-    template = extractTemplate(txt)
-    """# take off `template<` and ending `>` strings:
-    begin = len("template<")
-    end = len(txt) - 1
-    txt = txt[begin:end]
-    #print("")
-    #print("template: " + txt)
-    #print("")
-    splits = txt.split(",")
-    #splits = txt.split(", typename")
-    #print(splits)
-
-    splits = [split.strip() for split in splits]
-
-    typename = "typename"
-    klass = "class"
-    equals = "="
-    for i in range(len(splits)):
-      string = splits[i].strip()
-      if string.startswith(typename):
-        print("old string: {}".format(string))
-        string = string[len(typename):].strip()
-        print("new string: {}".format(string))
-      if string.startswith(klass):
-        print("old string: {}".format(string))
-        string = string[len(klass):].strip()
-        print("new string: {}".format(string))
-      if string.find(equals):
-        stringSplits = string.split(equals)
-        if len(stringSplits) == 2:
-          template.append({
-            "name": stringSplits[0].strip(),
-            "value": stringSplits[1].strip()
-          })
-        else:
-          template.append({
-            "name": string
-          })"""
-    #print(template)
-    #print("")
+      txt = divTemplate.getText().strip()
+      template = extractTemplate(txt)
+      #print(template)
+      #print("")
+  else:
+    print("The function with name {} has a template.".format(func_name))
+    template = templateMaybe
   sigTable = div.find("table", class_="memname")
   params = []
   if sigTable is not None:
@@ -478,15 +477,15 @@ def getSignatures(url):
   headers = getWantedHeaders(headers, wantedHeaders)
   print(headers)
 
-  def extract(div, functionName, permanentLink, isConstructor):
-    extracted = extractSignature(div, functionName, permanentLink, url, base_url, include, namespace)
+  def extract(div, functionName, permanentLink, isConstructor, templateMaybe=None):
+    extracted = extractSignature(div, functionName, permanentLink, url, base_url, include, namespace, templateMaybe)
     if isConstructor:
       extracted["func_type"] = "constructor"
     return extracted
 
   constructorBlockTitles = ["Constructor & Destructor Documentation"]
 
-  functionNames = getPublicFunctionNames(soup)
+  functionNames, functionTemplates = getPublicFunctionNames(soup)
   print(functionNames)
   
   headerSibs = getImmediateSiblingsOfHeaders(headers)
@@ -524,7 +523,7 @@ def getSignatures(url):
               skip.append(sibIndex + it)
               #print("Skipping {}".format(title))
               if isNotDeconstructor(title):
-                signatures[funcKey].append(extract(divSibling, funcName, getPermalink(title), isConstructor))
+                signatures[funcKey].append(extract(divSibling, funcName, getPermalink(title), isConstructor, functionTemplates[funcName] if funcName in functionTemplates else None))
               it += 1
               
               divSibling = divSibling.find_next_sibling("div", class_="memitem")

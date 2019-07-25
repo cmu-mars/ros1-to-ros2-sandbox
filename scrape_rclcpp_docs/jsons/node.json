@@ -123,10 +123,12 @@
                     "name": "MessageT"
                 },
                 {
-                    "name": "AllocatorT"
+                    "name": "AllocatorT",
+                    "value": "std::allocator<void>"
                 },
                 {
-                    "name": "PublisherT"
+                    "name": "PublisherT",
+                    "value": "rclcpp::Publisher<MessageT, AllocatorT>"
                 }
             ],
             "include": "rclcpp/node.hpp",
@@ -153,10 +155,12 @@
                     "name": "MessageT"
                 },
                 {
-                    "name": "AllocatorT"
+                    "name": "AllocatorT",
+                    "value": "std::allocator<void>"
                 },
                 {
-                    "name": "PublisherT"
+                    "name": "PublisherT",
+                    "value": "rclcpp::Publisher<MessageT, AllocatorT>"
                 }
             ],
             "include": "rclcpp/node.hpp",
@@ -179,10 +183,12 @@
                     "name": "MessageT"
                 },
                 {
-                    "name": "AllocatorT"
+                    "name": "AllocatorT",
+                    "value": "std::allocator<void>"
                 },
                 {
-                    "name": "PublisherT"
+                    "name": "PublisherT",
+                    "value": "rclcpp::Publisher<MessageT, AllocatorT>"
                 }
             ],
             "include": "rclcpp/node.hpp",
@@ -213,10 +219,12 @@
                     "name": "CallbackT"
                 },
                 {
-                    "name": "AllocatorT"
+                    "name": "Alloc",
+                    "value": "std::allocator<void>"
                 },
                 {
-                    "name": "SubscriptionT"
+                    "name": "SubscriptionT",
+                    "value": "rclcpp::Subscription<       rclcpp::subscription_traits::has_message_type<CallbackT>::type, Alloc>"
                 }
             ],
             "include": "rclcpp/node.hpp",
@@ -250,10 +258,12 @@
                     "name": "CallbackT"
                 },
                 {
-                    "name": "Alloc"
+                    "name": "Alloc",
+                    "value": "std::allocator<void>"
                 },
                 {
-                    "name": "SubscriptionT"
+                    "name": "SubscriptionT",
+                    "value": "rclcpp::Subscription<       rclcpp::subscription_traits::has_message_type<CallbackT>::type, Alloc>"
                 }
             ],
             "include": "rclcpp/node.hpp",
@@ -286,10 +296,12 @@
                     "name": "CallbackT"
                 },
                 {
-                    "name": "Alloc"
+                    "name": "Alloc",
+                    "value": "std::allocator<void>"
                 },
                 {
-                    "name": "SubscriptionT"
+                    "name": "SubscriptionT",
+                    "value": "rclcpp::Subscription<       rclcpp::subscription_traits::has_message_type<CallbackT>::type, Alloc>"
                 }
             ],
             "include": "rclcpp/node.hpp",
@@ -359,6 +371,11 @@
                 "const rcl_interfaces::msg::ParameterDescriptor & (=rcl_interfaces::msg::ParameterDescriptor())"
             ],
             "return": "const rclcpp::ParameterValue&",
+            "template": [
+                {
+                    "name": "ParameterT"
+                }
+            ],
             "include": "rclcpp/node.hpp",
             "ref": [
                 "http://docs.ros2.org/latest/api/rclcpp/classrclcpp_1_1Node.html#a64df64d004b6263c3c04f42179fc8f52",
@@ -548,6 +565,11 @@
                 "const std::string &"
             ],
             "return": "rclcpp::Parameter",
+            "template": [
+                {
+                    "name": "ParameterT"
+                }
+            ],
             "include": "rclcpp/node.hpp",
             "ref": [
                 "http://docs.ros2.org/latest/api/rclcpp/classrclcpp_1_1Node.html#a0bf1077fba623d72fe1b49805f6c0a5a",
@@ -563,6 +585,11 @@
                 "rclcpp::Parameter &"
             ],
             "return": "bool",
+            "template": [
+                {
+                    "name": "ParameterT"
+                }
+            ],
             "include": "rclcpp/node.hpp",
             "ref": [
                 "http://docs.ros2.org/latest/api/rclcpp/classrclcpp_1_1Node.html#a1fe80d17fb6789dec1ecf74c4d135aad",
@@ -616,6 +643,11 @@
                 "const std::vector<std::string> &"
             ],
             "return": "std::vector<rclcpp::Parameter>",
+            "template": [
+                {
+                    "name": "ParameterT"
+                }
+            ],
             "include": "rclcpp/node.hpp",
             "ref": [
                 "http://docs.ros2.org/latest/api/rclcpp/classrclcpp_1_1Node.html#a25890d01a2cd47ce99af887f556c529b",

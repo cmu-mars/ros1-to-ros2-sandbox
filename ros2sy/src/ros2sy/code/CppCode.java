@@ -65,6 +65,8 @@ public class CppCode {
 				if (mt.isNotDummyMethod(m)) {
 					this.apis.add(m);
 					
+					LOGGER.info("Number of required template parameters: ({}) -- {}/{}", m.name, m.numTemplateParametersRequired(), m.numTemplateParameters());
+					
 					if (mt.isPointerFieldAccess(m)) {
 						this.numHolesPerApi.add(0);
 					} else {
@@ -259,7 +261,7 @@ public class CppCode {
 		ArrayList<String> possibleFills = fillRemainingHoles(holeyCode, in, holesLeft);
 		LOGGER.info("We have {} possibile ways of filling", Integer.toString(possibleFills.size()));
 		for (String fill : possibleFills) {
-			LOGGER.info("A possible way of filling the holes:\n{}", fill);
+			LOGGER.trace("A possible way of filling the holes:\n{}", fill);
 		}
 		
 		

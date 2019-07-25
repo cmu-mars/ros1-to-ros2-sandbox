@@ -276,8 +276,11 @@ public class Method {
 		}
 		str = str + ")";
 		
-		str = str + " -> ";
-		return this.name + ": " + str + this.returnType.toString();
+		String returnString = this.returnType.toString();
+		
+		str = str + " -> " + ((this.isConstructor) ? this.fromClass.toString() : this.returnType.toString());
+		
+		return this.name + ": " + str; //str + this.returnType.toString();
 	}
 	
 	public int numArgs() {
@@ -360,20 +363,20 @@ public class Method {
 		return strings;
 	}
 	
-	public static Type replaceTypeParamsInType(HashMap<String, String> map, Type t) {
+	public static Type replaceTypeParamsInType(HashMap<String, String> typeVarToType, Type t) {
 		String tipeString = t.toString();
 		
-		for (Map.Entry<String, String> entry : map.entrySet()) {
+		for (Map.Entry<String, String> entry : typeVarToType.entrySet()) {
 			tipeString = tipeString.replaceAll(entry.getKey(), entry.getValue());
 		}
 		return new Type(tipeString);
 	}
 	
-	public Method replaceParametricTypeVariables(HashMap<String, String> map) {
+	public Method replaceParametricTypeVariables(HashMap<String, String> typeVarToType) {
 		String newName = this.name;
 		String returnTypeString = this.returnType.toString();
 		ArrayList<String> newArgs = this.argsListToStringList();
-		for (Map.Entry<String, String> entry : map.entrySet()) {
+		for (Map.Entry<String, String> entry : typeVarToType.entrySet()) {
 			newName = newName.replaceAll(entry.getKey(), entry.getValue());
 			returnTypeString = returnTypeString.replaceAll(entry.getKey(), entry.getValue());
 			for (int i = 0; i < newArgs.size(); i++) {
@@ -385,19 +388,19 @@ public class Method {
 		newMethod.methodType = this.methodType;
 		newMethod.isClassMethod = this.isClassMethod;
 		if (newMethod.isClassMethod) {
-			newMethod.fromClass = Method.replaceTypeParamsInType(map, this.fromClass);
+			newMethod.fromClass = Method.replaceTypeParamsInType(typeVarToType, this.fromClass);
 		}
 		
 		
 		for (TemplateParameter tp : this.tparams) {
-			if (!map.containsKey(tp.name)) {
+			if (!typeVarToType.containsKey(tp.name)) {
 				if (tp.hasDefault) {
 					newMethod.addTemplateParameter(tp.name, tp.getDefaultValue());
 				} else {
 					newMethod.addTemplateParameter(tp.name);
 				}
 			} else {
-				newMethod.addTemplateParameter(tp.name, map.get(tp.name));
+				newMethod.addTemplateParameter(tp.name, typeVarToType.get(tp.name));
 			}
 		}
 		

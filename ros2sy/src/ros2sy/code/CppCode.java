@@ -28,6 +28,7 @@ public class CppCode {
 	 * A list of the API calls that this sequence of C++ code represents
 	 */
 	ArrayList<Method> apis;
+	ArrayList<Method> originalApis;
 	ArrayList<Integer> numHolesPerApi;
 	ArrayList<Integer> numTypeVarHolesPerApi;
 	
@@ -58,6 +59,7 @@ public class CppCode {
 		}
 		
 		this.apis = new ArrayList<Method>();
+		this.originalApis = new ArrayList<Method>();
 		this.numHolesPerApi = new ArrayList<Integer>();
 		this.numTypeVarHolesPerApi = new ArrayList<>();
 		this.holeTypes = new ArrayList<Type>();
@@ -66,7 +68,7 @@ public class CppCode {
 				Method m = mt.getMethodFromNickname(a);
 				
 				if (mt.isNotDummyMethod(m)) {
-					
+					this.originalApis.add(m);
 					LOGGER.info("Number of required template parameters: ({}) -- {}/{}", m.name, m.numTemplateParametersRequired(), m.numTemplateParameters());
 					
 					if (mt.isPointerFieldAccess(m)) {
@@ -147,14 +149,20 @@ public class CppCode {
 				if (!m.returnType.getPlainName().equals("void") && !m.returnType.toString().equals("") && !m.returnType.isVirtual()) {
 					String id = this.getFreshId();
 					this.results.put(id, m.returnType);
-					LOGGER.info("Adding result type {} for hole {}", m.returnType, i);
+//					LOGGER.info("Adding result type {} for hole {}", m.returnType, i);
 					in.addNewResult(id, m.returnType, i);
 					code += m.returnType.toString() + " " + id + " = ";
 				} else if (m.isConstructor) {
 					String id = this.getFreshId();
+					
+					Method original = originalApis.get(i);
 					this.results.put(id,  m.fromClass);
 					in.addNewResult(id, m.fromClass, i);
-					code += m.fromClass.toString() + " " + id + " = ";
+					if (!original.hasTag("rate")) {
+						code += m.fromClass.toString() + " " + id + " = ";
+					} else {
+						code += m.fromClass.toString() + " " + id;
+					}
 				}
 				if (m.isClassMethod) {
 					code += "#" + Integer.toString(holes);
@@ -168,7 +176,13 @@ public class CppCode {
 					holes++;
 					numHolesOffset = 1;
 				}
-				code += m.getPrintingName() + "(";
+				
+				String templateParams = createTemplateParamString(m, originalApis.get(i));
+				if (m.isConstructor && originalApis.get(i).hasTag("rate")) {
+					code += templateParams + "(";
+				} else {
+					code += m.getPrintingName() + templateParams + "(";
+				}
 				int numArgHoles = this.numHolesPerApi.get(i) - numHolesOffset;
 				for (int j = 0; j < numArgHoles; j++) {
 					code += "#" + Integer.toString(holes);
@@ -188,6 +202,24 @@ public class CppCode {
 		}
 		LOGGER.traceExit(code);
 		return code;
+	}
+	
+	private String createTemplateParamString(Method current, Method original) {
+		String templateParams = "";
+		if (original.requiresTemplateParams()) {
+			templateParams = "<";
+			for (TemplateParameter param : original.getRequiredTemplateParameters()) {
+				if (current.hasTemplateParameter(param.name) && current.hasTemplateDefault(param.name)) {
+					if (templateParams.length() > 1) {
+						templateParams = templateParams + ", ";
+					}
+					templateParams = templateParams + current.getTemplateDefault(param.name);
+				}
+			}
+			
+			templateParams += ">";
+		}
+		return templateParams;
 	}
 	
 	/**

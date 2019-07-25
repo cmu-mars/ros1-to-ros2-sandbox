@@ -12,7 +12,7 @@
             "rclcpp::sleep_for"
         ],
         [
-            "rclcpp::GenericRate<Clock>::GenericRate"
+            "rclcpp::WallRate::WallRate"
         ],
         [
             "std_msgs::msgs::String::make_shared",
@@ -26,7 +26,7 @@
             "rclcpp::spin_some2"
         ],
         [
-            "rclcpp::GenericRate<Clock>::sleep"
+            "rclcpp::WallRate::sleep"
         ]
     ]
 }

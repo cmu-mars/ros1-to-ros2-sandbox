@@ -132,7 +132,7 @@ public class Synthesis {
 		LOGGER.info("Beginning synthesis of ROS2 code.");
 //		System.setProperty("log4j.configurationFile", "ros2sy/src/resources/log4j2.xml");
 		LOGGER.info("Getting methods");
-		ArrayList<Method> methods = ParseJson.getAllMethods("node", "publisher", "rclcpp", "subscription", "rate", "message", "duration");
+		ArrayList<Method> methods = ParseJson.getAllMethods("node", "publisher", "rclcpp", "subscription", "wallrate", "rate", "message", "duration");
 		
 		ArrayList<String> availableTypes = ParseJson.getAvailableTypes("scrape_rclcpp_docs/jsons/types.json");
 		
@@ -182,7 +182,7 @@ public class Synthesis {
 		search.addToLastBlock("sleep");
 		
 		// Block 3
-		search.addBlock("rate", "constructor");
+		search.addBlock("wallrate", "constructor");
 		
 		// Block 4
 		search.addBlock("message", "constructor");
@@ -197,7 +197,7 @@ public class Synthesis {
 		search.addBlock("spin");
 
 		// Block 7
-		search.addBlock("rate", "sleep");
+		search.addBlock("wallrate", "sleep");
 		
 		ArrayList<String> neverUse = search.getNameIntersect("shutdown");
 		

@@ -153,6 +153,10 @@ public class InputVariables {
 				}
 			}
 		}
+		
+		if (names.size() == 0) {
+			LOGGER.info("No results of type {} found, maybe we missed something: {}", t, this.resultsAvailable);
+		}
 		return names;
 	}
 }

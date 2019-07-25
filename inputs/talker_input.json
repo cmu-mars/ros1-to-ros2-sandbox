@@ -27,7 +27,7 @@
             "std::shared_ptr<rclcpp::Publisher<MessageT, Alloc>>"
         ],
         [
-            "rclcpp::GenericRate<Clock>"
+            "rclcpp::WallRate"
         ]
     ],
     "input_var_to_type": {

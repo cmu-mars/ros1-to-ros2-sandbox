@@ -77,7 +77,8 @@
             "rclcpp::GenericRate<Clock>::GenericRate",
             "std_msgs::msgs::String::make_shared",
             "std::chrono::seconds::seconds",
-            "std::chrono::nanoseconds::nanoseconds"
+            "std::chrono::nanoseconds::nanoseconds",
+            "rclcpp::WallRate::WallRate"
         ],
         "publisher": [
             "rclcpp::Node::create_publisher",
@@ -159,7 +160,8 @@
         ],
         "sleep": [
             "rclcpp::sleep_for",
-            "rclcpp::GenericRate<Clock>::sleep"
+            "rclcpp::GenericRate<Clock>::sleep",
+            "rclcpp::WallRate::sleep"
         ],
         "rate": [
             "rclcpp::GenericRate<Clock>::GenericRate",
@@ -182,6 +184,13 @@
         "duration": [
             "std::chrono::seconds::seconds",
             "std::chrono::nanoseconds::nanoseconds"
+        ],
+        "wallrate": [
+            "rclcpp::WallRate::WallRate",
+            "rclcpp::WallRate::sleep",
+            "rclcpp::WallRate::is_steady",
+            "rclcpp::WallRate::reset",
+            "rclcpp::WallRate::period"
         ]
     },
     "sig_to_tags": {
@@ -557,6 +566,28 @@
         "std::chrono::nanoseconds::nanoseconds": [
             "duration",
             "constructor"
+        ],
+        "rclcpp::WallRate::WallRate": [
+            "constructor",
+            "wallrate",
+            "rate"
+        ],
+        "rclcpp::WallRate::sleep": [
+            "wallrate",
+            "rate",
+            "sleep"
+        ],
+        "rclcpp::WallRate::is_steady": [
+            "wallrate",
+            "rate"
+        ],
+        "rclcpp::WallRate::reset": [
+            "wallrate",
+            "rate"
+        ],
+        "rclcpp::WallRate::period": [
+            "wallrate",
+            "rate"
         ]
     }
 }

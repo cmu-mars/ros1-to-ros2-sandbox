@@ -31,12 +31,13 @@ public class Method {
 	public HashSet<String> tags = new HashSet<>();
 	public ArrayList<String> include = new ArrayList<>();
 	public ArrayList<TemplateParameter> tparams = new ArrayList<>();
+	private HashMap<String, TemplateParameter> templateMap = new HashMap<>();
 	public boolean hasTemplateParamaters = false;
 	private int numRequiredTemplateParams = 0;
 //	private int numRequiredTemplateParameters;
 	
 	private static String [] rclcpp_classes = {
-		"Node", "Publisher<MessageT, Alloc>", "Subscription<CallbackMessageT, Alloc>", "Rate", "GenericRate<Clock>"
+		"Node", "Publisher<MessageT, Alloc>", "Subscription<CallbackMessageT, Alloc>", "GenericRate", "WallRate", "Rate"
 	};
 	
 	/**
@@ -76,7 +77,11 @@ public class Method {
 			}
 			LOGGER.trace("The method <{}> has lowest index ({})", name, lowestIndex);
 			if (lowestIndex != -1) {
-				this.fromClass = new Type("rclcpp::" + Method.rclcpp_classes[lowestIndex]);
+				if (Method.rclcpp_classes[lowestIndex].equals("GenericRate")) {
+					this.fromClass = new Type("rclcpp::" + Method.rclcpp_classes[lowestIndex] + "<Clock>");
+				} else {
+					this.fromClass = new Type("rclcpp::" + Method.rclcpp_classes[lowestIndex]);
+				}
 			} else {
 				this.fromClass = new Type(this.name.substring(0, this.name.lastIndexOf("::")));
 			}
@@ -140,9 +145,14 @@ public class Method {
 		}
 		this.numRequiredTemplateParams++;
 		if (name.equals("MessageT")) {
-			this.tparams.add(new MessageT(name));
+			MessageT tp = new MessageT(name);
+			
+			this.templateMap.put("MessageT", tp);
+			this.tparams.add(tp);
 		} else {
-			this.tparams.add(new TemplateParameter(name));
+			TemplateParameter tp = new TemplateParameter(name);
+			this.templateMap.put(name, tp);
+			this.tparams.add(tp);
 		}
 	}
 	
@@ -151,10 +161,30 @@ public class Method {
 			this.hasTemplateParamaters = true;
 		}
 		if (name.equals("MessageT")) {
-			this.tparams.add(new MessageT(name, value));
+			MessageT tp = new MessageT(name, value);
+			this.templateMap.put(name, tp);
+			this.tparams.add(tp);
 		} else {
-			this.tparams.add(new TemplateParameter(name, value));
+			TemplateParameter tp = new TemplateParameter(name, value);
+			this.templateMap.put(name, tp);
+			this.tparams.add(tp);
 		}
+	}
+	
+	public boolean hasTemplateParameter(String name) {
+		return this.templateMap.containsKey(name);
+	}
+	
+	public TemplateParameter getTemplateParameter(String name) {
+		return this.templateMap.get(name);
+	}
+	
+	public boolean hasTemplateDefault(String name) {
+		return this.templateMap.get(name).hasDefault;
+	}
+	
+	public String getTemplateDefault(String name) {
+		return this.templateMap.get(name).getDefaultValue();
 	}
 	
 	public String apply(String ...givenArgs) {
@@ -299,7 +329,7 @@ public class Method {
 			for (TemplateParameter tp : tparams) {
 				if (tp.hasDefault) {
 					if(tString.indexOf(tp.name) > -1) {
-						LOGGER.info("Replacing {} with {} in {} in method {}", tp.name, tp.getDefaultValue(), tString, this.name);
+//						LOGGER.info("Replacing {} with {} in {} in method {}", tp.name, tp.getDefaultValue(), tString, this.name);
 						String newTString = tString.replaceAll("\\b" + tp.name + "\\b", tp.getDefaultValue());
 						if (!newTString.equals(tString)) {
 							changed = true;
@@ -311,9 +341,9 @@ public class Method {
 		}
 		
 		
-		if (tString.indexOf("Alloc") > -1 || t.indexOf("Alloc") > -1) {
-			LOGGER.info("{} -- Before vs After: {} vs {}", this.name, t, tString);
-		}
+//		if (tString.indexOf("Alloc") > -1 || t.indexOf("Alloc") > -1) {
+//			LOGGER.info("{} -- Before vs After: {} vs {}", this.name, t, tString);
+//		}
 		
 		return tString;
 	}
@@ -459,20 +489,19 @@ public class Method {
 		ArrayList<String> newArgs = this.argsListToStringList();
 		
 		newName = mtpn.replaceTypeVars(newName);
-		if (this.name.indexOf("rclcpp::Node::create_publisher") > -1) {
-			LOGGER.info("Return before: {}", returnTypeString);
-		}
+//		if (this.name.indexOf("rclcpp::Node::create_publisher") > -1) {
+//			LOGGER.info("Return before: {}", returnTypeString);
+//		}
 		returnTypeString = mtpn.replaceTypeVars(returnTypeString);
-		if (this.name.indexOf("rclcpp::Node::create_publisher") > -1) {
-			LOGGER.info("Return after: {}", returnTypeString);
-		}
+//		if (this.name.indexOf("rclcpp::Node::create_publisher") > -1) {
+//			LOGGER.info("Return after: {}", returnTypeString);
+//		}
 		for (int i = 0; i < newArgs.size(); i++) {
 			newArgs.set(i, mtpn.replaceTypeVars(newArgs.get(i)));
 		}
 		
 		Method newMethod = new Method(newName, newArgs, returnTypeString);
-		newMethod.methodType = this.methodType;
-		newMethod.isClassMethod = this.isClassMethod;
+		configureNewMethod(newMethod);
 		if (newMethod.isClassMethod) {
 			newMethod.fromClass = new Type(mtpn.replaceTypeVars(this.replaceTypeParams(this.fromClass)));
 		}
@@ -487,6 +516,12 @@ public class Method {
 			}
 		}
 		return newMethod;
+	}
+	
+	private void configureNewMethod(Method newMethod) {
+		newMethod.methodType = this.methodType;
+		newMethod.isClassMethod = this.isClassMethod;
+		newMethod.isConstructor = this.isConstructor;
 	}
 	
 	public Method replaceParametricTypeVariables(HashMap<String, String> typeVarToType) {
@@ -507,8 +542,7 @@ public class Method {
 		}
 		
 		Method newMethod = new Method(newName, newArgs, returnTypeString);
-		newMethod.methodType = this.methodType;
-		newMethod.isClassMethod = this.isClassMethod;
+		configureNewMethod(newMethod);
 		if (newMethod.isClassMethod) {
 			newMethod.fromClass = Method.replaceTypeParamsInType(typeVarToType, this.fromClass);
 		}

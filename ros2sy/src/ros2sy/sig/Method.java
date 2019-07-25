@@ -251,6 +251,54 @@ public class Method {
 		this.ros1Name = name;
 	}
 	
+	public String getPrintableReturnType(HashMap<String, String> tempVarToType) {
+		String returnString = this.returnType.toString();
+		if (returnString.length() == 0 && this.isConstructor) {
+			returnString = this.fromClass.toString();
+		}
+		returnString = this.replaceTypeParams(returnString);
+		
+		return Method.replaceTypeParamsInString(tempVarToType, returnString);
+	}
+	
+	public String getPrintableArgType(HashMap<String, String> tempVarToType, int index) {
+		if (index < this.args.size()) {
+			String argTypeString = this.replaceTypeParams(this.args.get(index).argType);
+			
+			return Method.replaceTypeParamsInString(tempVarToType, argTypeString);
+		}
+		LOGGER.warn("Called getPrintableArgType with arg index of {}, but expected something less than {}", index, this.args.size());
+		return "<ERROR: INDEX TOO BIG FOR ARGS ARRAY IN METHOD " + this.name + ">";
+	}
+	
+	public String getPrintableClassType(HashMap<String, String> tempVarToType) {
+		if (this.isClassMethod) {
+			try {
+				String classString = replaceTypeParams(this.fromClass);
+				
+				return Method.replaceTypeParamsInString(tempVarToType, classString);
+			} catch (Exception e) {
+				LOGGER.warn("Caught an exception: ", e);
+			}
+		}
+		
+		return "";
+	}
+	
+	public String replaceTypeParams(Type t) {
+		return replaceTypeParams(t.toString());
+	}
+	
+	public String replaceTypeParams(String t) {
+		String tString = t.toString();
+		for (TemplateParameter tp : tparams) {
+			if (tp.hasDefault) {
+				tString = tString.replaceAll("\\b" + tp.name + "\\b", tp.getDefaultValue());
+			}
+		}
+		
+		return tString;
+	}
 	
 	/**
 	 * Gives the signature of the method, including its name, the types
@@ -363,19 +411,27 @@ public class Method {
 		return strings;
 	}
 	
-	public static Type replaceTypeParamsInType(HashMap<String, String> typeVarToType, Type t) {
-		String tipeString = t.toString();
-		
+	public static String replaceTypeParamsInString(HashMap<String, String> typeVarToType, String tipe) {
 		for (Map.Entry<String, String> entry : typeVarToType.entrySet()) {
-			tipeString = tipeString.replaceAll(entry.getKey(), entry.getValue());
+			tipe = tipe.replaceAll(entry.getKey(), entry.getValue());
 		}
-		return new Type(tipeString);
+		
+		return tipe;
+	}
+	
+	public static Type replaceTypeParamsInType(HashMap<String, String> typeVarToType, Type t) {
+		return new Type(replaceTypeParamsInString(typeVarToType, t.toString()));
 	}
 	
 	public Method replaceParametricTypeVariables(HashMap<String, String> typeVarToType) {
-		String newName = this.name;
-		String returnTypeString = this.returnType.toString();
+		String newName = this.replaceTypeParams(this.name);
+		String returnTypeString = this.replaceTypeParams(this.returnType;
 		ArrayList<String> newArgs = this.argsListToStringList();
+		
+		for (int i = 0; i < newArgs.size(); i++) {
+			newArgs.set(i, this.replaceTypeParams(newArgs.get(i).toString()));
+		}
+		
 		for (Map.Entry<String, String> entry : typeVarToType.entrySet()) {
 			newName = newName.replaceAll(entry.getKey(), entry.getValue());
 			returnTypeString = returnTypeString.replaceAll(entry.getKey(), entry.getValue());

@@ -106,10 +106,10 @@
             "rclcpp::GenericRate<Clock>"
         ]
     },
-    "std_msgs/msgs/string.hpp": {
+    "std_msgs/msg/string.hpp": {
         "defs": {},
         "types": [
-            "std_msgs::msgs::String"
+            "std_msgs::msg::String"
         ]
     }
 }

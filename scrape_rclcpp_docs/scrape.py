@@ -674,10 +674,10 @@ for name,url in urlDict.items():
     f.write(json.dumps(signatures, indent=4))
 
 
-typeDefinitions["std_msgs/msgs/string.hpp"] = {
+typeDefinitions["std_msgs/msg/string.hpp"] = {
   "defs": {},
   "types": [
-    "std_msgs::msgs::String"
+    "std_msgs::msg::String"
   ]
 }
 
@@ -760,10 +760,10 @@ predicateTags[publishTag] = [
   lambda fName, mSig: inNamespace(fName, "rclcpp::Publisher") and stringContains(getBaseFunctionName(fName), publishTag)
 ]
 predicateTags[messageTag] = [
-  lambda fName, mSig: inNamespace(fName, "std_msgs::msgs")
+  lambda fName, mSig: inNamespace(fName, "std_msgs::msg")
 ]
 predicateTags[dataTag] = [
-  lambda fName, mSig: inNamespace(fName, "std_msgs::msgs") and stringContains(fName, dataTag)
+  lambda fName, mSig: inNamespace(fName, "std_msgs::msg") and stringContains(fName, dataTag)
 ]
 
 

@@ -1,19 +1,19 @@
 {
-    "std_msgs::msgs::String::make_shared": {
+    "std::make_shared<std_msgs::msg::String>": {
         "args": ["void"],
-        "return": "std::shared_ptr<std_msgs::msgs::String>",
+        "return": "std::shared_ptr<std_msgs::msg::String>",
         "func_type": "constructor",
         "include": [
-            "std_msgs/msgs/string.hpp",
+            "std_msgs/msg/string.hpp",
             "<memory>"
         ],
         "ref": []
     },
-    "std_msgs::msgs::String::data": {
+    "std_msgs::msg::String::data": {
         "args": ["void"],
         "return": "std::string",
         "func_type": "member_access",
-        "include": "std_msgs/msgs/string.hpp",
+        "include": "std_msgs/msg/string.hpp",
         "ref": []
     }
 }

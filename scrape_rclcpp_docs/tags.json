@@ -75,7 +75,7 @@
             "rclcpp::create_subscription",
             "rclcpp::create_subscription_factory",
             "rclcpp::GenericRate<Clock>::GenericRate",
-            "std_msgs::msgs::String::make_shared",
+            "std::make_shared<std_msgs::msg::String>",
             "std::chrono::seconds::seconds",
             "std::chrono::nanoseconds::nanoseconds",
             "rclcpp::WallRate::WallRate"
@@ -171,15 +171,15 @@
             "rclcpp::GenericRate<Clock>::period"
         ],
         "message": [
-            "std_msgs::msgs::String::make_shared",
-            "std_msgs::msgs::String::data"
+            "std::make_shared<std_msgs::msg::String>",
+            "std_msgs::msg::String::data"
         ],
         "messages": [
-            "std_msgs::msgs::String::make_shared",
-            "std_msgs::msgs::String::data"
+            "std::make_shared<std_msgs::msg::String>",
+            "std_msgs::msg::String::data"
         ],
         "data": [
-            "std_msgs::msgs::String::data"
+            "std_msgs::msg::String::data"
         ],
         "duration": [
             "std::chrono::seconds::seconds",
@@ -549,12 +549,12 @@
         "rclcpp::GenericRate<Clock>::period": [
             "rate"
         ],
-        "std_msgs::msgs::String::make_shared": [
+        "std::make_shared<std_msgs::msg::String>": [
             "message",
             "constructor",
             "messages"
         ],
-        "std_msgs::msgs::String::data": [
+        "std_msgs::msg::String::data": [
             "message",
             "messages",
             "data"
@@ -573,9 +573,9 @@
             "rate"
         ],
         "rclcpp::WallRate::sleep": [
+            "sleep",
             "wallrate",
-            "rate",
-            "sleep"
+            "rate"
         ],
         "rclcpp::WallRate::is_steady": [
             "wallrate",

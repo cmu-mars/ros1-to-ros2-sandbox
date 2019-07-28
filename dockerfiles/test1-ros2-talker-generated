@@ -1,0 +1,33 @@
+# I think that this should work like this...
+# So basically I want to use this other image I made as the basis for our new image?
+ARG USERNAME
+FROM ${USERNAME}/ros2-base
+ARG SKETCH
+
+
+RUN ls
+
+RUN cd ~ && \
+    ls
+
+RUN . /opt/ros/$CHOOSE_ROS_DISTRO/setup.sh && \
+    cd ~ && \
+    ros2 pkg create test1_ros2 --build-type ament_cmake --dependencies rclcpp std_msgs
+
+WORKDIR /home/docker/test1_ros2
+
+COPY . /app
+
+RUN sudo rm /app/ex1/ros2_talker.cpp && \
+    sudo cp /app/$SKETCH /app/ex1/ros2_talker.cpp
+
+RUN cp /app/ex1/ros2* src/ && \
+    mkdir launch && \
+    cp /app/ex1/test1_ros2.launch.py launch/ && \
+    cp /app/ex1/CMakeLists.txt ./
+
+RUN . /opt/ros/$CHOOSE_ROS_DISTRO/setup.sh && \
+    colcon build --symlink-install
+
+# fire up the command line
+CMD /bin/bash -c "source /opt/ros/bouncy/setup.bash; source install/setup.bash; ros2 launch test1_ros2 test1_ros2.launch.py"

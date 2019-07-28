@@ -7,3 +7,13 @@ dockerfiles
 
 # Ignore other temp files
 \#*
+
+build/*
+
+ros2sy/*
+
+scrape_rclcpp_docs/*
+
+dot/*
+inputs/*
+logs/*

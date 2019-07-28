@@ -138,6 +138,8 @@ public class Synthesis {
 		
 		HashSet<String> templates = new HashSet<String>(Method.getAllRequiredTemplateParameters(methods));
 		
+		
+		
 		HashMap<String, HashSet<String>> templateToTypes = new HashMap<>();
 		LOGGER.info("Available types: {}",  availableTypes);
 		LOGGER.info("Types: {}", templates);
@@ -167,12 +169,20 @@ public class Synthesis {
 		
 		SearchSpace search = new SearchSpace(methods, "scrape_rclcpp_docs/tags.json", mtpn);
 		
+		int tagsCount = 0;
+		for (Method m : methods) {
+			tagsCount += m.tags.size();
+		}
+		float tagsAverage =  ((float) tagsCount) / methods.size();
+		LOGGER.info("Num methods: {}", methods.size());
+		LOGGER.info("Average number of tags per method: {}", tagsAverage);
+		
 		// Block 0
 		search.addBlock("initialization");
 		
 		// Block 1
 		search.addBlock("node", "constructor");
-//		search.addToLastBlock("subscription", "constructor");	
+//		search.addToLastBlock("subscription", "constructor");
 		search.addToLastBlock("publisher", "constructor");
 		
 		// Block 2
@@ -185,12 +195,13 @@ public class Synthesis {
 		search.addBlock("wallrate", "constructor");
 		
 		// Block 4
+		// TODO: add ordering to blocks, since we don't want data to happen before message
 		search.addBlock("message", "constructor");
 		search.addToLastBlock("message", "data");
 		search.addToLastBlock("message", "data");
 		
 		// Block 5
-//		search.addBlock("message", "data");		
+//		search.addBlock("message", "data");
 		search.addBlock("publish");
 		
 		// Block 6
@@ -265,5 +276,7 @@ public class Synthesis {
 		
 //		filler.fillSketches("ex1/sketches/listener.sketch", ivs);
 		filler.fillSketches("ex1/sketches/talker.sketch", ivs);
+		
+		LOGGER.info("{} places, {} transitions", mtpn.net.getPlaces().size(), mtpn.net.getTransitions().size());
 	}
 }

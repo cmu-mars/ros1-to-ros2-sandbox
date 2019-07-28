@@ -1,9 +1,6 @@
 package ros2sy.synthesis;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
+import java.util.*;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -23,6 +20,31 @@ public class SearchSpace {
 	
 	public SearchSpace(ArrayList<Method> methods, String tagFileName, MethodsToPetriNet mtpn) {
 		tagToMethods = ParseJson.tagMethods(methods, tagFileName);
+		for (Map.Entry<String, HashSet<Method>> entry : tagToMethods.entrySet()) {
+			LOGGER.info("\"{}\": {} methods", entry.getKey(), entry.getValue().size());
+		}
+		
+		ArrayList<Map.Entry<String, HashSet<Method>>> entries = new ArrayList<>(tagToMethods.entrySet());
+		
+		for (int i = 0; i < entries.size(); i++) {
+			for (int j = 0; j < entries.size(); j++) {
+				if (i != j) {
+					HashSet<Method> methodsEntry = new HashSet<>(entries.get(i).getValue());
+					methodsEntry.retainAll(entries.get(j).getValue());
+					LOGGER.info("{} and {}: {}", entries.get(i).getKey(), entries.get(j).getKey(), methodsEntry.size());
+				}
+			}
+		}
+		
+		if (tagToMethods.containsKey("message") && tagToMethods.containsKey("messages")) {
+			HashSet<Method> messageTagSet = tagToMethods.get("message");
+			
+			HashSet<Method> messagesTagSet = tagToMethods.get("messages");
+			
+			LOGGER.info("Message tag contains all of messages?: {}", messageTagSet.containsAll(messagesTagSet));
+			LOGGER.info("Messages tag contains all of message?: {}", messagesTagSet.containsAll(messageTagSet));
+		}
+		
 		tagToNames = Method.methodSetsToStringSets(tagToMethods, mtpn);
 	}
 	

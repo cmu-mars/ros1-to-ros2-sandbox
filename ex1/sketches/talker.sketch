@@ -8,24 +8,27 @@
 int main(int argc, char **argv){
   // Block 0
   std::string node_name = "talker_node";
+  std::string topic_name = "chatter";
+  int pause_duration = 1;
+  int loop_rate_duration = 10;
+
   ?#? //ros::init(argc, argv, "talker_node");
 
   // Block 1
   ?#? //ros::NodeHandle n;
-  std::string topic_name = "chatter";
+
   int queue_size = 1000;
   ?#? //ros::Publisher chatter_pub = n.advertise<std_msgs::String>("chatter", 1000);
 
   // Block 2
   // Sleep for 2 seconds
   // Construct some kind of time duration
-  int pause_duration = 1;
   ?#? // ros::Duration(1).sleep();
+  ?#?
   // Sleep
   ?#?
 
   // Block 3
-  int loop_rate_duration = 10;
   ?#? //ros::Rate loop_rate(10);
   int count = 1;
   while (ros::ok()) {
@@ -41,7 +44,7 @@ int main(int argc, char **argv){
     // ROS_INFO("%s", msg.data.c_str());
     // Actually publish it
     ?#? //chatter_pub.publish(msg);
-    ros::spinOnce(); //06/05/1710
+    ?#? //ros::spinOnce(); //06/05/1710
 
     // Block 5
     ?#? //loop_rate.sleep();

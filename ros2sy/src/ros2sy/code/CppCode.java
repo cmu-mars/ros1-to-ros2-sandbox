@@ -140,13 +140,18 @@ public class CppCode {
 		boolean isPointerFieldAccess = false;
 		for (int i = 0; i < this.apis.size(); i++) {
 			Method m = this.apis.get(i);
+			
+			if (originalApis.get(i).hasTag("duration")) {
+				LOGGER.info("The tags of method {}: {}", m.name, originalApis.get(i).tags);
+			}
+			
 			if (m.name.equals(MethodsToPetriNet.un_pointer_name)) {
 				LOGGER.info("We have a pointer dereference: {}", m.name);
 				isPointerFieldAccess = true;
 			} else {
 				LOGGER.info("We don't have a pointer dereference: {}", m.name);
 				int numHolesOffset = 0;
-				if (!m.returnType.getPlainName().equals("void") && !m.returnType.toString().equals("") && !m.returnType.isVirtual()) {
+				if (!m.returnType.getPlainName().equals("void") && !m.returnType.toString().equals("") && !m.returnType.isVirtual() && !m.isConstructor) {
 					String id = this.getFreshId();
 					this.results.put(id, m.returnType);
 //					LOGGER.info("Adding result type {} for hole {}", m.returnType, i);
@@ -156,12 +161,20 @@ public class CppCode {
 					String id = this.getFreshId();
 					
 					Method original = originalApis.get(i);
-					this.results.put(id,  m.fromClass);
-					in.addNewResult(id, m.fromClass, i);
-					if (!original.hasTag("rate")) {
-						code += m.fromClass.toString() + " " + id + " = ";
+					String resultString = (m.returnType.toString().equals("")) ? m.fromClass.toString() : m.returnType.toString();
+					Type resultType = (resultString.equals(m.returnType.toString())) ? m.returnType : m.fromClass;
+					
+					
+					this.results.put(id,  resultType);
+					in.addNewResult(id, resultType, i);
+					
+					
+					if (!original.hasTag("rate") && !original.hasTag("duration")) {
+						code += resultString + " " + id + " = ";
+						LOGGER.info("See the code now: {}", code);
 					} else {
-						code += m.fromClass.toString() + " " + id;
+						code += resultString + " " + id;
+						LOGGER.info("See the code NOW: {}", code);
 					}
 				}
 				if (m.isClassMethod) {
@@ -178,7 +191,7 @@ public class CppCode {
 				}
 				
 				String templateParams = createTemplateParamString(m, originalApis.get(i));
-				if (m.isConstructor && originalApis.get(i).hasTag("rate")) {
+				if (m.isConstructor && (originalApis.get(i).hasTag("rate") || originalApis.get(i).hasTag("duration"))) {
 					code += templateParams + "(";
 				} else {
 					code += m.getPrintingName() + templateParams + "(";

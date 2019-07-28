@@ -19,7 +19,7 @@
             "void"
         ],
         [
-            "std::shared_ptr<std_msgs::msgs::String>",
+            "std::shared_ptr<std_msgs::msg::String>",
             "std::shared_ptr<rclcpp::Publisher<MessageT, Alloc>>"
         ],
         [
@@ -34,7 +34,7 @@
         "argc": "int",
         "argv": "char **",
         "node_name": "std::string",
-        "advertise_template_type_input": "std_msgs::msgs::String",
+        "advertise_template_type_input": "std_msgs::msg::String",
         "topic_name": "std::string",
         "queue_size": "int",
         "pause_duration": "int",

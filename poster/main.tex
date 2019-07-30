@@ -85,7 +85,8 @@
     showspaces=false,                
     showstringspaces=false,
     showtabs=false,                  
-    tabsize=2
+    tabsize=2,
+    postbreak={\space\space\space}
 }
 \lstdefinestyle{textstyle}{
 	basicstyle=\ttfamily
@@ -105,7 +106,7 @@
 
 \title{Automatic Refactoring of Robotics Code} % Poster title
 
-\author{Audrey Seo} % Author(s)
+\author{Audrey Seo, Ian Voysey, Ruben Martins} % Author(s)
 
 \institute{REUSE -- ISR} % Institution(s)
 
@@ -145,7 +146,7 @@
 \begin{itemize}
 \item ROS is a framework for programming robots
 \item The first version, ROS1, is not compatible with ROS2
-\item Want to automatically port ROS1 to ROS2
+\item Want to automatically upgrade ROS1 to ROS2
 \end{itemize}
 
 \end{alertblock}
@@ -184,7 +185,7 @@
 \begin{figure}
 \lstinputlisting[language=C++,style=mystyle]{listener.sketch}
 
-\caption{The sketch created from the code in Fig. \ref{fig:listenercode} by putting holes (denoted by \texttt{?\#?}) in the place of any ROS APIs.}
+\caption{The sketch created from the code in Fig. \ref{fig:listenercode} by putting holes (denoted by \texttt{?\#?}) in the place of any ROS APIs. The original ROS1 API is shown in the comments after each hole.}
 \end{figure}
 
 %----------------------------------------------------------------------------------------
@@ -330,17 +331,22 @@ As first test cases for refactoring, we chose two node programs: a ``listener'' 
 \node[place,label=above:{shared\_ptr<Node>},right=1.2in of makeshared] 						(ptrnode) {};
 \node[trans,label=right:{->},below right=1.2in of ptrnode] 									(derefnode) {};
 \node[place,label=right:{Node}] at ($(derefnode.south)-(0.7in,1.2in)$) 						(n) {};
-\node[place,label=right:{size\_t}] at ($(stdstring)!($(makeshared)!.5!(ptrnode)$)!(derefnode)$)	(sizet) {};
+\path let \p1=($(stdstring)!($(makeshared)!.5!(ptrnode)$)!(derefnode)$) in
+	coordinate (middle) at (\p1);
+%\node[place,label=right:{size\_t}] at ($(stdstring)!($(makeshared)!.5!(ptrnode)$)!(derefnode)$)	(sizet) {};
+\node[place,label=above:{size\_t},tokens=1] at ($(stdstring)!(makeshared)!(derefnode)$)	(sizet) {};
+\node[place,label=above:{callback},tokens=1] at ($(stdstring)!(ptrnode)!(derefnode)$) (callback) {};
 
-\node[myinput,above=3in of sizet]			(inputs)	{apis: [[Node::make\_shared], [create\_subscription]]\\types: \{std::string: 2\}};
+
+\node[myinput,above=3.5in of middle]			(inputs)	{apis: [[Node::make\_shared], [create\_subscription]]\\types: \{std::string: 2,\\size\_t: 1, callback: 1\}};
 
 \path let \n1={-1.2in},
 		  \p1=($(inputs.south)+(0,\n1)$) in
 		 coordinate (myinputarrowend) at (\p1);
 
-\node[trans,label=below left:{create\_subscription(A)}] at ($($(n)-(5,0)$)!(sizet)!(n)$)	(createsubA) {};
+\node[trans,label=below left:{create\_subscription(A)}] at ($($(n)-(5,0)$)!($(makeshared)!.5!(ptrnode)$)!(n)$)	(createsubA) {};
 \node[place,label=above right:{shared\_ptr<Subscription>},below=1in of createsubA] 			(ptrsub) {};
-\path let \n1={-1.2in},
+\path let \n1={-1.5in},
 		  \p1=($(ptrsub) + (0,\n1)$),
 		  \p2=($(ptrsub) + (2,\n1)$) in
 	coordinate (derefsubA) at (\p1)
@@ -352,16 +358,17 @@ As first test cases for refactoring, we chose two node programs: a ``listener'' 
 \node[place,label=above:{shared\_ptr<msg::String>}] at  (ptrmsgplace) (ptrmsg) {};
 \node[trans,label=below:{publish},below=1.8in of ptrsub] 	(publish) {};
 
-\node[myinput,below=1.4in of publish,align=left] (output) {shared\_ptr<Node> n = Node::make\_shared(????);\\n.create\_subscription(???,???,???);};
+\node[myinput,below=1.4in of publish,align=left] (output) {shared\_ptr<Node> n = Node::make\_shared(node\_name);\\n->create\_subscription(topic\_name,chatterCallback,queue\_size);};
 \path let \n1={1.2in},
 		  \p1=($(output.north)+(0,\n1)$) in
 		  coordinate (myoutputarrowbegin) at (\p1);
 
 \draw[flow] (stdstring) to [bend left=45] 				(makeshared);
 \draw[flow] (makeshared) to 							(ptrnode);
-\draw[flow] (stdstring) to [bend right=45] 				(createsubA);
+\draw[flow] (stdstring) to [bend right=35] 				(createsubA);
 \draw[flow] (ptrnode) 	to [bend left=45]				(derefnode);
-\draw[flow] (sizet) to 									(createsubA);
+\draw[flow] (sizet) to [bend right=40]									(createsubA);
+\draw[flow] (callback) to [bend left=40]				(createsubA);
 \draw[flow] (derefnode) to [bend left=20]				(n);
 \draw[flow] (n) to 										(createsubA);
 \draw[flow] (createsubA) to 							(ptrsub);
@@ -429,18 +436,26 @@ The resulting petri net has
 \begin{itemize}
 \item 308 places (=types)
 \item 560 transitions (=ROS APIs)
-\item 1383 edges (=relationships between APIs and types)
 \end{itemize}
 
-Several candidate solutions are generated for each program.
+If we tried a naive approach to search the petri net, we would have at least $560^n$ solutions, where $n$ is the number of holes, or:
 \begin{itemize}
-\item Listener: 16
-\item Talker: 64
+\item $560^{4} \approx 9.83 \times 10^{10}$ listener candidates and
+\item $560^{14} \approx 2.98 \times 10^{38}$ talker candidates.
 \end{itemize}
 
-
+Using tags and types to guide the search, we get:
+\begin{itemize}
+\item Listener: 16 candidate solutions
+\item Talker: 64 candidate solutions.
+\end{itemize}
 \end{block}
 
+\begin{figure}
+\lstinputlisting[language=C++,style=mystyle]{listener_synthesized.cpp}
+
+\caption{An example of a correct synthesized candidate program, for the listener.}
+\end{figure}
 
 
 
@@ -458,7 +473,7 @@ Several candidate solutions are generated for each program.
 \item C++ grammar: complicated and ambiguous
 \item C++ types: parametric polymorphism
 \item Diagnosing cause of failing test
-\item Slow ROS compile time $\to$ test cases not feasible
+\item Slow ROS compile time %$\to$ test cases not feasible
 \end{itemize}
 
 \end{block}

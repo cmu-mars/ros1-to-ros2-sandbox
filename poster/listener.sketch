@@ -1,7 +1,5 @@
 void chatterCallback(const std_msgs::String::ConstPtr& msg){
-  char* string_template = "I heard: [%s]";
-  ?#? //ROS_INFO, std_msgs::String::data::c_str
-  }
+  // ...
 }
 
 int main(int argc, char **argv) {  

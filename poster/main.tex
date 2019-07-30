@@ -106,9 +106,9 @@
 
 \title{Automatic Refactoring of Robotics Code} % Poster title
 
-\author{Audrey Seo\footnotemark[1], Ian Voysey\footnotemark[2], Ruben Martins\footnotemark[3]} % Author(s)
+\author{Audrey Seo\footnotemark[1], Ian Voysey\footnotemark[2], Ruben Martins\footnotemark[2]} % Author(s)
 
-\institute{\footnotemark[1]Wellesley College; \footnotemark[2]Institute for Software Research, CMU; \footnotemark[3]Computer Science Department, CMU} % Institution(s)
+\institute{\footnotemark[1]Wellesley College; \footnotemark[2]School of Computer Science, Carnegie Mellon University} % Institution(s)
 
 %----------------------------------------------------------------------------------------
 
@@ -145,7 +145,7 @@
 \begin{alertblock}{Problem}
 \begin{itemize}
 \item ROS is a framework for programming robots
-\item The first version, ROS1, is not compatible with ROS2
+\item First version, ROS1, incompatible with ROS2
 \item Want to automatically upgrade ROS1 to ROS2
 \end{itemize}
 
@@ -167,9 +167,9 @@
 \begin{block}{Motivation}
 
 \begin{itemize}
-\item Difficult to update code (e.g. Python 2.7 vs Python 3)
-\item Coding robots is more interesting and fun than refactoring
+\item Difficult to update code (e.g. Python 2.7 vs 3)
 \item ROS1 has major security vulnerabilities
+\item Programming robots, which has real world applications and consequences, is higher priority than updating dependencies and refactoring code
 \end{itemize}
 
 \end{block}
@@ -178,14 +178,15 @@
 
 \begin{figure}
 \lstinputlisting[language=C++,style=mystyle]{ros1_listener.cpp}
-\caption{Original C++ code for a ``listener'' node, using ROS1 APIs.}
+\caption{Original C++ code for a ``listener'' node, using ROS1.}
 \label{fig:listenercode}
 \end{figure}
 
 \begin{figure}
 \lstinputlisting[language=C++,style=mystyle]{listener.sketch}
 
-\caption{The sketch created from the code in Fig. \ref{fig:listenercode} by putting holes (denoted by \texttt{?\#?}) in the place of any ROS APIs. The original ROS1 API is shown in the comments after each hole.}
+\caption{The sketch created from the code in Fig. \ref{fig:listenercode} by putting holes (denoted by \texttt{?\#?}) in the place of any ROS methods. The original ROS1 method is shown in the comments after each hole.}
+\label{fig:listenersketch}
 \end{figure}
 
 %----------------------------------------------------------------------------------------
@@ -267,12 +268,12 @@
 %    \\\///    ||////// ||     \|| ||////// ||     || //      \\   ||     ||    \\\///    ||     \||
 
 \begin{block}{Sketch Generation}
-A ``sketch'' could be generated using data flow analysis (DFA) to create blocks of code. However, in this first prototype, we have manually divided up the code into blocks.
+A \textbf{sketch} is a partially defined program with all ROS1 code removed (see Fig. \ref{fig:listenersketch}). We had to create these manually, but in the future, this could be automatically generated using data flow analysis. %In this first prototype, we have manually divided up the code into blocks.
 
 % Note: there *appears* to be 17 different tags, but two of the tags are actually just the same exact thing: message and messages lol
-ROS APIs were tagged with 16 different keys that encoded programmer intent (see Table \ref{tab:tags}).
+All ROS2 methods were \textbf{tagged} with 16 different keys that encoded programmer intent (see Table \ref{tab:tags}).
 
-As first test cases for refactoring, we chose two node programs: a ``listener'' and a ``talker'' that communicate over a channel called a \textit{topic}.
+As first test cases for synthesis, we chose two node programs: a ``listener'' and a ``talker'' that communicate over a channel called a \textit{topic}, a core part of the ROS framework. The talker sends messages, which the listener receives.
 \end{block}
 
 %As first test cases for refactoring, we chose two node programs: a ``listener'' and a ``talker'' that communicate over a channel called a \textit{topic}. Though just two programs might seem like a small sample size, the topic model drives the entirety of interactions in ROS, so this actually more representative of other ROS code samples than it would seem.
@@ -382,7 +383,7 @@ As first test cases for refactoring, we chose two node programs: a ``listener'' 
 
 \end{tikzpicture}
 
-\caption{Partial petri net of ROS2 APIs for the listener example (see Fig. \ref{fig:listenercode}). Input and output for synthesis is shown above and below, respectively.}
+\caption{Partial petri net of ROS2 methods for the listener example (see Fig. \ref{fig:listenercode}). Input and output for synthesis is shown above and below, respectively.}
 \label{fig:petri}
 \end{figure}
 
@@ -413,7 +414,7 @@ As first test cases for refactoring, we chose two node programs: a ``listener'' 
 \begin{column}{\onecolwid} % The third column
 
 \begin{block}{Synthesis}
-The ROS2 code synthesis is driven by searching a petri net (see Fig. \ref{fig:petri}), where the nodes are types and the transitions are various ROS2 APIs.
+The ROS2 code synthesis is driven by searching a petri net (see Fig. \ref{fig:petri}), where the nodes are types and the transitions are ROS2 methods.
 
 %However, in a petri net that has 308 places and 560 transitions, this problem is a lot more difficult than Fig. \ref{fig:petri} would make it appear.
 \end{block}
@@ -431,11 +432,17 @@ The ROS2 code synthesis is driven by searching a petri net (see Fig. \ref{fig:pe
 % ||     || ||       \\    //  \\    // ||       ||    \\    //
 % ||     || ||//////  //////    \\\///  ||////// ||     //////
 
+\begin{figure}
+\lstinputlisting[language=C++,style=mystyle]{listener_synthesized.cpp}
+
+\caption{An example of a ``correct'' synthesized listener program, where ``correct'' means it should typecheck, compile, and communicate with the talker.}
+\end{figure}
+
 \begin{block}{Results}
 The resulting petri net has 
 \begin{itemize}
-\item 308 places (=types)
-\item 560 transitions (=ROS APIs)
+\item 308 places (types)
+\item 560 transitions (ROS methods)
 \end{itemize}
 
 If we tried a naive approach to search the petri net, we would have at least $560^n$ solutions, where $n$ is the number of holes, or:
@@ -451,11 +458,7 @@ Using tags and types to guide the search, we get:
 \end{itemize}
 \end{block}
 
-\begin{figure}
-\lstinputlisting[language=C++,style=mystyle]{listener_synthesized.cpp}
 
-\caption{An example of a correct synthesized candidate program, for the listener.}
-\end{figure}
 
 
 

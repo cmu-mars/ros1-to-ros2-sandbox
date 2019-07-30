@@ -19,6 +19,15 @@
             "void"
         ],
         [
+            "void"
+        ],
+        [
+            "std::shared_ptr<std_msgs::msg::String>"
+        ],
+        [
+            "std::shared_ptr<std_msgs::msg::String>"
+        ],
+        [
             "std::shared_ptr<std_msgs::msg::String>",
             "std::shared_ptr<rclcpp::Publisher<MessageT, Alloc>>"
         ],

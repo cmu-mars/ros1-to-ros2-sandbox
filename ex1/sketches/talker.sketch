@@ -31,16 +31,16 @@ int main(int argc, char **argv){
   // Block 3
   ?#? //ros::Rate loop_rate(10);
   int count = 1;
-  while (ros::ok()) {
+  while (?(#)?) {
     // Block 4
     // Construct the message object
     ?#? //std_msgs::String msg;
     std::stringstream ss;
     ss << "Hello World: " << count;
     // Assign the data to the message object
-    ?#? = ss.str(); // msg.data
+    ?(#)? = ss.str(); // msg.data
     // Get the data from the message object
-    std::cout << "Publishing: '" << ?#? << "'" << std::endl;
+    std::cout << "Publishing: '" << ?(#)? << "'" << std::endl;
     // ROS_INFO("%s", msg.data.c_str());
     // Actually publish it
     ?#? //chatter_pub.publish(msg);

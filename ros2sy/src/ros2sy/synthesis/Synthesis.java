@@ -194,20 +194,28 @@ public class Synthesis {
 		// Block 3
 		search.addBlock("wallrate", "constructor");
 		
+		
+		// Block 4
+		search.addBlock("ok");
+		
 		// Block 4
 		// TODO: add ordering to blocks, since we don't want data to happen before message
 		search.addBlock("message", "constructor");
-		search.addToLastBlock("message", "data");
-		search.addToLastBlock("message", "data");
 		
 		// Block 5
+		search.addBlock("message", "data");
+		
+		// Block 6
+		search.addBlock("message", "data");
+		
+		// Block 7
 //		search.addBlock("message", "data");
 		search.addBlock("publish");
 		
-		// Block 6
+		// Block 8
 		search.addBlock("spin");
 
-		// Block 7
+		// Block 9
 		search.addBlock("wallrate", "sleep");
 		
 		ArrayList<String> neverUse = search.getNameIntersect("shutdown");
@@ -277,6 +285,6 @@ public class Synthesis {
 //		filler.fillSketches("ex1/sketches/listener.sketch", ivs);
 		filler.fillSketches("ex1/sketches/talker.sketch", ivs);
 		
-		LOGGER.info("{} places, {} transitions", mtpn.net.getPlaces().size(), mtpn.net.getTransitions().size());
+		LOGGER.info("{} places, {} transitions, {} edges", mtpn.net.getPlaces().size(), mtpn.net.getTransitions().size(), mtpn.net.getEdges().size());
 	}
 }

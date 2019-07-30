@@ -81,6 +81,30 @@ public class SketchFiller {
 		return includesGiven;
 	}
 	
+	
+	private ArrayList<HoleType> getHoleTypes(String sketch) {
+		int index = 0;
+		ArrayList<HoleType> holes = new ArrayList<>();
+//		String statementHole = "\\?#\\?";
+//		String exprHole = "\\?\\(#\\)\\?";
+		
+		int lastIndex = 0;
+		while (index > -1 && index < sketch.length()) {
+			lastIndex = index;
+			
+			index = sketch.indexOf("?#?", lastIndex);
+			int tempIndex = sketch.indexOf("?(#)?", lastIndex);
+			if ((index == -1 || index > tempIndex) && tempIndex > -1) {
+				index = tempIndex;
+				holes.add(HoleType.EXPRESSION);
+			} else {
+				holes.add(HoleType.STATEMENT);
+			}
+		}
+		
+		return holes;
+	}
+	
 	public void fillSketches(String sketchPath, InputVariables ivs) throws CodeGenerationException {
 		String sketchBaseName = getSketchBaseName(sketchPath);
 		

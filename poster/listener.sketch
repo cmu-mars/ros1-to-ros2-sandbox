@@ -1,0 +1,17 @@
+void chatterCallback(const std_msgs::String::ConstPtr& msg){
+  char* string_template = "I heard: [%s]";
+  ?#? //ROS_INFO, std_msgs::String::data::c_str
+  }
+}
+
+int main(int argc, char **argv) {  
+  std::string node_name = "listener_node";
+  ?#? // ros::init
+  ?#? // ros::NodeHandle
+  std::string topic_name = "chatter";
+  int queue_size = 1000;
+  ?#? // ros::NodeHandle::subscribe
+  ?#? // ros::spin
+  return 0;
+}
+

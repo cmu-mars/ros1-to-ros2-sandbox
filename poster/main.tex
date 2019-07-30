@@ -266,7 +266,7 @@
 %    \\\///    ||////// ||     \|| ||////// ||     || //      \\   ||     ||    \\\///    ||     \||
 
 \begin{block}{Sketch Generation}
-Ideally, a ``sketch'' would be generated using data flow analysis (DFA) to create the code blocks. However, in this first prototype, we have manually divided up the code into blocks.
+A ``sketch'' could be generated using data flow analysis (DFA) to create blocks of code. However, in this first prototype, we have manually divided up the code into blocks.
 
 % Note: there *appears* to be 17 different tags, but two of the tags are actually just the same exact thing: message and messages lol
 ROS APIs were tagged with 16 different keys that encoded programmer intent (see Table \ref{tab:tags}).
@@ -288,7 +288,7 @@ As first test cases for refactoring, we chose two node programs: a ``listener'' 
 		\texttt{sub}	&0				&-				&-				&-						&-						&-				&16	\\
 		\texttt{other}	&-				&-				&-				&-						&-						&-				&37
 	\end{tabular}
-	\caption{Breakdown of the top 5 tags, and all others are in the ``other'' category. The average number of tags per method was 1.5, so a decent number of methods have multiple tags. Thus the numbers in the total column don't add up to the number of methods in the search space: 142.}
+	\caption{Breakdown of the top 5 tags, and all others are in the ``other'' category. The average number of tags per method was 1.5, thus the numbers in the total column don't add up to the number of methods in the search space: 142.}
 	\label{tab:tags}
 \end{table}
 
@@ -316,8 +316,10 @@ As first test cases for refactoring, we chose two node programs: a ``listener'' 
 
 
 \begin{figure}
-\begin{tikzpicture}[scale=0.7,
-					every node/.style={scale=0.7},
+\def\myscale{0.8}
+
+\begin{tikzpicture}[scale=\myscale,
+					every node/.style={scale=\myscale},
 					trans/.style={transition,font=\ttfamily\footnotesize,minimum width=1cm,minimum height=3cm,fill=black},
 					every label/.style={font=\ttfamily\footnotesize},
 					flow/.style={->,>=stealth',thick,line width=1mm},
@@ -332,13 +334,13 @@ As first test cases for refactoring, we chose two node programs: a ``listener'' 
 
 \node[myinput,above=3in of sizet]			(inputs)	{apis: [[Node::make\_shared], [create\_subscription]]\\types: \{std::string: 2\}};
 
-\path let \n1={-1.5in},
+\path let \n1={-1.2in},
 		  \p1=($(inputs.south)+(0,\n1)$) in
 		 coordinate (myinputarrowend) at (\p1);
 
 \node[trans,label=below left:{create\_subscription(A)}] at ($($(n)-(5,0)$)!(sizet)!(n)$)	(createsubA) {};
 \node[place,label=above right:{shared\_ptr<Subscription>},below=1in of createsubA] 			(ptrsub) {};
-\path let \n1={-1.5in},
+\path let \n1={-1.2in},
 		  \p1=($(ptrsub) + (0,\n1)$),
 		  \p2=($(ptrsub) + (2,\n1)$) in
 	coordinate (derefsubA) at (\p1)
@@ -350,8 +352,8 @@ As first test cases for refactoring, we chose two node programs: a ``listener'' 
 \node[place,label=above:{shared\_ptr<msg::String>}] at  (ptrmsgplace) (ptrmsg) {};
 \node[trans,label=below:{publish},below=1.8in of ptrsub] 	(publish) {};
 
-\node[myinput,below=1.5in of publish,align=left] (output) {shared\_ptr<Node> n = Node::make\_shared(????);\\n.create\_subscription(???,???,???);};
-\path let \n1={1.5in},
+\node[myinput,below=1.4in of publish,align=left] (output) {shared\_ptr<Node> n = Node::make\_shared(????);\\n.create\_subscription(???,???,???);};
+\path let \n1={1.2in},
 		  \p1=($(output.north)+(0,\n1)$) in
 		  coordinate (myoutputarrowbegin) at (\p1);
 
@@ -373,7 +375,7 @@ As first test cases for refactoring, we chose two node programs: a ``listener'' 
 
 \end{tikzpicture}
 
-\caption{Partial petri net of ROS2 APIs for the listener example (see Fig. \ref{fig:listenercode}).}
+\caption{Partial petri net of ROS2 APIs for the listener example (see Fig. \ref{fig:listenercode}). Input and output for synthesis is shown above and below, respectively.}
 \label{fig:petri}
 \end{figure}
 
@@ -423,7 +425,12 @@ The ROS2 code synthesis is driven by searching a petri net (see Fig. \ref{fig:pe
 % ||     || ||//////  //////    \\\///  ||////// ||     //////
 
 \begin{block}{Results}
-The resulting petri net has 308 places, 560 transitions, and 1383 edges. The places in the petri net represent types, and the transitions represent ROS API's.
+The resulting petri net has 
+\begin{itemize}
+\item 308 places (=types)
+\item 560 transitions (=ROS APIs)
+\item 1383 edges (=relationships between APIs and types)
+\end{itemize}
 
 Several candidate solutions are generated for each program.
 \begin{itemize}

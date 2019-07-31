@@ -230,7 +230,7 @@ public class MethodsToPetriNet {
 		String doesntHaveTypeVars = hasTypeVars;
 		
 		for (Map.Entry<String, String> typeVarEntry : this.parametricTypeReplacements.entrySet()) {
-			doesntHaveTypeVars = doesntHaveTypeVars.replaceAll(typeVarEntry.getKey(), typeVarEntry.getValue());
+			doesntHaveTypeVars = doesntHaveTypeVars.replaceAll("\\b" + typeVarEntry.getKey() + "\\b", typeVarEntry.getValue());
 		}
 		
 		return doesntHaveTypeVars;

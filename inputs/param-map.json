@@ -1,4 +1,5 @@
 {
+    "CallbackMessageT": "[a-zA-Z0-9]*_msgs::msg::[a-zA-Z]*$",
     "MessageT": "[a-zA-Z0-9]*_msgs::msg::[a-zA-Z]*$",
     "PublisherT": "rclcpp::Publisher(<[a-zA-Z ,]+>)?$",
     "SubscriptionT": "rclcpp::Subscription(<[a-zA-Z ,]+>)?$"

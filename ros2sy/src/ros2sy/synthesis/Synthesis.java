@@ -182,48 +182,48 @@ public class Synthesis {
 		
 		// Block 1
 		search.addBlock("node", "constructor");
-//		search.addToLastBlock("subscription", "constructor");
-		search.addToLastBlock("publisher", "constructor");
+		search.addToLastBlock("subscription", "constructor");
+//		search.addToLastBlock("publisher", "constructor");
 		
 		// Block 2
-		// search.addBlock("spin");
+		 search.addBlock("spin");
 		// talker only from now on:
-		search.addBlock("duration");
-		search.addToLastBlock("sleep");
+//		search.addBlock("duration");
+//		search.addToLastBlock("sleep");
 		
 		// Block 3
-		search.addBlock("wallrate", "constructor");
-		
-		
-		// Block 4
-		search.addBlock("ok");
-		
-		// Block 4
-		// TODO: add ordering to blocks, since we don't want data to happen before message
-		search.addBlock("message", "constructor");
-		
-		// Block 5
-		search.addBlock("message", "data");
-		
-		// Block 6
-		search.addBlock("message", "data");
-		
-		// Block 7
+//		search.addBlock("wallrate", "constructor");
+//
+//
+//		// Block 4
+//		search.addBlock("ok");
+//
+//		// Block 4
+//		// TODO: add ordering to blocks, since we don't want data to happen before message
+//		search.addBlock("message", "constructor");
+//
+//		// Block 5
 //		search.addBlock("message", "data");
-		search.addBlock("publish");
-		
-		// Block 8
-		search.addBlock("spin");
-
-		// Block 9
-		search.addBlock("wallrate", "sleep");
+//
+//		// Block 6
+//		search.addBlock("message", "data");
+//
+//		// Block 7
+////		search.addBlock("message", "data");
+//		search.addBlock("publish");
+//
+//		// Block 8
+//		search.addBlock("spin");
+//
+//		// Block 9
+//		search.addBlock("wallrate", "sleep");
 		
 		ArrayList<String> neverUse = search.getNameIntersect("shutdown");
 		
 		InputVariables ivs = new InputVariables();
 		
-//		HashMap<String, String> varsToTypes = ParseJson.getInputVariableToType("inputs/listener_input.json");
-		HashMap<String, String> varsToTypes = ParseJson.getInputVariableToType("inputs/talker_input.json");
+		HashMap<String, String> varsToTypes = ParseJson.getInputVariableToType("inputs/listener_input.json");
+//		HashMap<String, String> varsToTypes = ParseJson.getInputVariableToType("inputs/talker_input.json");
 		
 		for (Map.Entry<String, String> e : varsToTypes.entrySet()) {
 			LOGGER.info("Adding variable: ({}, {})", e.getKey(), mtpn.replaceTypeVars(e.getValue()));
@@ -231,8 +231,8 @@ public class Synthesis {
 //			ivs.addInput(mtpn.replaceTypeVars(e.getKey()), )
 		}
 		
-//		ArrayList<ArrayList<String>> inputs = ParseJson.getInputTypesFromFile("inputs/listener_input.json");
-		ArrayList<ArrayList<String>> inputs = ParseJson.getInputTypesFromFile("inputs/talker_input.json");
+		ArrayList<ArrayList<String>> inputs = ParseJson.getInputTypesFromFile("inputs/listener_input.json");
+//		ArrayList<ArrayList<String>> inputs = ParseJson.getInputTypesFromFile("inputs/talker_input.json");
 		
 		for (ArrayList<String> strings : inputs) {
 			for (int i = 0; i < strings.size(); i++) {
@@ -240,8 +240,8 @@ public class Synthesis {
 			}
 		}
 		
-		// ArrayList<ArrayList<String>> correctAnswers = ParseJson.getCorrectAnswersFromFile("inputs/correct-answers.json");
-		ArrayList<ArrayList<String>> correctAnswers = ParseJson.getCorrectAnswersFromFile("inputs/correct-answers-talker.json");
+		 ArrayList<ArrayList<String>> correctAnswers = ParseJson.getCorrectAnswersFromFile("inputs/correct-answers.json");
+//		ArrayList<ArrayList<String>> correctAnswers = ParseJson.getCorrectAnswersFromFile("inputs/correct-answers-talker.json");
 		
 		ArrayList<String> correctSequence = new ArrayList<String>();
 		LOGGER.info("Beginning synthesis loop");
@@ -282,8 +282,8 @@ public class Synthesis {
 		LOGGER.info("Filling holes in generated code");
 		SketchFiller filler = new SketchFiller(mtpn, correctSequence);
 		
-//		filler.fillSketches("ex1/sketches/listener.sketch", ivs);
-		filler.fillSketches("ex1/sketches/talker.sketch", ivs);
+		filler.fillSketches("ex1/sketches/listener.sketch", ivs);
+//		filler.fillSketches("ex1/sketches/talker.sketch", ivs);
 		
 		LOGGER.info("{} places, {} transitions, {} edges", mtpn.net.getPlaces().size(), mtpn.net.getTransitions().size(), mtpn.net.getEdges().size());
 	}

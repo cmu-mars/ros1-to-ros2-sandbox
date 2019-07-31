@@ -507,7 +507,7 @@ public class Method {
 	
 	public static String replaceTypeParamsInString(HashMap<String, String> typeVarToType, String tipe) {
 		for (Map.Entry<String, String> entry : typeVarToType.entrySet()) {
-			tipe = tipe.replaceAll(entry.getKey(), entry.getValue());
+			tipe = tipe.replaceAll("\\b" + entry.getKey() + "\\b", entry.getValue());
 		}
 		
 		return tipe;

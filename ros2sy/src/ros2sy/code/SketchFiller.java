@@ -91,7 +91,9 @@ public class SketchFiller {
 		int lastIndex = 0;
 		while (index > -1 && index < sketch.length()) {
 			lastIndex = index;
-			
+			if (lastIndex > 0) {
+				lastIndex += 3;
+			}
 			index = sketch.indexOf("?#?", lastIndex);
 			int tempIndex = sketch.indexOf("?(#)?", lastIndex);
 			if ((index == -1 || index > tempIndex) && tempIndex > -1) {
@@ -111,22 +113,43 @@ public class SketchFiller {
 		// Get the sketch
 		try {
 			String sketchContents = new String(Files.readAllBytes(Paths.get(sketchPath)));
-			
+			ArrayList<HoleType> holeTypes = getHoleTypes(sketchContents);
 			getTypesAvailable(sketchContents);
 			
-			ArrayList<String> code = this.filler.generateCodeWithInputs(ivs.getInputs());
+			ArrayList<String> code = this.filler.generateCodeWithInputs(ivs.getInputs(), holeTypes);
 			
 			ArrayList<String> filledOutSketches = new ArrayList<String>();
 			for (String fill : code) {
 				String [] splits = fill.split("\n");
 				String replaceTag = "\\?#\\?";
+				String exprHole = "\\?\\(#\\)\\?";
 				String sketch = sketchContents;
 				int i = 0;
-				while (sketch.indexOf("?#?") > -1 && i < splits.length) {
-					LOGGER.trace("Replacing an instance of ?#? in the replace string with <{}>.", splits[i]);
-					sketch = sketch.replaceFirst(replaceTag, splits[i]);
+				for (HoleType ht : holeTypes) {
+					if (i <  splits.length) {
+						switch(ht) {
+							case STATEMENT:
+//								LOGGER.info("Statement: {}", sketch.indexOf("?#?") < sketch.indexOf("?(#)?") || sketch.indexOf("?(#)?") == -1);
+								sketch = sketch.replaceFirst(replaceTag, splits[i]);
+								break;
+							case EXPRESSION:
+//								LOGGER.info("Expression: {}", sketch.indexOf("?#?") > sketch.indexOf("?(#)?") || sketch.indexOf("?#?") == -1);
+								sketch = sketch.replaceFirst(exprHole, splits[i]);
+						}
+					}
 					i++;
 				}
+				
+//				while ((sketch.indexOf("?#?") > -1 || sketch.indexOf("?(#)?") > -1) && i < splits.length) {
+//					LOGGER.trace("Replacing an instance of ?#? in the replace string with <{}>.", splits[i]);
+//					if ((sketch.indexOf("?#?") > -1) && (sketch.indexOf("?(#)?") > -1)) {
+//						if (sketch.indexOf("?#?") > sketch.indexOf("?(#)?")) {
+//							sketch = sketch.replaceFirst(exprHole, splits[i]);
+//						}
+//					}
+//					sketch = sketch.replaceFirst(replaceTag, splits[i]);
+//					i++;
+//				}
 				filledOutSketches.add(sketch);
 			}
 			

@@ -383,7 +383,6 @@ public class ParseJson {
 					String funcType = jo.get("func_type").getAsString();
 					if (jo.has("return")) {
 						methods.add(new Method(key, args, jo.get("return").getAsString(), funcType));
-						
 					} else {
 						methods.add(new Method(key, args, "", funcType));						
 					}
@@ -419,9 +418,15 @@ public class ParseJson {
 								String name = temp.get("name").getAsString();
 								if (temp.has("value")) {
 									String val = temp.get("value").getAsString();
-									LOGGER.trace("Adding template parameter {}: {}", name, val);
 									
-									methods.get(index).addTemplateParameter(name, val);
+									if (temp.has("is_class_template")) {
+										methods.get(index).addTemplateParameter(name, val, Boolean.parseBoolean(temp.get("is_class_template").getAsString()));
+									} else {
+										LOGGER.trace("Adding template parameter {}: {}", name, val);
+										methods.get(index).addTemplateParameter(name, val);
+									}
+								} else if (temp.has("is_class_template")) {
+									methods.get(index).addTemplateParameter(name, Boolean.parseBoolean(temp.get("is_class_template").getAsString()));
 								} else {
 									
 									LOGGER.trace("Adding template parameter {}", name);

@@ -13,11 +13,13 @@
         "func_type": "constructor",
         "template": [
             {
-                "name": "CallbackMessageT"
+                "name": "CallbackMessageT",
+                "is_class_template": "true"
             },
             {
                 "name": "Alloc",
-                "value": "std::allocator<void>"
+                "value": "std::allocator<void>",
+                "is_class_template": "true"
             }
         ],
         "include": "rclcpp/subscription.hpp",
@@ -42,11 +44,13 @@
         "return": "void",
         "template": [
             {
-                "name": "CallbackMessageT"
+                "name": "CallbackMessageT",
+                "is_class_template": "true"
             },
             {
                 "name": "Alloc",
-                "value": "std::allocator<void>"
+                "value": "std::allocator<void>",
+                "is_class_template": "true"
             }
         ],
         "include": "rclcpp/subscription.hpp",
@@ -64,11 +68,13 @@
         "return": "std::shared_ptr<void>",
         "template": [
             {
-                "name": "CallbackMessageT"
+                "name": "CallbackMessageT",
+                "is_class_template": "true"
             },
             {
                 "name": "Alloc",
-                "value": "std::allocator<void>"
+                "value": "std::allocator<void>",
+                "is_class_template": "true"
             }
         ],
         "include": "rclcpp/subscription.hpp",
@@ -86,11 +92,13 @@
         "return": "std::shared_ptr<rcl_serialized_message_t>",
         "template": [
             {
-                "name": "CallbackMessageT"
+                "name": "CallbackMessageT",
+                "is_class_template": "true"
             },
             {
                 "name": "Alloc",
-                "value": "std::allocator<void>"
+                "value": "std::allocator<void>",
+                "is_class_template": "true"
             }
         ],
         "include": "rclcpp/subscription.hpp",
@@ -110,11 +118,13 @@
         "return": "void",
         "template": [
             {
-                "name": "CallbackMessageT"
+                "name": "CallbackMessageT",
+                "is_class_template": "true"
             },
             {
                 "name": "Alloc",
-                "value": "std::allocator<void>"
+                "value": "std::allocator<void>",
+                "is_class_template": "true"
             }
         ],
         "include": "rclcpp/subscription.hpp",
@@ -133,11 +143,13 @@
         "return": "void",
         "template": [
             {
-                "name": "CallbackMessageT"
+                "name": "CallbackMessageT",
+                "is_class_template": "true"
             },
             {
                 "name": "Alloc",
-                "value": "std::allocator<void>"
+                "value": "std::allocator<void>",
+                "is_class_template": "true"
             }
         ],
         "include": "rclcpp/subscription.hpp",
@@ -155,11 +167,13 @@
         "return": "void",
         "template": [
             {
-                "name": "CallbackMessageT"
+                "name": "CallbackMessageT",
+                "is_class_template": "true"
             },
             {
                 "name": "Alloc",
-                "value": "std::allocator<void>"
+                "value": "std::allocator<void>",
+                "is_class_template": "true"
             }
         ],
         "include": "rclcpp/subscription.hpp",
@@ -179,11 +193,13 @@
         "return": "void",
         "template": [
             {
-                "name": "CallbackMessageT"
+                "name": "CallbackMessageT",
+                "is_class_template": "true"
             },
             {
                 "name": "Alloc",
-                "value": "std::allocator<void>"
+                "value": "std::allocator<void>",
+                "is_class_template": "true"
             }
         ],
         "include": "rclcpp/subscription.hpp",
@@ -201,11 +217,13 @@
         "return": "const std::shared_ptr<rcl_subscription_t>",
         "template": [
             {
-                "name": "CallbackMessageT"
+                "name": "CallbackMessageT",
+                "is_class_template": "true"
             },
             {
                 "name": "Alloc",
-                "value": "std::allocator<void>"
+                "value": "std::allocator<void>",
+                "is_class_template": "true"
             }
         ],
         "include": "rclcpp/subscription.hpp",

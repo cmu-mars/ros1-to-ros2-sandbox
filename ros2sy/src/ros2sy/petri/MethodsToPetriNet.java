@@ -440,7 +440,7 @@ public class MethodsToPetriNet {
 			}
 			
 			if (!m.hasOptionalArgs()) {
-				if (m.isClassMethod) {
+				if (m.isClassMethod || m.isMemberAccess()) {
 					String instanceType = m.fromClass.toString();
 					
 					LOGGER.trace("Creating class method edge <{}> to <{}>", instanceType, t.getId());
@@ -451,7 +451,7 @@ public class MethodsToPetriNet {
 				MethodsToPetriNet.addTransitionFlowToPetri(mt.net, m.args, t, ret);
 			} else {
 				ArrayList<Arg> mandatory = m.getMandatoryArgs();
-				if (m.isClassMethod) {
+				if (m.isClassMethod || m.isMemberAccess()) {
 					String instType = m.fromClass.toString();
 					try {
 						mandatory.add(new Arg(instType));

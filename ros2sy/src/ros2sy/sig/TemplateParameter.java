@@ -13,6 +13,7 @@ public class TemplateParameter {
 	public String name;
 	public boolean hasDefault;
 	private String defaultValue;
+	private boolean isClassTemplate = false;
 	
 	private static HashMap<String, String> parameterTypeRegexes = ParseJson.getParameterMatchMap("inputs/param-map.json");
 	
@@ -23,6 +24,12 @@ public class TemplateParameter {
 		this.defaultValue = "";
 	}
 	
+	public TemplateParameter(String name, boolean isClassTemplate) {
+		this.name = name;
+		this.isClassTemplate = isClassTemplate;
+		this.hasDefault = false;
+	}
+	
 	public TemplateParameter(String name, String defValue) {
 		this.name = name;
 		
@@ -30,6 +37,15 @@ public class TemplateParameter {
 		if (this.hasDefault) {
 			this.defaultValue = defValue;
 		}
+	}
+	
+	public TemplateParameter(String name, String defValue, boolean isClassTemplate) {
+		this.name = name;
+		this.hasDefault = (defValue.length() > 0);
+		if (this.hasDefault) {
+			this.defaultValue = defValue;
+		}
+		this.isClassTemplate = isClassTemplate;
 	}
 	
 	public boolean fitsParameter(Type t) {
@@ -62,6 +78,10 @@ public class TemplateParameter {
 	
 	public String getDefaultValue() {
 		return this.defaultValue;
+	}
+	
+	public boolean isClassTemplate() {
+		return this.isClassTemplate;
 	}
 	
 	@Override

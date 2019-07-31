@@ -145,7 +145,7 @@ def getFunctionsTable(soup):
   for tab in tables:
     if "class" in tab.attrs:
       if "memberdecls" in tab["class"]:
-        print("Found table with class memberdecls")
+        #print("Found table with class memberdecls")
         rows = tab("tr")
         if len(rows) > 0:
           first = rows[0]
@@ -167,10 +167,10 @@ def hasTemplateParams(row):
   if hasClassStartingWith(tparamRow, "separator") or hasClass(tparamRow, "heading"):
     return False
     
-  print("Previous sibling: {}".format(tparamRow))
+  #print("Previous sibling: {}".format(tparamRow))
 
-  if tparamRow is not None and (not isinstance(tparamRow, bs4.NavigableString)) and hasClassStartingWith(tparamRow, "memitem") and tparamRow.find("td", class_="memTemplParams") is not None:
-    print("Look at this row: {}".format(tparamRow.getText()))
+  #if tparamRow is not None and (not isinstance(tparamRow, bs4.NavigableString)) and hasClassStartingWith(tparamRow, "memitem") and tparamRow.find("td", class_="memTemplParams") is not None:
+    #print("Look at this row: {}".format(tparamRow.getText()))
   
   return (tparamRow is not None) and not isinstance(tparamRow, bs4.NavigableString) and hasClassStartingWith(tparamRow, "memitem") and tparamRow.find("td", class_="memTemplParams") is not None
 
@@ -230,7 +230,7 @@ def getNextSiblingsOfHeader(hdr):
   while sib is not None and not hasClass(sib, "groupheader"):
     if hasClass(sib, "memtitle"):
       sibs.append(sib)
-      print("Adding sib: {}".format(sib))
+      #print("Adding sib: {}".format(sib))
     sib = sib.find_next_sibling("h2")
   #return [sib for sib in hdr.find_next_siblings("h2") if hasClass(sib, "memtitle")]
   return sibs
@@ -369,7 +369,7 @@ def isNotDeconstructor(header2):
 
 def addNamespace(tipe, namespace, originalTypedefs):
   def quantify(name):
-    print("Name: {}, name in original typedefs: {}".format(name, name in originalTypedefs))
+    #print("Name: {}, name in original typedefs: {}".format(name, name in originalTypedefs))
     name = re.sub(r"typename|class", r"", name).strip()
     sep = "::" if len(namespace) > 0 else ""
     if name.find("::") > -1:
@@ -432,6 +432,7 @@ def getTypedefs(url):
       for child in h3.children:
         if startsWithTemplate(child):
           template = extractTemplate(child)
+          print("Our template: {}".format(template))
           break
       break
   
@@ -452,7 +453,7 @@ def getTypedefs(url):
       print(text)
       splits = [s.strip() for s in text.split("=")]
       if len(splits) == 2:
-        print("Adding ({}, {}) to the typedefs".format(splits[0], splits[1]))
+        #print("Adding ({}, {}) to the typedefs".format(splits[0], splits[1]))
         fakeTypedefs[splits[0]] = removeSpacesBeforeAngleBrackets(splits[1])
         #typedefs[namespace + "::" + splits[0]] = addNamespace(removeSpacesBeforeAngleBrackets(splits[1]), namespace)
       else:
@@ -462,6 +463,7 @@ def getTypedefs(url):
       newKey = namespace + "::" + tipe
       typedefs[newKey] = addNamespace(definition, namespace, fakeTypedefs)
       tipesProvided.append(newKey)
+  print("Template: {}".format(template))
   return {include: {"defs": typedefs, "types": tipesProvided}} if len(template) == 0 else {include: {"defs": typedefs, "types": tipesProvided, "template": template}}
   
 
@@ -504,7 +506,7 @@ def getSignatures(url):
         funcName = getFunctionName(sib)
         permalink = getPermalink(sib) #sib.find("a", href=True).attrs["href"]
         
-        print("function name: " + funcName)
+        #print("function name: " + funcName)
         if funcName in functionNames:
           funcKey = namespace + "::" + funcName
           numIters = getNumIters(sib)
@@ -628,16 +630,40 @@ classConstructor = {
 
 typeDefinitions = {}
 
+def addClassTemplate(funcsig, templateName):
+  print("Looking at {} for {}".format(templateName, funcsig))
+  def addHelper(actualSig):
+    if "template" in actualSig:
+      print("Template in {}".format(actualSig))
+      for i in range(len(actualSig["template"])):
+        temp = actualSig["template"][i]
+        if temp["name"] == templateName:
+          temp["is_class_template"] = "true"
+        actualSig["template"][i] = temp
+    return actualSig
+    
+  if isinstance(funcsig, list):
+    for i in range(len(funcsig)):
+      funcsig[i] = addHelper(funcsig[i])
+  else:
+    funcsig = addHelper(funcsig)
+  return funcsig
+
 for name,url in urlDict.items():
   signatures = getSignatures(url)
   tipeDefs = getTypedefs(url)
-
+  print(tipeDefs)
   for key in tipeDefs:
     if name in hppFilesPrefix:
       typeDefinitions[hppFilesPrefix[name] + key] = tipeDefs[key]
     else:
       typeDefinitions[key] = tipeDefs[key]
-      
+    if "template" in tipeDefs[key]:
+      print("Template in tipeDefs: {}".format(tipeDefs))
+    
+      for func, funcsig in signatures.items():
+        for t in tipeDefs[key]["template"]:
+          signatures[func] = addClassTemplate(funcsig, t["name"])
   if name == "rclcpp":
     for func,funcsig in signatures.items():
       if isinstance(funcsig, list):

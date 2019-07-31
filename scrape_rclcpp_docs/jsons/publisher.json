@@ -11,11 +11,13 @@
         "func_type": "constructor",
         "template": [
             {
-                "name": "MessageT"
+                "name": "MessageT",
+                "is_class_template": "true"
             },
             {
                 "name": "Alloc",
-                "value": "std::allocator<void>"
+                "value": "std::allocator<void>",
+                "is_class_template": "true"
             }
         ],
         "include": "rclcpp/publisher.hpp",
@@ -37,11 +39,13 @@
         "return": "mapped_ring_buffer::MappedRingBufferBase::SharedPtr",
         "template": [
             {
-                "name": "MessageT"
+                "name": "MessageT",
+                "is_class_template": "true"
             },
             {
                 "name": "Alloc",
-                "value": "std::allocator<void>"
+                "value": "std::allocator<void>",
+                "is_class_template": "true"
             }
         ],
         "include": "rclcpp/publisher.hpp",
@@ -59,11 +63,13 @@
             "return": "virtual void",
             "template": [
                 {
-                    "name": "MessageT"
+                    "name": "MessageT",
+                    "is_class_template": "true"
                 },
                 {
                     "name": "Alloc",
-                    "value": "std::allocator<void>"
+                    "value": "std::allocator<void>",
+                    "is_class_template": "true"
                 }
             ],
             "include": "rclcpp/publisher.hpp",
@@ -81,11 +87,13 @@
             "return": "virtual void",
             "template": [
                 {
-                    "name": "MessageT"
+                    "name": "MessageT",
+                    "is_class_template": "true"
                 },
                 {
                     "name": "Alloc",
-                    "value": "std::allocator<void>"
+                    "value": "std::allocator<void>",
+                    "is_class_template": "true"
                 }
             ],
             "include": "rclcpp/publisher.hpp",
@@ -102,11 +110,13 @@
             "return": "virtual void",
             "template": [
                 {
-                    "name": "MessageT"
+                    "name": "MessageT",
+                    "is_class_template": "true"
                 },
                 {
                     "name": "Alloc",
-                    "value": "std::allocator<void>"
+                    "value": "std::allocator<void>",
+                    "is_class_template": "true"
                 }
             ],
             "include": "rclcpp/publisher.hpp",
@@ -122,11 +132,13 @@
             "return": "virtual void",
             "template": [
                 {
-                    "name": "MessageT"
+                    "name": "MessageT",
+                    "is_class_template": "true"
                 },
                 {
                     "name": "Alloc",
-                    "value": "std::allocator<void>"
+                    "value": "std::allocator<void>",
+                    "is_class_template": "true"
                 }
             ],
             "include": "rclcpp/publisher.hpp",
@@ -142,11 +154,13 @@
             "return": "void",
             "template": [
                 {
-                    "name": "MessageT"
+                    "name": "MessageT",
+                    "is_class_template": "true"
                 },
                 {
                     "name": "Alloc",
-                    "value": "std::allocator<void>"
+                    "value": "std::allocator<void>",
+                    "is_class_template": "true"
                 }
             ],
             "include": "rclcpp/publisher.hpp",
@@ -163,11 +177,13 @@
             "return": "void",
             "template": [
                 {
-                    "name": "MessageT"
+                    "name": "MessageT",
+                    "is_class_template": "true"
                 },
                 {
                     "name": "Alloc",
-                    "value": "std::allocator<void>"
+                    "value": "std::allocator<void>",
+                    "is_class_template": "true"
                 }
             ],
             "include": "rclcpp/publisher.hpp",
@@ -184,11 +200,13 @@
             "return": "void",
             "template": [
                 {
-                    "name": "MessageT"
+                    "name": "MessageT",
+                    "is_class_template": "true"
                 },
                 {
                     "name": "Alloc",
-                    "value": "std::allocator<void>"
+                    "value": "std::allocator<void>",
+                    "is_class_template": "true"
                 }
             ],
             "include": "rclcpp/publisher.hpp",
@@ -207,11 +225,13 @@
         "return": "std::shared_ptr<MessageAlloc>",
         "template": [
             {
-                "name": "MessageT"
+                "name": "MessageT",
+                "is_class_template": "true"
             },
             {
                 "name": "Alloc",
-                "value": "std::allocator<void>"
+                "value": "std::allocator<void>",
+                "is_class_template": "true"
             }
         ],
         "include": "rclcpp/publisher.hpp",

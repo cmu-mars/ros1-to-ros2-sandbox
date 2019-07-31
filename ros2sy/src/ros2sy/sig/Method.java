@@ -34,6 +34,7 @@ public class Method {
 	private HashMap<String, TemplateParameter> templateMap = new HashMap<>();
 	public boolean hasTemplateParamaters = false;
 	private int numRequiredTemplateParams = 0;
+	private String functionTypeString = "";
 //	private int numRequiredTemplateParameters;
 	
 	private static String [] rclcpp_classes = {
@@ -96,24 +97,27 @@ public class Method {
 	 * 										values in parentheses like so:
 	 * 										"<my-type> (=<my-default-value)"
 	 * @param returnType		a String with the return type of the method
-	 * @param type					either "constructor", "macro", or the empty
+	 * @param functionType					either "constructor", "macro", or the empty
 	 * 										string, used to determine what kind of
 	 * 										method this is.
 	 */
-	public Method(String name, ArrayList<String> args, String returnType, String type) {
+	public Method(String name, ArrayList<String> args, String returnType, String functionType) {
+		this.functionTypeString = functionType;
 		this.name = name;
 		this.args = stringListToArgList(args);
 		this.returnType = new Type(returnType);
 		
-		if (type.equals("constructor")) {
+		if (functionType.equals("constructor")) {
 			LOGGER.trace("The method <{}> is a constructor type", name);
 			this.methodType = MethodType.CONSTRUCTOR;
-		} else if (type.equals("macro")) {
+		} else if (functionType.equals("macro")) {
 			LOGGER.trace("The method <{}> is a macro type", name);
 			this.methodType = MethodType.MACRO;
-		} else if (type.equals("member_access")) {
-			LOGGER.trace("The method <{}> is a member access type", name);
+		} else if (functionType.equals("member_access")) {
+			LOGGER.info("The method <{}> is a member access type", name);
 			this.methodType = MethodType.MEMBER_ACCESS;
+			
+			LOGGER.info("{}", this.methodType == MethodType.MEMBER_ACCESS);
 		} else {
 			this.methodType = Method.determineMethodType(name);
 		}
@@ -121,7 +125,7 @@ public class Method {
 		this.isClassMethod = this.methodType == MethodType.CLASS_METHOD;
 		this.isConstructor = this.methodType == MethodType.CONSTRUCTOR;
 		
-		if (this.isClassMethod || this.isConstructor) {
+		if (this.isClassMethod || this.isConstructor || this.methodType == MethodType.MEMBER_ACCESS) {
 			int lowest = this.name.length();
 			int lowestIndex = -1;
 			for (int i = 0; i < Method.rclcpp_classes.length; i++) {
@@ -135,8 +139,15 @@ public class Method {
 				this.fromClass = new Type("rclcpp::" + Method.rclcpp_classes[lowestIndex]);
 			} else {
 				LOGGER.debug("Could not get fromClass for method {}", this.name);
+				if (this.name.indexOf("std_msgs::msg::String") > -1) {
+					this.fromClass = new Type("std_msgs::msg::String");
+				}
 			}
 		}
+	}
+	
+	public boolean isMemberAccess() {
+		return this.methodType == MethodType.MEMBER_ACCESS;
 	}
 	
 	public void addTemplateParameter(String name) {
@@ -156,6 +167,22 @@ public class Method {
 		}
 	}
 	
+	public void addTemplateParameter(String name, boolean isClassTemplate) {
+		if (!this.hasTemplateParamaters) {
+			this.hasTemplateParamaters = true;
+		}
+		this.numRequiredTemplateParams++;
+		if (name.equals("MessageT")) {
+			MessageT tp = new MessageT(name, isClassTemplate);
+			this.templateMap.put(name, tp);
+			this.tparams.add(tp);
+		} else {
+			TemplateParameter tp = new TemplateParameter(name, isClassTemplate);
+			this.templateMap.put(name, tp);
+			this.tparams.add(tp);
+		}
+	}
+	
 	public void addTemplateParameter(String name, String value) {
 		if (!this.hasTemplateParamaters) {
 			this.hasTemplateParamaters = true;
@@ -166,6 +193,21 @@ public class Method {
 			this.tparams.add(tp);
 		} else {
 			TemplateParameter tp = new TemplateParameter(name, value);
+			this.templateMap.put(name, tp);
+			this.tparams.add(tp);
+		}
+	}
+	
+	public void addTemplateParameter(String name, String value, boolean isClassTemplate) {
+		if (!this.hasTemplateParamaters) {
+			this.hasTemplateParamaters = true;
+		}
+		if (name.equals("MessageT")) {
+			MessageT tp = new MessageT(name, value, isClassTemplate);
+			this.templateMap.put(name, tp);
+			this.tparams.add(tp);
+		} else {
+			TemplateParameter tp = new TemplateParameter(name, value, isClassTemplate);
 			this.templateMap.put(name, tp);
 			this.tparams.add(tp);
 		}
@@ -249,7 +291,7 @@ public class Method {
 	}
 	
 	public String getPrintingName() {
-		if (this.isClassMethod) {
+		if (this.isClassMethod || this.isMemberAccess()) {
 			return this.getBaseName();
 		}
 		return this.name;
@@ -500,19 +542,19 @@ public class Method {
 			newArgs.set(i, mtpn.replaceTypeVars(newArgs.get(i)));
 		}
 		
-		Method newMethod = new Method(newName, newArgs, returnTypeString);
+		Method newMethod = (this.functionTypeString.length() > 0) ? new Method(newName, newArgs, returnTypeString, functionTypeString) : new Method(newName, newArgs, returnTypeString);
 		configureNewMethod(newMethod);
-		if (newMethod.isClassMethod) {
+		if (newMethod.isClassMethod || newMethod.isMemberAccess()) {
 			newMethod.fromClass = new Type(mtpn.replaceTypeVars(this.replaceTypeParams(this.fromClass)));
 		}
 		
 		for (TemplateParameter tp : this.tparams) {
 			if (tp.hasDefault) {
-				newMethod.addTemplateParameter(tp.name, this.replaceTypeParams(tp.getDefaultValue()));
+				newMethod.addTemplateParameter(tp.name, this.replaceTypeParams(tp.getDefaultValue()), tp.isClassTemplate());
 			} else if (mtpn.containsTypeVarKey(tp.name)) {
-				newMethod.addTemplateParameter(tp.name, this.replaceTypeParams(mtpn.getTypeVarReplacement(tp.name)));
+				newMethod.addTemplateParameter(tp.name, this.replaceTypeParams(mtpn.getTypeVarReplacement(tp.name)), tp.isClassTemplate());
 			} else {
-				newMethod.addTemplateParameter(tp.name);
+				newMethod.addTemplateParameter(tp.name, tp.isClassTemplate());
 			}
 		}
 		return newMethod;
@@ -541,9 +583,9 @@ public class Method {
 			}
 		}
 		
-		Method newMethod = new Method(newName, newArgs, returnTypeString);
+		Method newMethod = (this.functionTypeString.length() > 0) ? new Method(newName, newArgs, returnTypeString, functionTypeString) : new Method(newName, newArgs, returnTypeString);
 		configureNewMethod(newMethod);
-		if (newMethod.isClassMethod) {
+		if (newMethod.isClassMethod || newMethod.isMemberAccess()) {
 			newMethod.fromClass = Method.replaceTypeParamsInType(typeVarToType, this.fromClass);
 		}
 		
@@ -551,12 +593,12 @@ public class Method {
 		for (TemplateParameter tp : this.tparams) {
 			if (!typeVarToType.containsKey(tp.name)) {
 				if (tp.hasDefault) {
-					newMethod.addTemplateParameter(tp.name, this.replaceTypeParams(tp.getDefaultValue()));
+					newMethod.addTemplateParameter(tp.name, this.replaceTypeParams(tp.getDefaultValue()), tp.isClassTemplate());
 				} else {
-					newMethod.addTemplateParameter(tp.name);
+					newMethod.addTemplateParameter(tp.name, tp.isClassTemplate());
 				}
 			} else {
-				newMethod.addTemplateParameter(tp.name, typeVarToType.get(tp.name));
+				newMethod.addTemplateParameter(tp.name, typeVarToType.get(tp.name), tp.isClassTemplate());
 			}
 		}
 		

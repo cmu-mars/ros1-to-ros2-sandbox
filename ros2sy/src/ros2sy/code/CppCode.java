@@ -78,7 +78,7 @@ public class CppCode {
 					} else {
 						m = m.replaceParametricTypeVariables(mt);
 						this.apis.add(m);
-						int instReq = (m.isClassMethod) ? 1 : 0;
+						int instReq = (m.isClassMethod || m.isMemberAccess()) ? 1 : 0;
 						int numReq = m.numRequiredArgs();
 						int numOpts = this.numberOptionals(a);
 						
@@ -87,10 +87,13 @@ public class CppCode {
 						
 						LOGGER.info("<" + Integer.toString(this.apis.size()) + ", " + m.toString() + ">");
 						
-						if (m.isClassMethod) {
+						if (m.isClassMethod || m.isMemberAccess()) {
 							this.holeTypes.add(m.fromClass);
 							this.updateHoleTypeCounts(m.fromClass);
 						}
+//						if (m.methodType == MethodType.MEMBER_ACCESS) {
+//							this.holeTypes.add()
+//						}
 						
 						for (Arg arg : m.getActualArgs(numOpts)) {
 							holeTypes.add(arg.argType);
@@ -132,12 +135,15 @@ public class CppCode {
 	 * 						thrown when the number of holes expected does not match the
 	 * 						number of holes found for this code
 	 */
-	public String createCodeWithHoles(InputVariables in) throws CodeGenerationException {
+	public String createCodeWithHoles(InputVariables in, ArrayList<HoleType> apiHoleTypes) throws CodeGenerationException {
 		LOGGER.traceEntry("createCodeWithHoles({})", in);
 		
 		String code = "";
 		int holes = 0;
 		boolean isPointerFieldAccess = false;
+		
+		LOGGER.info("ApiHoleTypes: {}", apiHoleTypes.size());
+		int line = 0;
 		for (int i = 0; i < this.apis.size(); i++) {
 			Method m = this.apis.get(i);
 			
@@ -152,32 +158,57 @@ public class CppCode {
 				LOGGER.info("We don't have a pointer dereference: {}", m.name);
 				int numHolesOffset = 0;
 				if (!m.returnType.getPlainName().equals("void") && !m.returnType.toString().equals("") && !m.returnType.isVirtual() && !m.isConstructor) {
-					String id = this.getFreshId();
-					this.results.put(id, m.returnType);
+					if (line >= apiHoleTypes.size() || (line < apiHoleTypes.size() && apiHoleTypes.get(line) == HoleType.STATEMENT)) {
+						String id = this.getFreshId();
+						this.results.put(id, m.returnType);
 //					LOGGER.info("Adding result type {} for hole {}", m.returnType, i);
-					in.addNewResult(id, m.returnType, i);
-					code += m.returnType.toString() + " " + id + " = ";
+						in.addNewResult(id, m.returnType, i);
+						code += m.returnType.toString() + " " + id + " = ";
+					}
 				} else if (m.isConstructor) {
-					String id = this.getFreshId();
+					if (line < apiHoleTypes.size()) {
+						switch(apiHoleTypes.get(line)) {
+							case STATEMENT:
+								String id = this.getFreshId();
+								
+								
+								String resultString = (m.returnType.toString().equals("")) ? m.fromClass.toString() : m.returnType.toString();
+								Type resultType = (resultString.equals(m.returnType.toString())) ? m.returnType : m.fromClass;
+								
+								code += resultString + " " + id;
+								
+								this.results.put(id,  resultType);
+								in.addNewResult(id, resultType, i);
+								break;
+							case EXPRESSION:
+								break;
+						}
+					} else {
+						LOGGER.warn("{} is bigger than size of api hole types: {}", line, apiHoleTypes.size());
+						String id = this.getFreshId();
+						
+						
+						String resultString = (m.returnType.toString().equals("")) ? m.fromClass.toString() : m.returnType.toString();
+						Type resultType = (resultString.equals(m.returnType.toString())) ? m.returnType : m.fromClass;
+						
+						code += resultString + " " + id;
+						
+						this.results.put(id,  resultType);
+						in.addNewResult(id, resultType, i);
+					}
+					
+					
 					
 					Method original = originalApis.get(i);
-					String resultString = (m.returnType.toString().equals("")) ? m.fromClass.toString() : m.returnType.toString();
-					Type resultType = (resultString.equals(m.returnType.toString())) ? m.returnType : m.fromClass;
-					
-					
-					this.results.put(id,  resultType);
-					in.addNewResult(id, resultType, i);
-					
-					
 					if (!original.hasTag("rate") && !original.hasTag("duration")) {
-						code += resultString + " " + id + " = ";
+						code += " = ";
 						LOGGER.info("See the code now: {}", code);
 					} else {
-						code += resultString + " " + id;
+//						code += resultString + " " + id;
 						LOGGER.info("See the code NOW: {}", code);
 					}
 				}
-				if (m.isClassMethod) {
+				if (m.isClassMethod || m.isMemberAccess()) {
 					code += "#" + Integer.toString(holes);
 					
 					if (isPointerFieldAccess) {
@@ -189,13 +220,29 @@ public class CppCode {
 					holes++;
 					numHolesOffset = 1;
 				}
+//				else if (m.methodType == MethodType.MEMBER_ACCESS) {
+//					code += "#" + Integer.toString(holes);
+//
+//					if (isPointerFieldAccess) {
+//						code += "->";
+//						isPointerFieldAccess = false;
+//					} else {
+//						code += ".";
+//					}
+//					holes++;
+//					numHolesOffset = 1;
+//				}
+				
+				String lparen = (m.isMemberAccess()) ? "" : "(";
+				String rparen = (m.isMemberAccess()) ? "" : ")";
 				
 				String templateParams = createTemplateParamString(m, originalApis.get(i));
 				if (m.isConstructor && (originalApis.get(i).hasTag("rate") || originalApis.get(i).hasTag("duration"))) {
-					code += templateParams + "(";
+					code += templateParams; // + "(";
 				} else {
-					code += m.getPrintingName() + templateParams + "(";
+					code += m.getPrintingName() + templateParams; // + "(";
 				}
+				code += lparen;
 				int numArgHoles = this.numHolesPerApi.get(i) - numHolesOffset;
 				for (int j = 0; j < numArgHoles; j++) {
 					code += "#" + Integer.toString(holes);
@@ -204,7 +251,18 @@ public class CppCode {
 					}
 					holes++;
 				}
-				code += ");\n";
+				
+				code += rparen;
+				
+				if (!m.isMemberAccess()) {
+					if (line >= apiHoleTypes.size() || apiHoleTypes.get(line) == HoleType.STATEMENT) {
+						code += ";";
+					}
+				}
+				code += "\n";
+				
+				
+				line++;
 			}
 			
 			if (holes > this.numHolesToFill) {
@@ -220,17 +278,20 @@ public class CppCode {
 	private String createTemplateParamString(Method current, Method original) {
 		String templateParams = "";
 		if (original.requiresTemplateParams()) {
-			templateParams = "<";
+			templateParams = "";
 			for (TemplateParameter param : original.getRequiredTemplateParameters()) {
-				if (current.hasTemplateParameter(param.name) && current.hasTemplateDefault(param.name)) {
-					if (templateParams.length() > 1) {
+				if (current.hasTemplateParameter(param.name) && current.hasTemplateDefault(param.name) && (!param.isClassTemplate())) {
+					if (templateParams.length() > 0) {
 						templateParams = templateParams + ", ";
+					} else {
+						templateParams = "<";
 					}
 					templateParams = templateParams + current.getTemplateDefault(param.name);
 				}
 			}
-			
-			templateParams += ">";
+			if (templateParams.length() > 0) {
+				templateParams += ">";
+			}
 		}
 		return templateParams;
 	}
@@ -244,12 +305,12 @@ public class CppCode {
 	 * 									these inputs
 	 * @throws CodeGenerationException
 	 */
-	public ArrayList<String> generateCodeWithInputs(HashMap<String, Type> inputs) throws CodeGenerationException {
+	public ArrayList<String> generateCodeWithInputs(HashMap<String, Type> inputs, ArrayList<HoleType> holes) throws CodeGenerationException {
 		LOGGER.traceEntry("generateCodeWithInputs({})", inputs);
 		// Enumerates how many of each type we have, as well as contains convenience
 		// methods for different ways of querying the inputs.
 		InputVariables in = new InputVariables(inputs);
-		String holeyCode = this.createCodeWithHoles(in);
+		String holeyCode = this.createCodeWithHoles(in, holes);
 		LOGGER.info("Hole-y code:\n{}", holeyCode);
 //		LOGGER.info(holeyCode);
 		

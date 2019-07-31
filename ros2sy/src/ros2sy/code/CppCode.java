@@ -163,49 +163,52 @@ public class CppCode {
 						this.results.put(id, m.returnType);
 //					LOGGER.info("Adding result type {} for hole {}", m.returnType, i);
 						in.addNewResult(id, m.returnType, i);
-						code += m.returnType.toString() + " " + id + " = ";
+//						code += m.returnType.toString() + " " + id + " = ";
+						code += "auto " + id + " = ";
 					}
-				} else if (m.isConstructor) {
-					if (line < apiHoleTypes.size()) {
-						switch(apiHoleTypes.get(line)) {
-							case STATEMENT:
-								String id = this.getFreshId();
-								
-								
-								String resultString = (m.returnType.toString().equals("")) ? m.fromClass.toString() : m.returnType.toString();
-								Type resultType = (resultString.equals(m.returnType.toString())) ? m.returnType : m.fromClass;
-								
-								code += resultString + " " + id;
-								
-								this.results.put(id,  resultType);
-								in.addNewResult(id, resultType, i);
-								break;
-							case EXPRESSION:
-								break;
-						}
-					} else {
-						LOGGER.warn("{} is bigger than size of api hole types: {}", line, apiHoleTypes.size());
-						String id = this.getFreshId();
-						
-						
-						String resultString = (m.returnType.toString().equals("")) ? m.fromClass.toString() : m.returnType.toString();
-						Type resultType = (resultString.equals(m.returnType.toString())) ? m.returnType : m.fromClass;
-						
-						code += resultString + " " + id;
-						
-						this.results.put(id,  resultType);
-						in.addNewResult(id, resultType, i);
-					}
+				} else if (m.isConstructor && (line >= apiHoleTypes.size() || (apiHoleTypes.get(line) == HoleType.STATEMENT))) {
+//					if (line < apiHoleTypes.size()) {
+//						switch(apiHoleTypes.get(line)) {
+//							case STATEMENT:
+//								String id = this.getFreshId();
+//
+//
+//								String resultString = (m.returnType.toString().equals("")) ? m.fromClass.toString() : m.returnType.toString();
+//								Type resultType = (resultString.equals(m.returnType.toString())) ? m.returnType : m.fromClass;
+//
+//								code += resultString + " " + id;
+//
+//								this.results.put(id,  resultType);
+//								in.addNewResult(id, resultType, i);
+//								break;
+//							case EXPRESSION:
+//								break;
+//						}
+//					} else {
+//
+//					}
+					
+					LOGGER.warn("{} is bigger than size of api hole types: {}", line, apiHoleTypes.size());
+					String id = this.getFreshId();
+					
+					
+					String resultString = (m.returnType.toString().equals("")) ? m.fromClass.toString() : m.returnType.toString();
+					Type resultType = (resultString.equals(m.returnType.toString())) ? m.returnType : m.fromClass;
+					
+					
+					
+					this.results.put(id,  resultType);
+					in.addNewResult(id, resultType, i);
 					
 					
 					
 					Method original = originalApis.get(i);
 					if (!original.hasTag("rate") && !original.hasTag("duration")) {
-						code += " = ";
-						LOGGER.info("See the code now: {}", code);
+						code += "auto " + id + " = ";
+//						code += " = ";
+//						LOGGER.info("See the code now: {}", code);
 					} else {
-//						code += resultString + " " + id;
-						LOGGER.info("See the code NOW: {}", code);
+						code += resultString + " " + id;
 					}
 				}
 				if (m.isClassMethod || m.isMemberAccess()) {
@@ -220,18 +223,6 @@ public class CppCode {
 					holes++;
 					numHolesOffset = 1;
 				}
-//				else if (m.methodType == MethodType.MEMBER_ACCESS) {
-//					code += "#" + Integer.toString(holes);
-//
-//					if (isPointerFieldAccess) {
-//						code += "->";
-//						isPointerFieldAccess = false;
-//					} else {
-//						code += ".";
-//					}
-//					holes++;
-//					numHolesOffset = 1;
-//				}
 				
 				String lparen = (m.isMemberAccess()) ? "" : "(";
 				String rparen = (m.isMemberAccess()) ? "" : ")";
@@ -539,7 +530,7 @@ public class CppCode {
 		}
 		String nameSub = name.substring(index, name.length());
 		
-		nameSub.replaceAll("[ALT-()]*", "");
+		nameSub = nameSub.replaceAll("[-ALT\\(\\)]*", "");
 		// Add one because it's actually zero-indexed
 		return Integer.valueOf(nameSub).intValue() + 1;
 	}

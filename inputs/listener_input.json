@@ -7,7 +7,7 @@
         [
             "const std::string&",
             "const std::string&",
-            "const rclcpp::QoS&",
+            "const rmw_qos_profile_t&",
             "CallbackT&&"
         ],
         [
@@ -20,7 +20,7 @@
         "argv": "char **",
         "node_name": "std::string",
         "topic_name": "std::string",
-        "rmw_qos_profile_system_default": "rclcpp::QoS",
+        "rmw_qos_profile_system_default": "rmw_qos_profile_t",
         "chatterCallback": "CallbackT"
     }
 }
